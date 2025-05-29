@@ -1,0 +1,266 @@
+﻿@model SME_WEB_ApiManagement.Models.ViewRegisterApiModels
+@{
+    ViewData["Title"] = "หน่วยงานหรือบริษัท";
+    var vDdlStatus = @ViewBag.vDdlStatus;
+    var vDdlOrg = @ViewBag.vDdlOrg;
+
+}
+<script>
+    function GetCreate() {
+
+        $("#CreateModal").modal()
+    }
+
+    function OpenConfirmDeleteModal(ReqID) {
+
+
+        document.getElementById("TArrivalDetaiModels_Id").value = ReqID;
+
+        $("#ConfirmDeleteModal").modal();
+
+    }
+
+  
+</script>
+@using (Html.BeginForm("RegisterList", "RegisterAPI", FormMethod.Post, htmlAttributes: new { enctype = "multipart/form-data" }))
+{
+    
+    <div class="wrap-boder">
+        <div class="wrap-content">
+            <div class="header">
+                <div class="nav-navigation">
+                    <p>HOME</p> <p>></p>
+                    <p>หน่วยงานที่ลงทะเบียนเรียบร้อยแล้ว</p>
+                </div>
+                <div class="header_content">
+                    <h1>หน่วยงานที่ลงทะเบียนเรียบร้อยแล้ว</h1>
+                </div>
+            </div>
+            <div class="content_body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div><label>ผู้ใช้บริการ</label></div>
+                        <input class="form-control" type="text" placeholder="Ex. ผู้ใช้บริการ..." name="MRegister.OrganizationName" asp-for="MRegister.OrganizationName" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <div><label>API-Key</label></div>
+                        <input class="form-control" type="text" placeholder="Ex. ระบบ..." name="MRegister.ApiKey" asp-for="MRegister.ApiKey" />
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <div><label>วันที่ลงทะเบียน</label></div>
+                        <input class="form-control" type="date" placeholder="Ex.dd/MM/yyyy" name="MRegister.StartDate" asp-for="MRegister.CreateDate" />
+                    </div>
+                    <div class="col-md-6">
+                        <div><label>วันที่แก้ไขล่าสุด</label></div>
+                        <input class="form-control" type="date" placeholder="Ex.dd/MM/yyyy" name="MRegister.EndDate" asp-for="MRegister.UpdateDate" />
+                    </div>
+                </div>
+                <div class="text-center m-t-10">
+                    <button class="btn btn_search text-color-botton" name="searchDate" id="searchDate" value="searchDate">ค้นหา</button>
+                    <button class="btn btn_search text-color-botton" name="searchDate" id="searchDate" value="searchDate">ค้นหา</button>
+                </div>
+                <br />
+
+                <br />
+                <div class="content_table">
+                    <div class="content_table_head d-flex align-items-center">
+                        <h6>รายการ ลงทะเบียนใช้งาน</h6>
+
+                    </div>
+                    <div class="line"></div>
+                    <div class="m-b-10">
+
+                        <input type="button" class="btn btn_search text-color-botton" name="create"
+                               value="+ADD" onclick="window.location.href='/RegisterAPI/RegisterAPI';" />
+
+                    </div>
+                    <div class="table-responsive">
+                        <table class=" table table-stand">
+                            <thead>
+                                <tr>
+
+
+                                    <th scope="col">#</th>
+
+
+                                    <th scope="col">ผู้ใช้บริการ</th>
+                                    <th scope="col">API Key</th>
+                                    <th scope="col">สถานะ</th>
+                                    <th scope="col">เริ่มให้บริการ</th>
+                                    <th scope="col">วันที่ลงทะเบียน</th>
+                                    <th scope="col">วันที่แก้ไขล่าสุด</th>
+                                    <th scope="col"> </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @if (Model.LRegis !=null)
+                                {
+
+                                    @foreach (var w in Model.LRegis)
+                                    {
+                                          <tr>
+                                    <td class="align_text">
+                                        
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                                @Html.ActionLink(w.OrganizationName, "RegisterAPIDetail", "RegisterAPI", new { OrgCode = w.OrganizationCode }, null)
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                            @w.ApiKey
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                            @(w.FlagActive ?? false ? "ใช้งาน" : "ปิดการใช้งาน")
+                                        </td>
+                                    <td class="align_text" style="width:auto">
+                                            @(w.StartDate?.ToString("dd/MM/yyyy") ?? "-") - @(w.EndDate?.ToString("dd/MM/yyyy") ?? "-")
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                            @(w.CreateDate.HasValue ? w.CreateDate.Value.ToString("dd/MM/yyyy") : "-")
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                            @(w.UpdateDate.HasValue ? w.UpdateDate.Value.ToString("dd/MM/yyyy") : "-")
+
+                                    </td>
+                                        </tr>
+                                    }
+                                       
+                                } 
+                                else
+                                {
+                                    <tr id="trNodata" runat="server" visible="false">
+                                        <td colspan="12" valign="middle">
+                                            <b>No Data</b>
+                                        </td>
+                                    </tr>
+                                }
+
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <div class="d-flex justify-content-end">
+                        <input type="hidden" name="hidcurrentpage" id="hidcurrentpage" value="@Model.PageModel.CurrentPageNumber"></input>
+                        <input type="hidden" name="hidtotalpage" id="hidtotalpage" value="@Model.PageModel.TotalPage"></input>
+                        <!-- Start pagiantion -->
+                        <nav aria-label="Page navigation example ">
+                            <ul class="pagination pull-right layout_align m-t-10">
+
+                                <li class="page-item"><input type="submit" class="page-link" name="first" value="<<"></input></li>
+                                <li class="page-item"><input type="submit" class="page-link" name="previous" value="<"></input></li>
+
+                                <li class="page-item text_padding_nav"> @Model.PageModel.CurrentPageNumber of @Model.PageModel.TotalPage</li>
+                                <li class="page-item"><input type="submit" class="page-link" name="next" value=">"></input></li>
+                                <li class="page-item"><input type="submit" class="page-link" name="last" value=">>"></input></li>
+
+                            </ul>
+                        </nav>
+                    </div>
+
+
+
+
+                </div>
+
+                @*   <div class="text-center m-t-10">
+            <button class="btn btn_search text-color-botton m-r-10" id="Resend" name="Resend" value="Resend" onclick="submitSelected()">Resend All</button>
+            <button class="btn btn_cancel ">Cancel</button>
+            </div> *@
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="CreateModal" tabindex="-1" role="dialog" aria-labelledby="ViewCancelModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="min-width: 80%;">
+            <div class="modal-content">
+                <div class="modal-header  ">
+                    <h5 class="modal-title" id="reqDetailModalLabel">System Master Management</h5>
+
+                    <button type="button" class="close button_close" data-dismiss="modal" aria-label="Close">
+                        <span class="x-sign" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="card" style=" margin-top: 1px; ">
+
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>ชื่อระบบ</label>
+                                    <input class="form-control" type="text" placeholder="Ex. ระบบ.." />
+
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>API-Key</label>
+                                    <input class="form-control" placeholder="Ex. c6633541-65e9-43f7-bb4f-e543c3963815" type="text" />
+
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>สถานะ</label>
+                                    <select class="form-control" name="cars" id="cars">
+
+                                        <option value="Completed">ใช้งาน</option>
+                                        <option value="Uncompleted">ปิดการใช้งาน</option>
+
+
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer n-border" style="align-self: center;">
+                    <button class="btn btn_search text-color-botton m-r-10" value="saveEmp" id="saveEmp" name="saveEmp">Submit</button>
+                    <button class="btn btn_cancel ">Cancel</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ViewCancelModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="min-width: 80%;">
+            <div class="modal-content">
+                <div class="modal-header  ">
+                    <h5 class="modal-title" id="reqDetailModalLabel">Confirm Delete</h5>
+
+                    <button type="button" class="close button_close" data-dismiss="modal" aria-label="Close">
+                        <span class="x-sign" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="card" style=" margin-top: 1px; ">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="CLeaveRequestModel_EmpCode">Are you sure you want to Delete this item?</label>
+                            <input type="hidden" id="TArrivalDetaiModels_Id" />
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal-footer n-border" style="align-self: center;">
+                    <button class="btn btn_search text-color-botton m-r-10" name="DeleteEmp" id="DeleteEmp" value="DeleteEmp">Submit</button>
+                    <button class="btn btn_cancel ">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

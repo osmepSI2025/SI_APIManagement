@@ -1,0 +1,311 @@
+﻿@model SME_WEB_ApiManagement.Models.ViewRegisterApiModels
+@{
+    ViewData["Title"] = "หน่วยงานหรือบริษัท";
+    var vDdlStatus = @ViewBag.vDdlStatus;
+    var vDdlOrg = @ViewBag.vDdlOrg;
+
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function GetCreate() {
+
+        $("#CreateModal").modal()
+    }
+
+    function OpenConfirmDeleteModal(ReqID) {
+
+       
+        document.getElementById("TArrivalDetaiModels_Id").value = ReqID;
+
+        $("#ConfirmDeleteModal").modal();
+
+    }
+
+ 
+</script>
+<script>
+    $(document).ready(function () {
+        $(".editbtn").click(function () {
+            var organizationId = $(this).data("organizationid");
+            var organizationCode = $(this).data("organizationcode");
+            var organizationName = $(this).data("organizationname");
+            var description = $(this).data("description");
+            var flagActive = $(this).data("flagactive");
+
+            $("#InsMOrg_OrganizationId").val(organizationId);
+            $("#InsMOrg_OrganizationCode").val(organizationCode);
+            $("#InsMOrg_OrganizationName").val(organizationName);
+            $("#InsMOrg_Description").val(description);
+            $("#InsMOrg_FlagActive").val(flagActive); // ✅ แก้ชื่อตัวแปร
+
+            $("#CreateModal").modal("show");
+        });
+    });
+</script>
+@using (Html.BeginForm("AgencyCompany", "APIManagement", FormMethod.Post, htmlAttributes: new { enctype = "multipart/form-data" }))
+{
+
+<div class="wrap-boder">
+    <div class="wrap-content">
+        <div class="header">
+            <div class="nav-navigation">
+                <p>HOME</p> <p>></p>
+                <p>หน่วยงานหรือบริษัท</p>
+            </div>
+            <div class="header_content">
+                <h1>หน่วยงานหรือบริษัท</h1>
+            </div>
+        </div>
+        <div class="content_body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div><label>รหัสผู้ใช้บริการ</label></div>
+                        <input class="form-control" type="text" asp-for="MOrg.OrganizationCode" placeholder="Ex. ORG..." />
+                      
+                </div>
+
+                <div class="col-md-6">
+                        <div><label>ผู้ใช้บริการ</label></div>
+       
+                        <input class="form-control" type="text" asp-for="MOrg.OrganizationName" placeholder="Ex. ฝ่าย..." />
+                </div>
+
+
+                <div class="col-md-6">
+                    <div><label>วันที่สร้าง</label></div>
+                        <input class="form-control" type="date" asp-for="MOrg.CreateDate" />
+         
+                </div>
+                <div class="col-md-6">
+                        <div><label>วันที่แก้ไขล่าสุด</label></div>
+                        <input class="form-control" type="date" asp-for="MOrg.UpdateDate" />
+                    
+                </div>
+            </div>
+            <div class="text-center m-t-10">
+                    <button class="btn btn_search text-color-botton" name="searchData" id="searchData" value="searchData">ค้นหา</button>
+                    <button class="btn btn_search text-color-botton" name="clearSearcData" id="clearSearcData" value="clearSearcData">Clear</button>
+            </div>
+            <br />
+
+            <br />
+            <div class="content_table">
+                <div class="content_table_head d-flex align-items-center">
+                        <h6>รายการ หน่วยงานหรือบริษัท</h6>
+
+                </div>
+                <div class="line"></div>
+                <div class="m-b-10">
+
+                    <input type="button" class="btn btn_search text-color-botton" name="create" onclick="GetCreate();" value="+ADD" />
+
+                </div>
+                <div class="table-responsive">
+                    <table class=" table table-stand">
+                        <thead>
+                            <tr>
+
+
+                                <th scope="col">#</th>
+
+                                    <th scope="col">รหัสใช้บริการ</th>
+                                <th scope="col">ผู้ใช้บริการ</th>
+                              
+                                <th scope="col">สถานะ</th>
+                                <th scope="col">วันที่สร้าง</th>
+                                <th scope="col">วันที่แก้ไขล่าสุด</th>
+                                <th scope="col"> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                                @if (Model.LOrg != null)
+                            {
+                                @foreach (var w in Model.LOrg)
+                                {
+                                    <tr>
+
+
+                                        <td class="align_text">
+                                        </td>
+                                            <td class="align_text" style="width:auto">
+
+                                                @w.OrganizationCode
+                                                @*  @Html.ActionLink(w.SystemName, "SysMasterAPIConnect", "SysMasterAPI", new { SystemCode = w.SystemCode }, null) *@
+                                            </td>
+                                        <td class="align_text" style="width:auto">
+
+                                            @w.OrganizationName
+                                           @*  @Html.ActionLink(w.SystemName, "SysMasterAPIConnect", "SysMasterAPI", new { SystemCode = w.SystemCode }, null) *@
+                                        </td>
+
+                                        <td class="align_text" style="width:auto">
+                                            @(w.FlagActive ?? false ? "ใช้งาน" : "ปิดการใช้งาน")
+                                        </td>
+                                        <td class="align_text" style="width:auto">
+                                            @(w.CreateDate.HasValue ? w.CreateDate.Value.ToString("dd/MM/yyyy") : "-")
+                                        </td>
+                                        <td class="align_text" style="width:auto">
+                                            @(w.UpdateDate.HasValue ? w.UpdateDate.Value.ToString("dd/MM/yyyy") : "-")
+                                        </td>
+
+                                        <td>
+                                                <button type="button" class="btn btn-sm editbtn btn-primary"
+                                                        data-organizationid="@w.OrganizationId"
+                                                        data-organizationcode="@w.OrganizationCode"
+                                                        data-organizationname="@w.OrganizationName"
+                                                        data-description="@w.Description"
+                                                        data-flagactive="@w.FlagActive">
+                                                    Edit
+                                                </button>
+
+                                                <input type="button" class="btn btn-danger btn-sm deletebtn"
+                                                       onclick="OpenConfirmDeleteModal(@w.OrganizationId)" name="btn_Delete" value="Delete">
+                                        </td>
+
+
+                                    </tr>
+                                }
+
+                            }
+                            else
+                            {
+                                <tr id="trNodata" runat="server" visible="false">
+                                    <td colspan="12" valign="middle">
+                                        <b>No Data</b>
+                                    </td>
+                                </tr>
+
+                            }
+
+
+
+                         
+                        
+
+                        </tbody>
+                    </table>
+                </div>
+
+                    <div class="d-flex justify-content-end">
+                        <input type="hidden" name="hidcurrentpage" id="hidcurrentpage" value="@Model.PageModel.CurrentPageNumber"></input>
+                        <input type="hidden" name="hidtotalpage" id="hidtotalpage" value="@Model.PageModel.TotalPage"></input>
+                        <!-- Start pagiantion -->
+                        <nav aria-label="Page navigation example ">
+                            <ul class="pagination pull-right layout_align m-t-10">
+
+                                <li class="page-item"><input type="submit" class="page-link" name="first" value="<<"></input></li>
+                                <li class="page-item"><input type="submit" class="page-link" name="previous" value="<"></input></li>
+
+                                <li class="page-item text_padding_nav"> @Model.PageModel.CurrentPageNumber of @Model.PageModel.TotalPage</li>
+                                <li class="page-item"><input type="submit" class="page-link" name="next" value=">"></input></li>
+                                <li class="page-item"><input type="submit" class="page-link" name="last" value=">>"></input></li>
+
+                            </ul>
+                        </nav>
+                    </div>
+
+
+
+            </div>
+
+            @*   <div class="text-center m-t-10">
+            <button class="btn btn_search text-color-botton m-r-10" id="Resend" name="Resend" value="Resend" onclick="submitSelected()">Resend All</button>
+            <button class="btn btn_cancel ">Cancel</button>
+            </div> *@
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="CreateModal" tabindex="-1" role="dialog" aria-labelledby="ViewCancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="min-width: 80%;">
+        <div class="modal-content">
+            <div class="modal-header  ">
+                    <h5 class="modal-title" id="reqDetailModalLabel">หน่วยงานหรือบริษัท</h5>
+
+                <button type="button" class="close button_close" data-dismiss="modal" aria-label="Close">
+                    <span class="x-sign" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="card" style=" margin-top: 1px; ">
+
+                    <input class="form-control" type="text" asp-for="InsMOrg.OrganizationId" id="InsMOrg_OrganizationId" />
+                <div class="card-body">
+                    <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>ชื่อระหัสหน่วยงาน</label>
+                                
+                                    <input class="form-control" type="text" asp-for="InsMOrg.OrganizationCode" placeholder="Ex. GXD001..." id="InsMOrg_OrganizationCode" />
+                                </div>
+                            </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>ชื่อระบบ</label>
+                              
+                                    <input class="form-control" type="text" asp-for="InsMOrg.OrganizationName" placeholder="Ex. ฝ่าย..." id="InsMOrg_OrganizationName" />
+                            </div>
+                        </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>สถานะ</label>
+                                    <select asp-for="InsMOrg.FlagActive" asp-items="vDdlStatus" class="form-control" id="InsMOrg_FlagActive">
+                                        @* <option value="">-- กรุณาเลือก --</option> *@
+                                    </select>
+
+                                </div>
+                            </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>หมายเหตุ</label>
+                              @*       <input class="form-control" type="text" asp-for="InsMOrg.Description" placeholder="Ex. เพิ่มเติม..." id="InsMOrg_Description" /> *@
+                                    <textarea class="form-control" asp-for="InsMOrg.Description" placeholder="Ex. เพิ่มเติม..." id="InsMOrg_Description"></textarea>
+                            </div>
+                        </div>
+                    
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer n-border" style="align-self: center;">
+                    <button class="btn btn_search text-color-botton m-r-10" value="saveData" id="saveData" name="saveData">Submit</button>
+                <button class="btn btn_cancel ">Cancel</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ViewCancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="min-width: 80%;">
+        <div class="modal-content">
+            <div class="modal-header  ">
+                <h5 class="modal-title" id="reqDetailModalLabel">Confirm Delete</h5>
+
+                <button type="button" class="close button_close" data-dismiss="modal" aria-label="Close">
+                    <span class="x-sign" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="card" style=" margin-top: 1px; ">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="CLeaveRequestModel_EmpCode">Are you sure you want to Delete this item?</label>
+                            <input type="hidden" id="TArrivalDetaiModels_Id" asp-for="MOrg.OrganizationId" />
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal-footer n-border" style="align-self: center;">
+                    <button class="btn btn_search text-color-botton m-r-10" name="DeleteData" id="DeleteData" value="DeleteData">Submit</button>
+                <button class="btn btn_cancel ">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+}
