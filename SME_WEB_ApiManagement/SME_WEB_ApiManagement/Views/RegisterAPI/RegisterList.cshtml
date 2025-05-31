@@ -24,13 +24,13 @@
 </script>
 @using (Html.BeginForm("RegisterList", "RegisterAPI", FormMethod.Post, htmlAttributes: new { enctype = "multipart/form-data" }))
 {
-    
+     <div class="main-content">
     <div class="wrap-boder">
         <div class="wrap-content">
             <div class="header">
                 <div class="nav-navigation">
-                    <p>HOME</p> <p>></p>
-                    <p>หน่วยงานที่ลงทะเบียนเรียบร้อยแล้ว</p>
+                    <p>HOME </p> <p>></p>
+                    <p> หน่วยงานที่ลงทะเบียนเรียบร้อยแล้ว</p>
                 </div>
                 <div class="header_content">
                     <h1>หน่วยงานที่ลงทะเบียนเรียบร้อยแล้ว</h1>
@@ -39,7 +39,7 @@
             <div class="content_body">
                 <div class="row">
                     <div class="col-md-6">
-                        <div><label>ผู้ใช้บริการ</label></div>
+                            <div><label>ผู้ระบบ</label></div>
                         <input class="form-control" type="text" placeholder="Ex. ผู้ใช้บริการ..." name="MRegister.OrganizationName" asp-for="MRegister.OrganizationName" />
                     </div>
 
@@ -58,16 +58,25 @@
                         <input class="form-control" type="date" placeholder="Ex.dd/MM/yyyy" name="MRegister.EndDate" asp-for="MRegister.UpdateDate" />
                     </div>
                 </div>
+               
+                
+                
                 <div class="text-center m-t-10">
-                    <button class="btn btn_search text-color-botton" name="searchDate" id="searchDate" value="searchDate">ค้นหา</button>
+                        <button class="btn btn_search text-color-botton" name="searchDate" id="searchDate" value="searchDate">ล้างข้อมูล</button>
                     <button class="btn btn_search text-color-botton" name="searchDate" id="searchDate" value="searchDate">ค้นหา</button>
                 </div>
-                <br />
+                 
+                </div>
+            </div>
+        </div>
+    </div>
 
-                <br />
+                    <div class="main-content">
+                        <div class="wrap-boder">
+                            <div class="wrap-content">
                 <div class="content_table">
                     <div class="content_table_head d-flex align-items-center">
-                        <h6>รายการ ลงทะเบียนใช้งาน</h6>
+                            <h6>รายการ Inbound API</h6>
 
                     </div>
                     <div class="line"></div>
@@ -175,7 +184,8 @@
             </div>
         </div>
     </div>
-
+     
+   
 
     <div class="modal fade" id="CreateModal" tabindex="-1" role="dialog" aria-labelledby="ViewCancelModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document" style="min-width: 80%;">

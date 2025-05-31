@@ -1,41 +1,354 @@
+/* Base Styles and Variables */
+:root {
+    --primary-color: #f8f9fa; /* สีพื้นหลังอ่อน */
+    --secondary-color: #e9ecef; /* สีพื้นหลังเข้ม */
+    --text-color: #737A85;
+    --border-color: #e0e0e0;
+    --hover-color: #4a90e2;
+    --transition: all 0.3s ease;
+    --danger-color: #FF0000;
+    --success-color: #4bd36f;
+    --fail-color: #f96370;
+    --link-color: #0077b6;
+    --background-color: #eeeeee;
+    --button-color: #34A5EB;
+    --color-table: #34A5EB;
+    --color_toppic: #247CB3;
+    --background-modal: linear-gradient(to right, #255D80, #0F334A);
+}
+
+/* Typography and Base Elements */
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
 body {
-    background: #d5e5e9;
-    font-size: .825rem;
+    background: var(--background-color);
+    min-height: 100vh;
+    font-family: 'Prompt', sans-serif;
+    color: var(--text-color);
 }
-.color-primary{
-    background: #0077b6;
+
+/* Focus States */
+.btn:focus, 
+.btn:active:focus, 
+.btn-link.nav-link:focus, 
+.form-control:focus, 
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
-.color-primary-text-white{
+
+/* Sidebar Styles */
+.sidebar {
+    background: rgba(255, 255, 255, 0.95);
+    min-height: 100vh;
+    border-right: 1px solid var(--border-color);
+    padding: 0;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    transition: var(--transition);
+}
+
+.sidebar .nav-link {
+    color: var(--text-color);
+    font-weight: 500;
+    border-radius: 8px;
+    margin: 4px 8px;
+    padding: 12px 16px;
+    transition: var(--transition);
+}
+
+.sidebar .nav-link i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+    background: var(--primary-color);
     color: #fff;
+    transform: translateX(5px);
 }
+
+.sidebar .logo {
+    padding: 24px 0 16px 0;
+    text-align: center;
+    background: rgba(255,255,255,0.1);
+}
+
+.sidebar .logo img {
+    max-width: 140px;
+    transition: var(--transition);
+}
+
+.sidebar .logo img:hover {
+    transform: scale(1.05);
+}
+
+.sidebar-bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 16px;
+    background: rgba(255,255,255,0.95);
+    border-top: 1px solid var(--border-color);
+}
+
+.sidebar-bottom div {
+    padding: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    border-radius: 6px;
+}
+
+.sidebar-bottom div:hover {
+    background: var(--hover-color);
+    color: white;
+}
+
+/* Main Content Area */
+.main-content {
+    padding: 24px;
+    background: rgba(255,255,255,0.95);
+    border-radius: 12px;
+    margin: 16px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.header-bar {
+    background: white;
+    border-radius: 8px;
+    padding: 16px 24px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
+.user-info {
+    text-align: right;
+    font-size: 0.95rem;
+    color: var(--text-color);
+    background: rgba(43, 88, 118, 0.1);
+    padding: 8px 16px;
+    border-radius: 6px;
+}
+
+/* Status Indicators */
 .status_success {
     padding: 0px 10px;
     text-align: center;
     border-radius: 5px;
-    background: #4bd36f;
+    background: var(--success-color);
     color: #fff;
     width: 70px;
-
 }
-.status_fail{
+
+.status_fail {
     padding: 0px 10px;
     text-align: center;
     border-radius: 5px;
-    background: #f96370;
+    background: var(--fail-color);
     color: #fff;
     width: 70px;
-
 }
-.btn_action_resend{
+
+/* Buttons */
+.btn {
+    padding: 3px 15px;
+    font-size: 14px;
+}
+
+.btn_add {
+    color: #fff;
+    background: #27368F;
+}
+
+.btn_delete {
+    color: #fff;
+    background: var(--danger-color);
+}
+.btn-primary-all {
+    background: var(--button-color);
+    padding: 5px 40px;
+    color:#fff;
+}
+
+.btn_search {
+    background: var(--link-color);
+    padding: 5px 40px;
+}
+
+.btn_search:hover {
+    background: #465a67;
+}
+
+.btn_action_resend {
     padding: 5px 15px;
     text-align: center;
     border-radius: 5px;
-    background: #0077b6;
-    color: #fff; 
+    background: var(--link-color);
+    color: #fff;
     border: none;
-
 }
 
+.btn_cancel {
+    background: #ffffff;
+    padding: 5px 40px;
+    border: 1px solid #4545;
+}
+
+/* Navigation and Layout */
+.nav-navigation {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.nav-navigation p {
+    font-size: 12px;
+    font-weight: 500;
+    color: #7D8398;
+    margin: 0;
+}
+
+.navbar {
+    padding: 0rem 1rem;
+}
+
+.navbar-brand img {
+    height: 45px;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    font-weight: 500;
+    color: #fff;
+}
+
+/* Tables */
+.table-stand  th {
+    background: var(--color-table);
+    color: #fff;
+    white-space: nowrap;
+}
+.table-stand tr  {
+    background: var(--primary-color);
+    color: #fff;
+    white-space: nowrap;
+}
+
+.table-stand tr td {
+    white-space: nowrap;
+}
+
+/* Tabs */
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #d6dde1;
+    color: #fff;
+    font-weight: 500;
+    border-bottom-color: var(--link-color);
+}
+
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 5px 5px;
+    transition: 0.3s;
+    color: #122529;
+    font-size: 12px;
+    border: 1px solid transparent;
+    border-bottom: 5px solid transparent;
+}
+
+.tab button:hover {
+    background-color: #ddd;
+    border: none;
+    border: 1px solid var(--link-color);
+    border-bottom: 5px solid dodgerblue;
+}
+
+.tab button.active {
+    background-color: #ffffff;
+    color: var(--link-color);
+    border-collapse: collapse;
+    border: 1px solid var(--link-color);
+    border-bottom: 5px solid var(--link-color);
+}
+
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid var(--link-color);
+    border-top: none;
+}
+
+/* Forms */
+.form-control {
+    margin-bottom: 10px;
+}
+
+.form-control:disabled,
+.xx,
+.form-control[readonly] {
+    background-color: transparent;
+    opacity: 1;
+}
+
+.xx {
+    font-size: inherit !important;
+}
+
+/* Utility Classes */
+.color-primary {
+    background: var(--link-color);
+}
+
+.color-primary-text-white {
+    color: #fff;
+}
+
+.text-color-botton {
+    color: #fff;
+}
+
+.text-color-botton:hover {
+    color: #fff;
+}
+
+/* Margins */
+.m-r-10 {
+    margin-right: 10px;
+}
+
+.m-l-10 {
+    margin-left: 10px;
+}
+
+.m-t-10 {
+    margin-top: 10px;
+}
+
+.m-b-10 {
+    margin-bottom: 10px;
+}
+
+.m-b-12 {
+    margin-bottom: 12px;
+}
+
+/* Layout Components */
 .footer {
     position: fixed;
     bottom: 0;
@@ -43,166 +356,30 @@ body {
 }
 
 .wrap-boder {
-    padding: 1rem;
+    
+    
 }
 
 .wrap-content {
-    background: #fff;
-    padding: 1rem;
+    background: inherit;
+    
+    
 }
 
-.nav-navigation {
-    display: flex;
-    margin-bottom:10px
-}
-
-    .nav-navigation p {
-        font-size: 12px;
-        font-weight: 500;
-        color: #7D8398;
-        margin:0;
-    }
-.btn {
-
-    padding:3px 15px ;
-    font-size:14px;
-
-}
-.btn_add {
-    color: #fff;
-    background: #27368F;
-}
-.btn_delete {
-    color: #fff;
-    background: #FF0000;
-}
-.btn_search {
-    background: #0077b6;
-    padding: 5px 40px;
-}
-   .btn_search:hover {
-        background:#465a67;
-    }
-.text-color-botton {
-color:#fff}
-.text-color-botton:hover {
-    color: #fff
-}
 .line {
     margin-top: 10px;
     border-bottom: 1px solid #7D8398;
     margin-bottom: 10px;
 }
-.content_table_head h6 {
-margin:0px;
-}
-/*margin setteing start*/
-.m-r-10 {
-    margin-right: 10px;
-}
-.m-l-10 {
-    margin-left: 10px;
-}
-.m-t-10 {
-margin-top:10px
-}
-/*margin setteing end*/
-/*setting css*/
-.align-items-center {
-    align-items: center;
-}
-.navbar-brand img{
-  height: 45px;
-}
-.navbar{
-    padding: 0rem 1rem;
-}
- 
-.navbar-light .navbar-nav .nav-link {
-    font-weight: 500;
-    color: #fff;
-}
 
-/* Style the tab */
-.tab {
-    overflow: hidden;
-    border: 1px solid #ccc;
-    background-color: #d6dde1;
-    color:#fff;
-    font-weight:500;
-    border-bottom-color: #0077b6;
-}
-
-    /* Style the buttons that are used to open the tab content */
-    .tab button {
-        background-color: inherit;
-        float: left;
-        border: none;
-        outline: none;
-        cursor: pointer;
-        padding: 5px 5px;
-        transition: 0.3s;
-        color: #122529;
-        font-size: 12px;
-        border: 1px solid transparent;
-        border-bottom: 5px solid transparent;
-    }
-
-        /* Change background color of buttons on hover */
-        .tab button:hover {
-            background-color: #ddd;
-            border: none;
-            border: 1px solid #0077b6;
-            border-bottom: 5px solid dodgerblue;
-        }
-
-/* Create an active/current tablink class */
-
-
-/* Style the tab content */
-.tabcontent {
-    display: none;
-    padding: 6px 12px;
-    border: 1px solid #0077b6;
-    border-top: none;
-}
-.tab button.active {
-    background-color: #ffffff;
-    color: #0077b6;
-    border-collapse: collapse;
-   /* font-weight: 700;*/
-    border: 1px solid #0077b6;
-    border-bottom: 5px solid #0077b6;
-}
-.form-control{
-    margin-bottom: 10px;
-}
-.m-r-10 {
-    margin-right:10px
-}
-.m-b-12 {
-    margin-bottom: 12px
-}
 .header-toppic {
-margin-bottom:1rem;
+    margin-bottom: 1rem;
 }
+
 .header_content {
     margin-bottom: 1rem;
 }
-.btn_cancel {
-    background: #ffffff;
-    padding: 5px 40px;
-    border: 1px solid #4545;
-}
-.table-stand tr th {
-    background: #0077b6;
-    color: #fff;
-    white-space: nowrap;
-}
-.table-stand tr td {
-    white-space: nowrap;
-}
-/*setting css*/
+
 .box-noti_text {
     border: 1px solid #efefef;
     height: 100%;
@@ -211,22 +388,90 @@ margin-bottom:1rem;
     color: red;
     padding: 1rem;
 }
-.icon_button img {
-    width:15px;
-}
-.m-b-10 {
-margin-bottom:10px;
 
+.icon_button img {
+    width: 15px;
 }
-.form-control:disabled,.xx, .form-control[readonly] {
-    background-color: transparent;
-    opacity: 1;
-}
-.xx {
- font-size: inherit !important;}
+
 .text_padding_nav {
     display: flex;
     align-items: center;
     margin-left: 10px;
     margin-right: 10px;
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        z-index: 1000;
+        transform: translateX(-100%);
+    }
+
+    .sidebar.show {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 16px 8px;
+    }
+}
+@media (min-width: 1400px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 1400px;
+    }
+}
+.form-control:focus {
+    color: var(--text-color);
+    background-color: var(--bs-body-bg);
+    border-color: #D0D5DD;
+    outline: 0;
+    box-shadow: 0 0 0 .1rem rgba(13, 110, 253, .25);
+}
+.form-control {
+    color: var(--text-color);
+}
+.wrap-modal{
+    padding: 1rem;
+}
+
+/* slick */
+.slick-prev {
+    left: 10px !important;
+    z-index: 10;
+     
+}
+.slick-next {
+    right: 10px !important;
+    z-index: 10;
+}
+.slick-dots {
+    
+    bottom: 5px !important;
+  
+} 
+.one-time img{
+    height: 280px;
+    width: 100%;
+}
+.slick-dotted.slick-slider {
+    margin-bottom: 0px !important;
+}
+.wrap-boder .row { /* มีช่องว่างระหว่าง .wrap-boder กับ .row */
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+    /* เพิ่ม CSS อื่นๆ ที่คุณต้องการกำหนดให้กับ .row ในที่นี้ได้เลย */
+}
+.wrap_main_normal{
+    padding: 0rem 5rem;
+}
+.headtoppic-color h2 {
+    color: var(--color_toppic);
+}
+.picture_toppic img {
+height:200px;
+object-fit:cover;
+width:100%
+}
+   
