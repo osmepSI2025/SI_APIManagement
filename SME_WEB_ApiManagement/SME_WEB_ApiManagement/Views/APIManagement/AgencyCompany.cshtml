@@ -50,8 +50,8 @@
     <div class="wrap-content">
         <div class="header">
             <div class="nav-navigation">
-                <p>HOME</p> <p>></p>
-                <p>หน่วยงานหรือบริษัท</p>
+                <p class="m-r-10">HOME</p> <p>></p>
+                        <p class="m-l-10">หน่วยงานหรือบริษัท</p>
             </div>
             <div class="header_content">
                 <h1>หน่วยงานหรือบริษัท</h1>
@@ -158,17 +158,19 @@
                                         </td>
 
                                         <td>
-                                                <button type="button" class="btn btn-sm editbtn btn-primary"
+                                                <a type="button"  
                                                         data-organizationid="@w.OrganizationId"
                                                         data-organizationcode="@w.OrganizationCode"
                                                         data-organizationname="@w.OrganizationName"
                                                         data-description="@w.Description"
                                                         data-flagactive="@w.FlagActive">
-                                                    Edit
-                                                </button>
+                                                    <i class="fas fa-edit" style="color: #34A5EB; cursor: pointer;"></i>
+                                                </a>
 
-                                                <input type="button" class="btn btn-danger btn-sm deletebtn"
+                                                <a type="button" style="cursor: pointer;"
                                                        onclick="OpenConfirmDeleteModal(@w.OrganizationId)" name="btn_Delete" value="Delete">
+                                                    <i class="fas fa-trash m-l-10 btn_delete-icon "></i>
+                                                       </a>
                                         </td>
 
 

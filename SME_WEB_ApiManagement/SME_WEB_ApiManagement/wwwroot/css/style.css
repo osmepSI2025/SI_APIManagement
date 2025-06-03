@@ -15,6 +15,7 @@
     --color-table: #34A5EB;
     --color_toppic: #247CB3;
     --background-modal: linear-gradient(to right, #255D80, #0F334A);
+    --button-delete: #E86666;
 }
 
 /* Typography and Base Elements */
@@ -176,6 +177,10 @@ body {
     color: #fff;
     background: var(--danger-color);
 }
+.btn_delete-icon {
+    color: var(--button-delete) ;
+}
+
 .btn-primary-all {
     background: var(--button-color);
     padding: 5px 40px;
@@ -329,11 +334,11 @@ body {
 
 /* Margins */
 .m-r-10 {
-    margin-right: 10px;
+    margin-right: 10px !important;
 }
 
 .m-l-10 {
-    margin-left: 10px;
+    margin-left: 10px !important;
 }
 
 .m-t-10 {
@@ -354,10 +359,16 @@ body {
     bottom: 0;
     width: 100%;
 }
-
-.wrap-boder {
-    
-    
+.labelloop {
+display:contents;
+}
+.b-loop {
+margin-bottom:10px
+}
+.input-group {
+margin-bottom:10px
+}
+    .wrap-boder {
 }
 
 .wrap-content {

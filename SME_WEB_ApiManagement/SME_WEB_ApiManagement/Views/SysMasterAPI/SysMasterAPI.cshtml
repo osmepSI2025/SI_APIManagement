@@ -51,8 +51,8 @@
         <div class="wrap-content">
             <div class="header">
                 <div class="nav-navigation">
-                    <p>HOME</p> <p>></p>
-                    <p>API System Master</p>
+                        <p class="m-r-10">HOME</p> <p>></p>
+                        <p class="m-l-10">API System Master</p>
                 </div>
                 <div class="header_content">
                     <h1>API System Master</h1>
@@ -77,10 +77,15 @@
                     </div>
 
                     <div class="col-md-6">
-                        <div><label>Create Date</label></div>
+                            <div><label>วันที่สร้าง</label></div>
                         <input class="form-control" type="date" asp-for="MSystem.CreateDate" />
                       
                     </div>
+                        <div class="col-md-6">
+                            <div><label>วันที่สิ้นสุด</label></div>
+                            <input class="form-control" type="date" />
+
+                        </div>
                  
                 </div>
 
@@ -159,12 +164,12 @@
                                             </td>
 
                                             <td>
-                                                <button type="button" class="btn btn-sm editbtn btn-primary"
+                                                <a type="button"  
                                                         data-id="@w.Id"
                                                         data-systemname="@w.SystemName"
                                                         data-flagactive="@w.FlagActive">
-                                                    Edit
-                                                </button>
+                                                    <i class="fas fa-edit" style="color: #34A5EB; cursor: pointer;"></i>
+                                                </a>
                                               @*   <input type="button" class="btn btn_cancel"
                                                        onclick="OpenConfirmDeleteModal()" name="btn_Delete" value="Delete"> *@
 
@@ -172,8 +177,10 @@
                                            @*      <button class="btn btn-danger btn-sm deletebtn" data-id="@w.Id">
                                                     Delete
                                                 </button> *@
-                                                <input type="button" class="btn btn-danger btn-sm deletebtn"
+                                                <a type="button" style="cursor: pointer;"
                                                        onclick="OpenConfirmDeleteModal(@w.Id)" name="btn_Delete" value="Delete">
+                                                    <i class="fas fa-trash m-l-10 btn_delete-icon "></i>
+                                                       </a>
                                             </td>
 
 
