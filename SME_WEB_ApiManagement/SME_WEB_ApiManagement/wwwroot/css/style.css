@@ -238,20 +238,43 @@ body {
 }
 
 /* Tables */
-.table-stand  th {
-    background: var(--color-table);
-    color: #fff;
-    white-space: nowrap;
-}
-.table-stand tr  {
-    background: var(--primary-color);
-    color: #fff;
-    white-space: nowrap;
+/* ใส่ในไฟล์ .css ของคุณ หรือในแท็ก <style> ในส่วน <head> ของ HTML */
+
+/* กำหนดให้เส้นขอบของเซลล์รวมกันเป็นเส้นเดียว */
+.table-stand {
+    width: 100%; /* ทำให้ตารางกว้างเต็มพื้นที่ที่กำหนด */
+    border-collapse: collapse; /* รวมเส้นขอบของเซลล์ให้เป็นเส้นเดียว */
+    margin-bottom: 20px; /* เว้นระยะห่างด้านล่างตาราง */
 }
 
-.table-stand tr td {
-    white-space: nowrap;
+/* กำหนดเส้นขอบให้กับหัวตาราง (th) และเซลล์ข้อมูล (td) */
+.table-stand th, td {
+    border: 1px solid #ddd; /* เส้นขอบหนา 1px, สีเทาอ่อน */
+    padding: 8px; /* ระยะห่างด้านในของเซลล์ */
+    text-align: left; /* จัดข้อความชิดซ้าย */
 }
+
+/* กำหนดพื้นหลังและสีข้อความสำหรับหัวตาราง (th) */
+    .table-stand th {
+        background-color: #f2f2f2; /* สีพื้นหลังของหัวตาราง */
+        color: #333; /* สีข้อความของหัวตาราง */
+        font-weight: bold; /* ทำให้ตัวอักษรหนา */
+    }
+
+/* (Optional) เพิ่มสีพื้นหลังสลับแถวเพื่อให้ดูง่ายขึ้น */
+.table-stand tr:nth-child(even) {
+    background-color: #f9f9f9; /* สีพื้นหลังสำหรับแถวคู่ */
+}
+
+/* (Optional) เมื่อเมาส์ชี้ (hover) ที่แถว */
+.table-stand tr:hover {
+    background-color: #e6e6e6; /* เปลี่ยนสีพื้นหลังเมื่อเมาส์ชี้ */
+}
+
+
+
+
+ 
 
 /* Tabs */
 .tab {
