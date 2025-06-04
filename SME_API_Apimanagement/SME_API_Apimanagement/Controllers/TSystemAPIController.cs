@@ -2,6 +2,7 @@
 using SME_API_Apimanagement.Entities;
 using SME_API_Apimanagement.Models;
 using SME_API_Apimanagement.Repository;
+using SME_API_Apimanagement.Services;
 
 namespace SME_API_Apimanagement.Controllers
 {
@@ -10,10 +11,14 @@ namespace SME_API_Apimanagement.Controllers
     public class TSystemAPIController : ControllerBase
     {
         private readonly ITSystemAPIRepository _repository;
+        private readonly IMSystemInfoService _mSystemInfoService;
 
-        public TSystemAPIController(ITSystemAPIRepository repository)
+        public TSystemAPIController(ITSystemAPIRepository repository
+            , IMSystemInfoService mSystemInfoService
+            )
         {
             _repository = repository;
+            _mSystemInfoService = mSystemInfoService;
         }
 
         [HttpGet]
@@ -48,8 +53,35 @@ namespace SME_API_Apimanagement.Controllers
         {
             try
             {
+                // CheckSysitemInfoUpsert
+                var msystemInfo = new MSystemInfoModels
+                {
+                    SystemCode = xModels.TSystemAPI.OwnerSystemCode,
+                    ApiKey = xModels.TSystemAPI.ApiKey,
+                    Note = xModels.TSystemAPI.ApiNote,
+                    CreateBy = xModels.TSystemAPI.CreateBy,
+                    ApiPassword = xModels.TSystemAPI.ApiPassword,
+                    ApiUrlProdInbound = xModels.TSystemAPI.ApiUrlProdInbound,
+                    ApiUrlUatInbound = xModels.TSystemAPI.ApiUrlUatInbound
+                    ,
+                    ApiUser = xModels.TSystemAPI.ApiUser
+                    ,
+                    FlagActive = xModels.TSystemAPI.FlagActive
+                    ,
+                    FlagDelete = xModels.TSystemAPI.FlagDelete
+                    ,
+                    CreateDate = xModels.TSystemAPI.CreateDate
+                    ,
+                    UpdateBy = xModels.TSystemAPI.UpdateBy
+                    ,
+                    UpdateDate = xModels.TSystemAPI.UpdateDate
+                    ,
+                    Id = xModels.TSystemAPI.Id
+                };
+                var systemInfo = await _mSystemInfoService.CheckSysitemInfoUpsert(msystemInfo);
+
                 int xdata = await _repository.UpsertSystemApi(xModels); // ใช้ await
-                
+
                 return Ok(xdata); // คืนค่า 200 พร้อมข้อมูล
             }
             catch (Exception ex)
@@ -58,7 +90,7 @@ namespace SME_API_Apimanagement.Controllers
             }
         }
 
-   
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] TSystemApiMapping api)
         {
@@ -77,6 +109,14 @@ namespace SME_API_Apimanagement.Controllers
             existing.FlagActive = api.FlagActive;
             existing.UpdateBy = api.UpdateBy;
             existing.UpdateDate = DateTime.UtcNow;
+            existing.ApiUrlProdInbound = api.ApiUrlProdInbound;
+            existing.ApiUrlUatInbound = api.ApiUrlUatInbound;
+            existing.ApiUser = api.ApiUser;
+            existing.ApiPassword = api.ApiPassword;
+            existing.ApiServiceType = api.ApiServiceType;
+            existing.ApiUrlProdOutbound = api.ApiUrlProdOutbound;
+            existing.ApiUrlUatOutbound = api.ApiUrlUatOutbound;
+            
 
             await _repository.UpdateAsync(existing);
             return NoContent();
@@ -93,7 +133,7 @@ namespace SME_API_Apimanagement.Controllers
         [Route("GetTSystemMappingBySearch")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<List<MSystemModels>>> GetRegisterBySearch(MSystemModels xModels)
+        public async Task<ActionResult<List<MSystemModels>>> GetTSystemMappingBySearch(MSystemModels xModels)
         {
             try
             {
@@ -110,7 +150,7 @@ namespace SME_API_Apimanagement.Controllers
                 return BadRequest(new { message = ex.Message }); // คืน 400 พร้อมข้อความข้อผิดพลาด
             }
         }
-       
+
     }
 
 }

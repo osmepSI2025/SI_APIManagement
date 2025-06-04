@@ -1,16 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SME_API_Apimanagement.Entities;
 using SME_API_Apimanagement.Models;
+using SME_API_Apimanagement.Services;
 
 namespace SME_API_Apimanagement.Repository
 {
     public class TSystemAPIRepository : ITSystemAPIRepository
     {
         private readonly ApiMangeDBContext _context;
+        private readonly IMSystemInfoService _mSystemInfoService;
 
-        public TSystemAPIRepository(ApiMangeDBContext context)
+        public TSystemAPIRepository(ApiMangeDBContext context
+            ,IMSystemInfoService mSystemInfoService)
         {
             _context = context;
+            _mSystemInfoService = mSystemInfoService
+              ;
         }
 
         public async Task<IEnumerable<TSystemApiMapping>> GetAllAsync() =>
@@ -58,7 +63,6 @@ namespace SME_API_Apimanagement.Repository
         public async Task<int> UpsertSystemApi(UpSertSystemApiModels xModels)
         {
             int success = 0;
-
             try
             {
                 var result = await GetByIdAsync(xModels.TSystemAPI.Id); // เรียกใช้ await
@@ -85,6 +89,22 @@ namespace SME_API_Apimanagement.Repository
                         CreateDate = DateTime.Now
                         ,
                         CreateBy = xModels.TSystemAPI.CreateBy
+                        ,ApiPassword = xModels.TSystemAPI.ApiPassword
+                        ,ApiServiceType = xModels.TSystemAPI.ApiServiceType
+                        ,ApiUrlProdInbound = xModels.TSystemAPI.ApiUrlProdInbound
+                        ,ApiUrlProdOutbound = xModels.TSystemAPI.ApiUrlProdOutbound
+                        ,ApiUrlUatInbound = xModels.TSystemAPI.ApiUrlUatInbound
+                        ,ApiUrlUatOutbound = xModels.TSystemAPI.ApiUrlUatOutbound
+                        ,ApiUser = xModels.TSystemAPI.ApiUser
+                        ,ApiResponseDescription = xModels.TSystemAPI.ApiResponseDescription
+                        ,ApiRequestDescription = xModels.TSystemAPI.ApiRequestDescription
+                        ,ApiRequestParamater = xModels.TSystemAPI.ApiRequestParamater
+                        ,ApiRequestParamaterType = xModels.TSystemAPI.ApiRequestParamaterType
+                        ,ApiResponseParamater = xModels.TSystemAPI.ApiResponseParamater
+                        ,ApiResponseParamaterType = xModels.TSystemAPI.ApiResponseParamaterType
+                       
+                        ,EndPoint = xModels.TSystemAPI.EndPoint
+                        ,
                     };
                     var updatex = UpdateAsync(xRaw);
                 }
@@ -107,6 +127,23 @@ namespace SME_API_Apimanagement.Repository
                         CreateDate = DateTime.Now,
                         CreateBy = xModels.TSystemAPI.CreateBy,
                         UpdateBy = xModels.TSystemAPI.CreateBy
+                        ,ApiPassword = xModels.TSystemAPI.ApiPassword
+                        ,ApiServiceType = xModels.TSystemAPI.ApiServiceType
+                        ,
+                        ApiUrlProdInbound = xModels.TSystemAPI.ApiUrlProdInbound
+                        ,ApiUrlProdOutbound = xModels.TSystemAPI.ApiUrlProdOutbound
+                        ,ApiUrlUatInbound = xModels.TSystemAPI.ApiUrlUatInbound
+                        , EndPoint = xModels.TSystemAPI.EndPoint
+                        ,ApiUrlUatOutbound = xModels.TSystemAPI.ApiUrlUatOutbound
+                        ,ApiUser = xModels.TSystemAPI.ApiUser
+                        ,ApiResponseDescription = xModels.TSystemAPI.ApiResponseDescription
+                        ,ApiRequestDescription = xModels.TSystemAPI.ApiRequestDescription
+                        ,ApiRequestParamater = xModels.TSystemAPI.ApiRequestParamater
+                        ,ApiRequestParamaterType = xModels.TSystemAPI.ApiRequestParamaterType
+                        ,ApiResponseParamater = xModels.TSystemAPI.ApiResponseParamater
+                        ,ApiResponseParamaterType = xModels.TSystemAPI.ApiResponseParamaterType
+                
+
                     };
 
                     _context.TSystemApiMappings.Add(xRaw);
@@ -142,14 +179,30 @@ namespace SME_API_Apimanagement.Repository
                                  ApiRequestExample = r.ApiRequestExample,
                                  ApiResponseExample = r.ApiResponseExample,
                                  ApiServiceName = r.ApiServiceName,
-                                 //ApiUrlProd = r.ApiUrlProd,
-                                 //ApiUrlUat = r.ApiUrlUat,
+                               
                                  CreateBy = r.CreateBy,
                                  FlagDelete = r.FlagDelete,
                                  UpdateBy = r.UpdateBy,
                                  ApiKey = r.ApiKey,
                                  CreateDate = r.CreateDate,
                                  UpdateDate = r.UpdateDate,
+                                   ApiPassword = r.ApiPassword,
+                                    ApiServiceType = r.ApiServiceType,
+                                     ApiUrlProdInbound = r.ApiUrlProdInbound
+                                     , ApiUrlProdOutbound = r.ApiUrlProdOutbound
+                                      ,ApiUrlUatInbound = r.ApiUrlUatInbound
+                                      ,ApiUrlUatOutbound = r.ApiUrlUatOutbound
+                                      , ApiUser = r.ApiUser
+                                      , ApiResponseDescription = r.ApiResponseDescription
+                                      , ApiRequestDescription = r.ApiRequestDescription
+                                      ,ApiRequestParamater = r.ApiRequestParamater
+                                      ,ApiRequestParamaterType = r.ApiRequestParamaterType
+                                      ,ApiResponseParamater = r.ApiResponseParamater
+                                      ,ApiResponseParamaterType = r.ApiResponseParamaterType
+                                    
+                                      ,EndPoint = r.EndPoint
+
+
 
                              }).AsQueryable(); // ทำให้ Query เป็น IQueryable
 

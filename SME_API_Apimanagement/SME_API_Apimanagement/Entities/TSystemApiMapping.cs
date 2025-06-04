@@ -23,9 +23,21 @@ public partial class TSystemApiMapping
 
     public string? ApiKey { get; set; }
 
+    public string? ApiRequestParamaterType { get; set; }
+
+    public string? ApiRequestParamater { get; set; }
+
     public string? ApiRequestExample { get; set; }
 
+    public string? ApiRequestDescription { get; set; }
+
+    public string? ApiResponseDescription { get; set; }
+
     public string? ApiResponseExample { get; set; }
+
+    public string? ApiResponseParamaterType { get; set; }
+
+    public string? ApiResponseParamater { get; set; }
 
     public string? ApiNote { get; set; }
 
@@ -46,4 +58,6 @@ public partial class TSystemApiMapping
     public string? ApiUrlProdOutbound { get; set; }
 
     public string? ApiUrlUatOutbound { get; set; }
+
+    public string? EndPoint { get; set; }
 }

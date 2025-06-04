@@ -50,6 +50,8 @@ namespace SME_API_Apimanagement
 
              builder.Services.AddScoped<ITErrorApiLogRepository, TErrorApiLogRepository>();
             builder.Services.AddScoped<ITErrorApiLogService, TErrorApiLogService>();
+            builder.Services.AddScoped<IMSystemInfoRepository, MSystemInfoRepository>();
+            builder.Services.AddScoped<IMSystemInfoService, MSystemInfoService>();
 
             builder.Services.AddScoped<IApiInformationRepository, ApiInformationRepository>();
             builder.Services.AddScoped<ICallAPIService, CallAPIService>(); // Register ICallAPIService with CallAPIService
