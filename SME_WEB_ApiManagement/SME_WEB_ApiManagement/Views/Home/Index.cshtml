@@ -8,6 +8,7 @@
     // {
     //     result = System.Text.Encoding.UTF8.GetString(sessionName);
     // }
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 <style>
     .card-box div {
@@ -101,13 +102,24 @@
               
             </div>
         </div>
+       
         <div class="row ">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="card-box">
+                    <a id="picjob" runat="server" href="../SysMasterAPI/SysMasterAPI">
+                        <div>
+                            <img src="~/img/system.png" alt="">
+                            <span>API Inbound</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
             <div class="col-lg-3 col-md-6 .col-sm-12">
                 <div class="card-box">
                     <a id="PicEmp" href="../RegisterAPI/RegisterList" runat="server">
                         <div>
                             <img src="~/img/registered.png" alt="">
-                            <span>API Register</span>
+                            <span>API Outbound</span>
                         </div>
                     </a>
                 </div>
@@ -132,16 +144,7 @@
                     </a>
                 </div>
             </div> *@
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="card-box">
-                    <a id="picjob" runat="server" href="../SysMasterAPI/SysMasterAPI">
-                        <div>
-                            <img src="~/img/system.png" alt="">
-                            <span>API System Master</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
+           
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="card-box">
                     <a id="picjob" runat="server" href="../APIManagement/AgencyCompany">

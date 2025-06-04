@@ -106,7 +106,7 @@
                             </div>
                             <div class="col-md-6">
 
-                                <input class="form-control" id="TSystemAPI_ApiUrlProd"  type="text" placeholder="https:..." asp-for="TSystemAPI.ApiUrlProd" />
+                                <input class="form-control" id="TSystemAPI_ApiUrlProd"  type="text" placeholder="https:..." asp-for="TSystemAPI.ApiUrlProdInbound" />
 
                             </div>
 
@@ -115,7 +115,7 @@
 
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" id="TSystemAPI_ApiUrlUat"  type="text" placeholder="https://..." asp-for="TSystemAPI.ApiUrlUat" />
+                                <input class="form-control" id="TSystemAPI_ApiUrlUat"  type="text" placeholder="https://..." asp-for="TSystemAPI.ApiUrlUatInbound" />
 
                             </div>
                             <div class="col-md-3 offset-md-3">
@@ -213,10 +213,10 @@
                                                     @w.ApiServiceName
                                                 </td>
                                                 <td class="align_text" style="width:auto">
-                                                    @w.ApiUrlProd
+                                                @*     @w.ApiUrlProd *@
                                                 </td>
                                                 <td class="align_text" style="width:auto">
-                                                    @(w.FlagActive ?? false ? "ใช้งาน" : "ปิดการใช้งาน")
+                                                    @(w.FlagActive ? "ใช้งาน" : "ปิดการใช้งาน")
                                                 </td>
                                                 <td class="align_text" style="width:auto">
                                                     @(w.CreateDate.HasValue ? w.CreateDate.Value.ToString("dd/MM/yyyy") : "-")
@@ -230,8 +230,8 @@
                                                             data-id="@w.Id"
                                                             data-method="@w.ApiMethod"
                                                             data-service="@w.ApiServiceName"
-                                                            data-prod="@w.ApiUrlProd"
-                                                            data-uat="@w.ApiUrlUat"
+                                                          @*   data-prod="@w.ApiUrlProd"
+                                                            data-uat="@w.ApiUrlUat" *@
                                                             data-request="@w.ApiRequestExample"
                                                             data-response="@w.ApiResponseExample"
                                                             data-note="@w.ApiNote">

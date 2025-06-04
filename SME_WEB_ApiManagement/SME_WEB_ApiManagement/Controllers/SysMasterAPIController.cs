@@ -112,14 +112,160 @@ namespace SME_WEB_ApiManagement.Controllers
                 return View(result);
             }
         }
-        public IActionResult SubSysMasterAPI()
+        public async Task<IActionResult> SubSysMasterAPI(string systemcode)
         {
-            return View();
+            var result = new ViewSystemApiModels();
+            try {
+                if (systemcode != "")
+                {
+                    // get data tsystemlist
+                    return View(result);
+                }
+                else
+                {
+                    return View(result);
+                }
+            } catch (Exception ex) 
+            {
+                return View(result);
+            }
+          
+            
+        }
+        public IActionResult SysMasterAPIConnectInbound(ViewSystemApiModels vm, string previous, string first, string next, string last, string hidcurrentpage, string hidtotalpage,
+
+            string searchNews = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null, string SystemCode = null
+            , string sortColumn = null, string sortOrder = null,string saveSubData =null)
+        {
+            #region panging
+            int curpage = 0;
+            int totalpage = 0;
+            ViewSystemApiModels result = new ViewSystemApiModels();
+
+            if (!string.IsNullOrEmpty(hidcurrentpage)) curpage = Convert.ToInt32(hidcurrentpage);
+            if (!string.IsNullOrEmpty(hidtotalpage)) totalpage = Convert.ToInt32(hidtotalpage);
+            if (!string.IsNullOrEmpty(first)) currentPageNumber = 1;
+            else if (!string.IsNullOrEmpty(previous)) currentPageNumber = (curpage == 1) ? 1 : curpage - 1;
+            else if (!string.IsNullOrEmpty(next)) currentPageNumber = (curpage == totalpage) ? totalpage : curpage + 1;
+            else if (!string.IsNullOrEmpty(last)) currentPageNumber = totalpage;
+
+            int PageSizeDummy = PageSize;
+            int totalCount = 0;
+            PageSize = PageSizeDummy;
+            #endregion
+            // 
+
+            try
+            {
+
+                if (!string.IsNullOrEmpty(saveData))
+                {
+                    if (vm.TSystemAPI != null)
+                    {
+                        MSystemInfoModels um = new MSystemInfoModels();
+                       um.Note = vm.TSystemAPI.ApiNote;
+                        um.ApiUrlProdInbound = vm.TSystemAPI.ApiUrlProdInbound;
+                        um.ApiUrlUatInbound = vm.TSystemAPI.ApiUrlUatInbound;
+                        um.ApiUser = vm.TSystemAPI.ApiUser;
+                        um.ApiPassword = vm.TSystemAPI.ApiPassword;
+                        um.ApiKey = vm.TSystemAPI.ApiKey;
+                        um.SystemCode = vm.TSystemAPI.OwnerSystemCode;
+                        um.FlagActive = vm.TSystemAPI.FlagActive;
+                        um.FlagDelete = "N"; // default N
+                        um.CreateBy = "system"; // ใช้ชื่อผู้ใช้ที่ล็อกอินปัจจุบัน
+                        um.CreateDate = DateTime.Now; // ใช้วันที่ปัจจุบัน
+                       
+                        var Upsert = SystemDAO.MSystemInfoUpsertSystem(um, API_Path_Main + API_Path_Sub, null);
+
+                        return RedirectToAction("SysMasterAPIConnectInbound", "SysMasterAPI", new { SystemCode = vm.TSystemAPI.OwnerSystemCode });
+                    }
+                }
+                if (!string.IsNullOrEmpty(saveSubData))
+                {
+                    if (vm.TSystemAPI != null)
+                    {
+                        UpSerTSystemApiMappingModels um = new UpSerTSystemApiMappingModels();
+                        um.TSystemAPI = vm.TSystemAPI;
+                        // um.LSystem = vm.LSystem;
+
+                        // insert/update TB register
+                        var Upsert = SystemDAO.UpsertSystemApi(um, API_Path_Main + API_Path_Sub, null);
+
+                        return RedirectToAction("SysMasterAPIConnectInbound", "SysMasterAPI", new { SystemCode = vm.TSystemAPI.OwnerSystemCode });
+                    }
+                }
+                else if (!string.IsNullOrEmpty(editData))
+                {
+
+                }
+                else if (!string.IsNullOrEmpty(cancelData))
+                {
+
+                }
+                else if ((!string.IsNullOrEmpty(SystemCode)) && (string.IsNullOrEmpty(sortColumn)) && (string.IsNullOrEmpty(sortOrder)))
+                {
+                    TSystemApiMappingModels ma = new TSystemApiMappingModels();
+
+                    ma.OwnerSystemCode = SystemCode;
+                    result.TSystemAPI = ma;
+                    // list data Tsystem by Owner
+                    MSystemModels ms = new MSystemModels();
+                    ms.SystemCode = SystemCode;
+                    result.LSysApi = SystemDAO.GetTSystemMappingBySearch(ms, API_Path_Main + API_Path_Sub, null);
+                    result.MSystemInfo = SystemDAO.GetSystemInfoByCode(SystemCode, API_Path_Main + API_Path_Sub, null);
+                }
+                else if (((!string.IsNullOrEmpty(sortColumn)) || (!string.IsNullOrEmpty(sortOrder))) && (!string.IsNullOrEmpty(SystemCode)))
+                {
+                    sortColumn ??= "Id";
+                    sortOrder = sortOrder == "asc" ? "desc" : "asc"; // เปลี่ยน asc <-> desc
+
+                    MSystemModels ms = new MSystemModels();
+                    ms.SystemCode = SystemCode;
+
+                    var data = SystemDAO.GetTSystemMappingBySearch(ms, API_Path_Main + API_Path_Sub, null);
+
+
+                    var sortedData = sortColumn switch
+                    {
+                        "Name" => sortOrder == "asc" ? data.OrderBy(x => x.ApiServiceName) : data.OrderByDescending(x => x.ApiServiceName),
+                        "CreatedDate" => sortOrder == "asc" ? data.OrderBy(x => x.CreateDate) : data.OrderByDescending(x => x.CreateDate),
+                        _ => sortOrder == "asc" ? data.OrderBy(x => x.Id) : data.OrderByDescending(x => x.Id),
+                    };
+                    result.LSysApi = sortedData.ToList(); // ✅ แปลงเป็น List<T>
+                }
+                else
+                {
+
+                }
+                #region dropdown 
+                //  result.LSystem = SystemDAO.GetSystem(API_Path_Main + API_Path_Sub, null);
+
+                result.vDdlStatus = Service_CenterDAO.GetLookups("STATUS", API_Path_Main + API_Path_Sub, null);
+                result.vDdlSystem = Service_CenterDAO.GetDropdownSystem(API_Path_Main + API_Path_Sub, null);
+                result.vDdlMethodApi = Service_CenterDAO.GetLookups("METHODAPI", API_Path_Main + API_Path_Sub, null);
+
+
+                ViewBag.vDdlStatus = new SelectList(result.vDdlStatus.DropdownList.OrderBy(x => x.Code), "Code", "Name");
+                ViewBag.vDdlSystem = new SelectList(result.vDdlSystem.DropdownList.OrderBy(x => x.Code), "Code", "Name");
+                ViewBag.vDdlMethodApi = new SelectList(result.vDdlMethodApi.DropdownList.OrderBy(x => x.Code), "Code", "Name");
+
+                //
+                ViewBag.SortColumn = sortColumn;
+                ViewBag.SortOrder = sortOrder;
+                ViewBag.SystemCode = SystemCode; // ส่งค่า SystemCode ไปที่ View
+                #endregion dropdown
+                return View(result);
+            }
+            catch (Exception)
+            {
+                return View(result);
+            }
+
         }
         public IActionResult SysMasterAPIConnect(ViewSystemApiModels vm, string previous, string first, string next, string last, string hidcurrentpage, string hidtotalpage,
 
-            string searchNews = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null, string SystemCode = null
-            , string sortColumn = null, string sortOrder = null)
+    string searchNews = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null, string SystemCode = null
+    , string sortColumn = null, string sortOrder = null)
         {
             #region panging
             int curpage = 0;

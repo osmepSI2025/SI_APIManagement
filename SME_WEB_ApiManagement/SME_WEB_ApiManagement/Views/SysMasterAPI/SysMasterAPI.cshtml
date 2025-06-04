@@ -256,7 +256,11 @@
                             {
                                 <tr>
                                     <td>@index</td>
-                                    <td>@w.SystemName</td>
+                                    <td>
+                                        <a href="@Url.Action("SysMasterAPIConnectInbound", "SysMasterAPI", new { systemcode = w.SystemCode })" style="text-decoration: underline; color: #2196f3; cursor: pointer;">
+                                            @w.SystemName
+                                        </a>
+                                    </td>
                                     <td>
                                         <span class="@(w.FlagActive ? "status-active" : "status-inactive")">
                                             @(w.FlagActive ? "ใช้งาน" : "ไม่ใช้งาน")

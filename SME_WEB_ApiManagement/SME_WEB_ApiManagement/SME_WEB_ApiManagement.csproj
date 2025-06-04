@@ -16,6 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Views\SysMasterAPI\SysMasterAPIConnectInbound - Copy.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Views\Shared\Error.cshtml" />
     <None Include="Views\Shared\_Layout.cshtml" />
     <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
@@ -67,5 +71,8 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
-
+	<PropertyGroup>
+		<VSEnvironment>Development</VSEnvironment>
+		<BrowserRemoteDebugging>false</BrowserRemoteDebugging>
+	</PropertyGroup>
 </Project>

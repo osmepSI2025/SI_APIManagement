@@ -530,5 +530,83 @@ namespace SME_WEB_ApiManagement.DAO
                 return null;
             }
         }
+        public static MSystemInfoModels? GetSystemInfoByCode(string syscode = null, string apipath = null, string TokenStr = null)
+        {
+            try
+            {
+                var model = new MSystemInfoModels();
+
+                APIpath = apipath + "MSystemInfo/" + syscode;
+                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(APIpath);
+                httpWebRequest.ContentType = "application/json";
+                //  httpWebRequest.Headers.Add("Authorization", "Bearer " + TokenStr);
+                httpWebRequest.Method = "GET";
+
+                try
+                {
+                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+
+                        var result = streamReader.ReadToEnd();
+                        model = JsonConvert.DeserializeObject<MSystemInfoModels>(result);
+                        if (model == null)
+                        {
+                            return null;
+                        }
+                        return model;
+
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex) { return null; }
+           
+        }
+        public static int? MSystemInfoUpsertSystem(MSystemInfoModels vm = null, string apipath = null, string TokenStr = null)
+        {
+
+
+            APIpath = apipath + "MSystemInfo/UpsertSystemInfo";
+            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(APIpath);
+            httpWebRequest.ContentType = "application/json";
+            //  httpWebRequest.Headers.Add("Authorization", "Bearer " + TokenStr);
+            httpWebRequest.Method = "POST";
+            int? Llist = 0;
+            try
+            {
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    var Req = vm;
+
+
+                    var json = JsonConvert.SerializeObject(Req, Formatting.Indented);
+
+                    streamWriter.Write(json);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+
+                    var result = streamReader.ReadToEnd();
+                    Llist = JsonConvert.DeserializeObject<int?>(result);
+                    return Llist;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
     }
 }
