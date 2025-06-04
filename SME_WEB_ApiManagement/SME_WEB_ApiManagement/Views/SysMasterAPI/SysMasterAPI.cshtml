@@ -351,4 +351,29 @@
             </div>
         </div>
     </div>
+    <!-- Confirm Delete Modal -->
+    <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ViewCancelModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="min-width: 40%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reqDetailModalLabel">Confirm Delete</h5>
+                    <button type="button" class="close button_close" data-dismiss="modal" aria-label="Close">
+                        <span class="x-sign" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="card" style="margin-top: 1px;">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Are you sure you want to Delete this item?</label>
+                            <input type="hidden" id="TArrivalDetaiModels_Id" asp-for="MSystem.Id" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer n-border" style="align-self: center;">
+                    <button class="btn btn_search text-color-botton m-r-10" name="DeleteData" id="DeleteData" value="DeleteData">Submit</button>
+                    <button class="btn btn_cancel" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 }
