@@ -13,9 +13,9 @@ public partial class TSystemApiMapping
 
     public string? ApiMethod { get; set; }
 
-    public string? ApiUrlProd { get; set; }
+    public string? ApiUrlProdInbound { get; set; }
 
-    public string? ApiUrlUat { get; set; }
+    public string? ApiUrlUatInbound { get; set; }
 
     public string? ApiUser { get; set; }
 
@@ -42,4 +42,8 @@ public partial class TSystemApiMapping
     public DateTime? UpdateDate { get; set; }
 
     public string? ApiServiceType { get; set; }
+
+    public string? ApiUrlProdOutbound { get; set; }
+
+    public string? ApiUrlUatOutbound { get; set; }
 }

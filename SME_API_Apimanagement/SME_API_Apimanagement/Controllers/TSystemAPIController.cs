@@ -5,7 +5,7 @@ using SME_API_Apimanagement.Repository;
 
 namespace SME_API_Apimanagement.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/SYS-API/[controller]")]
     [ApiController]
     public class TSystemAPIController : ControllerBase
     {
@@ -68,8 +68,8 @@ namespace SME_API_Apimanagement.Controllers
             existing.OwnerSystemCode = api.OwnerSystemCode;
             existing.ApiServiceName = api.ApiServiceName;
             existing.ApiMethod = api.ApiMethod;
-            existing.ApiUrlProd = api.ApiUrlProd;
-            existing.ApiUrlUat = api.ApiUrlUat;
+            //existing.ApiUrlProd = api.ApiUrlProd;
+            //existing.ApiUrlUat = api.ApiUrlUat;
             existing.ApiKey = api.ApiKey;
             existing.ApiRequestExample = api.ApiRequestExample;
             existing.ApiResponseExample = api.ApiResponseExample;

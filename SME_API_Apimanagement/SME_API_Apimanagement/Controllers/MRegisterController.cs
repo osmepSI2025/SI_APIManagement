@@ -3,7 +3,7 @@ using SME_API_Apimanagement.Entities;
 using SME_API_Apimanagement.Models;
 using SME_API_Apimanagement.Repository;
 
-[Route("api/[controller]")]
+   [Route("api/SYS-API/[controller]")]
 [ApiController]
 public class MRegisterController : ControllerBase
 {

@@ -38,21 +38,31 @@ namespace SME_API_Apimanagement.Repository
             entity.FlagActive = model.FlagActive;
             entity.UpdateDate = DateTime.Now;
             entity.UpdateBy = model.UpdateBy;
-
+            entity.OwnerSystemCode = model.OwnerSystemCode;
             return await _context.SaveChangesAsync();
         }
 
-
-        public async Task DeleteAsync(int id)
+        public async Task<int> DeleteAsync(int id)
         {
-            var system = await _context.MSystems.FindAsync(id);
-            if (system != null)
+            try
             {
-                system.FlagDelete = "Y";
-                system.UpdateDate = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
+                var system = await _context.MSystems.FindAsync(id);
+                if (system != null)
+                {
+                    system.FlagDelete = "Y";
+                    system.UpdateDate = DateTime.UtcNow;
+                    var xint = await _context.SaveChangesAsync();
+                    return xint; // Return the number of rows updated
+                }
+                return 0; // Return 0 if the system is not found
+            }
+            catch (Exception ex)
+            {
+                // Handle the error here, e.g., log the error
+                return 0; // Return 0 if an error occurs
             }
         }
+
         public async Task<int> UpsertSystem(MSystemModels xModels)
         {
             try
@@ -67,7 +77,8 @@ namespace SME_API_Apimanagement.Repository
                         Id = result.Id,
                         SystemName = xModels.SystemName,
                         FlagActive = xModels.FlagActive,
-                        UpdateBy = xModels.CreateBy
+                        UpdateBy = xModels.CreateBy,
+                        OwnerSystemCode = xModels.OwnerSystemCode
                     };
 
                     await UpdateAsync(xRaw);
@@ -89,7 +100,8 @@ namespace SME_API_Apimanagement.Repository
                         UpdateDate = DateTime.Now,
                         CreateDate = DateTime.Now,
                         CreateBy = xModels.CreateBy,
-                        UpdateBy = xModels.CreateBy
+                        UpdateBy = xModels.CreateBy,
+                        OwnerSystemCode = xModels.OwnerSystemCode
                     };
 
                     _context.MSystems.Add(xRaw);
@@ -104,13 +116,12 @@ namespace SME_API_Apimanagement.Repository
             }
         }
 
-
         public async Task<List<MSystemModels>> GetSystemBySearch(MSystemModels xModels)
         {
             try
             {
-                var query = (from s in _context.MSystems where s.FlagDelete=="N"
-
+                var query = (from s in _context.MSystems
+                             where s.FlagDelete == "N"
                              select new MSystemModels
                              {
                                  Id = s.Id,
@@ -123,7 +134,7 @@ namespace SME_API_Apimanagement.Repository
                                  SystemName = s.SystemName,
                                  CreateDate = s.CreateDate,
                                  UpdateDate = s.UpdateDate,
-
+                                 OwnerSystemCode = s.OwnerSystemCode
                              }).AsQueryable(); // ทำให้ Query เป็น IQueryable
 
                 // Apply Filters
@@ -131,10 +142,10 @@ namespace SME_API_Apimanagement.Repository
                 {
                     query = query.Where(u => u.SystemName.Contains(xModels.SystemName));
                 }
-                if (xModels?.FlagActive != null)
-                {
-                    query = query.Where(u => u.FlagActive == xModels.FlagActive);
-                }
+                //if (xModels?.FlagActive != null)
+                //{
+                //    query = query.Where(u => u.FlagActive == xModels.FlagActive);
+                //}
                 if (xModels?.CreateDate != null)
                 {
                     query = query.Where(u => u.CreateDate.Value.Date == xModels.CreateDate.Value.Date);
@@ -150,5 +161,4 @@ namespace SME_API_Apimanagement.Repository
             }
         }
     }
-
 }

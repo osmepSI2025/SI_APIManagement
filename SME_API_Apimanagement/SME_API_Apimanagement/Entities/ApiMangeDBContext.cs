@@ -15,7 +15,11 @@ public partial class ApiMangeDBContext : DbContext
     {
     }
 
+    public virtual DbSet<MApiInformation> MApiInformations { get; set; }
+
     public virtual DbSet<MLookup> MLookups { get; set; }
+
+    public virtual DbSet<MMenu> MMenus { get; set; }
 
     public virtual DbSet<MOrganization> MOrganizations { get; set; }
 
@@ -26,6 +30,8 @@ public partial class ApiMangeDBContext : DbContext
     public virtual DbSet<MSystem> MSystems { get; set; }
 
     public virtual DbSet<TApiPermisionMapping> TApiPermisionMappings { get; set; }
+
+    public virtual DbSet<TEmployeeRole> TEmployeeRoles { get; set; }
 
     public virtual DbSet<TErrorApiLog> TErrorApiLogs { get; set; }
 
@@ -43,6 +49,26 @@ public partial class ApiMangeDBContext : DbContext
     {
         modelBuilder.HasDefaultSchema("SMEAPI");
 
+        modelBuilder.Entity<MApiInformation>(entity =>
+        {
+            entity.ToTable("M_ApiInformation", "dbo");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.ApiKey).HasMaxLength(150);
+            entity.Property(e => e.AuthorizationType).HasMaxLength(50);
+            entity.Property(e => e.Bearer).HasColumnType("ntext");
+            entity.Property(e => e.ContentType).HasMaxLength(150);
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
+            entity.Property(e => e.MethodType).HasMaxLength(50);
+            entity.Property(e => e.Password).HasMaxLength(150);
+            entity.Property(e => e.ServiceNameCode).HasMaxLength(250);
+            entity.Property(e => e.ServiceNameTh).HasMaxLength(250);
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
+            entity.Property(e => e.Urldevelopment).HasColumnName("URLDevelopment");
+            entity.Property(e => e.Urlproduction).HasColumnName("URLProduction");
+            entity.Property(e => e.Username).HasMaxLength(50);
+        });
+
         modelBuilder.Entity<MLookup>(entity =>
         {
             entity.ToTable("M_Lookup");
@@ -55,6 +81,25 @@ public partial class ApiMangeDBContext : DbContext
             entity.Property(e => e.LookupDescription).HasMaxLength(50);
             entity.Property(e => e.LookupType).HasMaxLength(150);
             entity.Property(e => e.LookupValue).HasMaxLength(50);
+            entity.Property(e => e.UpdateBy).HasMaxLength(50);
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
+        });
+
+        modelBuilder.Entity<MMenu>(entity =>
+        {
+            entity.HasKey(e => e.MenuId);
+
+            entity.ToTable("M_Menu", "dbo");
+
+            entity.Property(e => e.CreateBy).HasMaxLength(50);
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
+            entity.Property(e => e.FlagActive).HasMaxLength(1);
+            entity.Property(e => e.FlagDelete).HasMaxLength(1);
+            entity.Property(e => e.MenuName).HasMaxLength(50);
+            entity.Property(e => e.MenuUrl)
+                .HasMaxLength(50)
+                .HasColumnName("MenuURL");
+            entity.Property(e => e.Style).HasMaxLength(50);
             entity.Property(e => e.UpdateBy).HasMaxLength(50);
             entity.Property(e => e.UpdateDate).HasColumnType("datetime");
         });
@@ -125,18 +170,9 @@ public partial class ApiMangeDBContext : DbContext
 
             entity.Property(e => e.CreateBy).HasMaxLength(50);
             entity.Property(e => e.CreateDate).HasColumnType("datetime");
-            entity.Property(e => e.FlagActive)
-                .HasMaxLength(10)
-                .IsFixedLength();
-            entity.Property(e => e.FlagDelete)
-                .HasMaxLength(10)
-                .IsFixedLength();
-            entity.Property(e => e.RoleCode)
-                .HasMaxLength(10)
-                .IsFixedLength();
-            entity.Property(e => e.RoleName)
-                .HasMaxLength(10)
-                .IsFixedLength();
+            entity.Property(e => e.FlagDelete).HasMaxLength(50);
+            entity.Property(e => e.RoleCode).HasMaxLength(50);
+            entity.Property(e => e.RoleName).HasMaxLength(150);
             entity.Property(e => e.UpdateBy).HasMaxLength(50);
             entity.Property(e => e.UpdateDate).HasColumnType("datetime");
         });
@@ -148,6 +184,8 @@ public partial class ApiMangeDBContext : DbContext
             entity.Property(e => e.CreateBy).HasMaxLength(50);
             entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.FlagDelete).HasMaxLength(1);
+            entity.Property(e => e.Note).HasMaxLength(500);
+            entity.Property(e => e.OwnerSystemCode).HasMaxLength(50);
             entity.Property(e => e.SystemCode)
                 .HasMaxLength(50)
                 .HasColumnName("System_Code");
@@ -181,6 +219,23 @@ public partial class ApiMangeDBContext : DbContext
             entity.Property(e => e.SystemCode)
                 .HasMaxLength(50)
                 .HasColumnName("System_Code");
+            entity.Property(e => e.UpdateBy).HasMaxLength(50);
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
+        });
+
+        modelBuilder.Entity<TEmployeeRole>(entity =>
+        {
+            entity.ToTable("T_Employee_Roles");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.BusinessUnitId).HasMaxLength(50);
+            entity.Property(e => e.CreateBy).HasMaxLength(50);
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
+            entity.Property(e => e.EmployeeCode).HasMaxLength(50);
+            entity.Property(e => e.PositionId).HasMaxLength(50);
+            entity.Property(e => e.RoleCode)
+                .HasMaxLength(50)
+                .HasColumnName("Role_code");
             entity.Property(e => e.UpdateBy).HasMaxLength(50);
             entity.Property(e => e.UpdateDate).HasColumnType("datetime");
         });
@@ -259,12 +314,18 @@ public partial class ApiMangeDBContext : DbContext
             entity.Property(e => e.ApiServiceType)
                 .HasMaxLength(50)
                 .HasColumnName("API_Service_Type");
-            entity.Property(e => e.ApiUrlProd)
+            entity.Property(e => e.ApiUrlProdInbound)
                 .HasMaxLength(300)
-                .HasColumnName("API_URL_PROD");
-            entity.Property(e => e.ApiUrlUat)
+                .HasColumnName("API_URL_PROD_Inbound");
+            entity.Property(e => e.ApiUrlProdOutbound)
                 .HasMaxLength(300)
-                .HasColumnName("API_URL_UAT");
+                .HasColumnName("API_URL_PROD_Outbound");
+            entity.Property(e => e.ApiUrlUatInbound)
+                .HasMaxLength(300)
+                .HasColumnName("API_URL_UAT_Inbound");
+            entity.Property(e => e.ApiUrlUatOutbound)
+                .HasMaxLength(300)
+                .HasColumnName("API_URL_UAT_Outbound");
             entity.Property(e => e.ApiUser)
                 .HasMaxLength(50)
                 .HasColumnName("API_USER");

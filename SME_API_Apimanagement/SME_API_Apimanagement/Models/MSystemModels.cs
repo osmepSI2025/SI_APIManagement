@@ -22,7 +22,7 @@ namespace SME_API_Apimanagement.Models
 
         public DateTime? UpdateDate { get; set; }
         public bool? IsSelected { get; set; }
-
+        public string? OwnerSystemCode { get; set; }
         public int rowOFFSet { get; set; }
         public int rowFetch { get; set; }
         public string? Token { get; set; }

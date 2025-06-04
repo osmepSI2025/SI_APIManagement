@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace SME_API_Apimanagement.Entities;
 
-public partial class MRole
+public partial class TEmployeeRole
 {
     public int Id { get; set; }
 
+    public string EmployeeCode { get; set; } = null!;
+
     public string? RoleCode { get; set; }
 
-    public string? RoleName { get; set; }
+    public string? BusinessUnitId { get; set; }
 
-    public bool? FlagActive { get; set; }
-
-    public string? FlagDelete { get; set; }
+    public string? PositionId { get; set; }
 
     public string? CreateBy { get; set; }
 

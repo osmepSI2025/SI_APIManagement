@@ -5,7 +5,7 @@ using SME_API_Apimanagement.Repository;
 
 namespace SME_API_Apimanagement.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/SYS-API/[controller]")]
     [ApiController]
     public class MOrganizationController : ControllerBase
     {

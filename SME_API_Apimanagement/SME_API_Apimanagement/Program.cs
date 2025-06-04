@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SME_API_Apimanagement.Entities;
+using SME_API_Apimanagement.Models;
 using SME_API_Apimanagement.Repository;
+using SME_API_Apimanagement.Service;
 using SME_API_Apimanagement.Services;
 using System;
 using System.Text;
@@ -42,6 +44,16 @@ namespace SME_API_Apimanagement
             builder.Services.AddScoped<IMOrganizationRepository, MOrganizationRepository>();
             builder.Services.AddScoped<IMRegisterRepository, MRegisterRepository>();
             builder.Services.AddScoped<IErrorApiLogRepository, ErrorApiLogRepository>();
+            builder.Services.AddScoped<UserManagementRepository>();
+            builder.Services.AddScoped<UserManagementService>();
+            builder.Services.AddScoped<HrEmployeeService>();
+
+             builder.Services.AddScoped<ITErrorApiLogRepository, TErrorApiLogRepository>();
+            builder.Services.AddScoped<ITErrorApiLogService, TErrorApiLogService>();
+
+            builder.Services.AddScoped<IApiInformationRepository, ApiInformationRepository>();
+            builder.Services.AddScoped<ICallAPIService, CallAPIService>(); // Register ICallAPIService with CallAPIService
+            builder.Services.AddHttpClient<CallAPIService>();
             builder.Services.AddScoped<MailService>();
             // Add Swagger Configuration
             builder.Services.AddSwaggerGen(c =>

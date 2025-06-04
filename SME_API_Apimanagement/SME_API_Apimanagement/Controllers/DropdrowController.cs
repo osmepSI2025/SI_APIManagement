@@ -6,7 +6,7 @@ using SME_API_Apimanagement.Repository;
 namespace SME_API_Apimanagement.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/SYS-API/[controller]")]
     public class DropdownController : ControllerBase
     {
         private readonly ApiMangeDBContext _context;

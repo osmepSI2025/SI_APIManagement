@@ -6,7 +6,7 @@ namespace SME_API_Apimanagement.Controllers
 {
   
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/SYS-API/[controller]")]
     public class ApiManangementController : ControllerBase
     {
         [HttpPost()]

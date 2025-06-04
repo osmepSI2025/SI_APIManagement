@@ -5,7 +5,7 @@ using SME_API_Apimanagement.Repository;
 
 namespace SME_API_Apimanagement.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/SYS-API/[controller]")]
     [ApiController]
     public class MSystemController : ControllerBase
     {
@@ -56,10 +56,11 @@ namespace SME_API_Apimanagement.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<int> Delete(int id)
         {
-            await _repository.DeleteAsync(id);
-            return NoContent();
+           var xresult = await _repository.DeleteAsync(id);
+
+            return xresult;
         }
 
         [HttpPost]

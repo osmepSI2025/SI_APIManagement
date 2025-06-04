@@ -24,4 +24,8 @@ public partial class MSystem
     public DateTime? UpdateDate { get; set; }
 
     public int? Runing { get; set; }
+
+    public string? Note { get; set; }
+
+    public string? OwnerSystemCode { get; set; }
 }

@@ -1,6 +1,6 @@
 ﻿namespace SME_API_Apimanagement.Models
 {
-    public class TErrorApiLogModels
+    public class ErrorLogModels
     {
         public int Id { get; set; }
 
@@ -29,21 +29,5 @@
         public string? CreatedBy { get; set; }
 
         public DateTime? Createdate { get; set; }
-        public int rowOFFSet { get; set; }
-        public int rowFetch { get; set; }
-
-        public string? SystemName { get; set; }
-        public string? ApiKey { get; set; }
-    }
-    public class ViewErroApiModels
-    {
-        public vDropdownDTO vDdlSystem { get; set; } = new vDropdownDTO();
-
-        public PagingModel PageModel { get; set; } = new PagingModel();
-        public List<MSystemModels> LSystem { get; set; } = new List<MSystemModels>();
-        public List<TErrorApiLogModels> LError { get; set; } = new List<TErrorApiLogModels>();
-        public TErrorApiLogModels ErrorModel { get; set; } = new TErrorApiLogModels();
-        public int? totalList { get; set; }
-
     }
 }
