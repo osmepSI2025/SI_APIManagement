@@ -1,8 +1,11 @@
+using SME_WEB_ApiManagement.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddScoped<ICallAPIService, CallAPIService>(); // Register ICallAPIService with CallAPIService
+builder.Services.AddHttpClient<CallAPIService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

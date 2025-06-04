@@ -2,16 +2,16 @@
 {
     public class ViewSystemApiModels
     {
-        public vDropdownDTO vDdlSystem { get; set; }
-        public vDropdownDTO vDdlMethodApi { get; set; }
-        public vDropdownDTO vDdlStatus { get; set; }
-        public vDropdownDTO vDdlOrg { get; set; }
-        public PagingModel PageModel { get; set; }
-        public TSystemApiMappingModels TSystemAPI { get; set; }
-        public List<TSystemApiMappingModels> LSysApi { get; set; }
-        public List<MSystemModels> LSystem { get; set; }
-        public MSystemModels MSystem { get; set; }
-        public MSystemModels InsMSystem { get; set; }
+        public vDropdownDTO vDdlSystem { get; set; } = new vDropdownDTO();
+        public vDropdownDTO vDdlMethodApi { get; set; } = new vDropdownDTO();    
+        public vDropdownDTO vDdlStatus { get; set; } = new vDropdownDTO();
+        public vDropdownDTO vDdlOrg { get; set; } = new vDropdownDTO();
+        public PagingModel PageModel { get; set; } = new PagingModel();
+        public TSystemApiMappingModels TSystemAPI { get; set; } = new TSystemApiMappingModels();
+        public List<TSystemApiMappingModels> LSysApi { get; set; } = new List<TSystemApiMappingModels>();
+        public List<MSystemModels> LSystem { get; set; } = new List<MSystemModels>();
+        public MSystemModels MSystem { get; set; } = new MSystemModels();
+        public MSystemModels InsMSystem { get; set; } = new MSystemModels();
     }
     public class UpSerTSystemApiMappingModels
     {

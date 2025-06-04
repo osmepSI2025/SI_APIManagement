@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SME_WEB_ApiManagement.DAO;
 using SME_WEB_ApiManagement.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using SME_WEB_ApiManagement.Services;
 
 namespace SME_WEB_ApiManagement.Controllers
 {
@@ -18,7 +18,11 @@ namespace SME_WEB_ApiManagement.Controllers
         protected int currentPageNumber;
         protected static int PageSize;
         protected static int PageSizMedium;
-        public SysMasterAPIController(ILogger<SysMasterAPIController> logger, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
+        private readonly CallAPIService _callAPIService;
+        public SysMasterAPIController(ILogger<SysMasterAPIController> logger,
+            IConfiguration configuration, IWebHostEnvironment webHostEnvironment
+             , CallAPIService callAPIService)
+
         {
             _logger = logger;
             _configuration = configuration;
@@ -30,11 +34,10 @@ namespace SME_WEB_ApiManagement.Controllers
             PageSizMedium = _configuration.GetValue<Int32>("PageSizMedium");
             currentPageNumber = 1;
             _webHostEnvironment = webHostEnvironment;
-
+            _callAPIService = callAPIService;
 
         }
         public IActionResult SysMasterAPI(ViewSystemApiModels vm, string previous, string first, string next, string last, string hidcurrentpage, string hidtotalpage,
-
             string searchData = null, string clearSearcData = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null)
         {
             #region panging
@@ -51,24 +54,23 @@ namespace SME_WEB_ApiManagement.Controllers
             int PageSizeDummy = PageSize;
             int totalCount = 0;
             PageSize = PageSizeDummy;
-
-
             #endregion End panging
+
             ViewSystemApiModels result = new ViewSystemApiModels();
             try
             {
                 if (!string.IsNullOrEmpty(searchData))
                 {
                     result.LSystem = SystemDAO.GetSystemBySearch(vm.MSystem, API_Path_Main + API_Path_Sub, null);
-                    if (result.LSystem != null) 
+                    if (result.LSystem != null)
                     {
                         totalCount = SystemDAO.GetSystemBySearch(vm.MSystem, API_Path_Main + API_Path_Sub, "Y", 0, 0, null).Count();
-                    } 
+                    }
                     else
                     {
                         totalCount = 0;
                     }
-  
+
                     result.PageModel = Service_CenterDAO.LoadPagingViewModel(totalCount, currentPageNumber, PageSize);
                 }
                 else if (!string.IsNullOrEmpty(clearSearcData))
@@ -80,20 +82,26 @@ namespace SME_WEB_ApiManagement.Controllers
                     int? save = SystemDAO.UpsertSystem(vm.InsMSystem, API_Path_Main + API_Path_Sub, null);
                     return Redirect("SysMasterAPI");
                 }
-                else  if (!string.IsNullOrEmpty(DeleteData)) 
+                else if (!string.IsNullOrEmpty(DeleteData))
                 {
-                    var del= SystemDAO.DeleteSystem(vm.MSystem.Id.ToString(), API_Path_Main + API_Path_Sub, null);
+                    var del = SystemDAO.DeleteSystem(vm.MSystem.Id.ToString(), API_Path_Main + API_Path_Sub, null);
                     return Redirect("SysMasterAPI");
                 }
+                else
                 {
-                    result.LSystem = SystemDAO.GetSystemBySearch(vm.MSystem, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize,null);
-                     totalCount = SystemDAO.GetSystemBySearch(vm.MSystem, API_Path_Main + API_Path_Sub, "Y", 0, 0, null).Count();
+                    MSystemModels model = new MSystemModels();
+                    model.FlagDelete = "N";
+
+                    result.LSystem = SystemDAO.GetSystemBySearch(model, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
+                    totalCount = SystemDAO.GetSystemBySearch(model, API_Path_Main + API_Path_Sub, "Y", 0, 0, null).Count();
                     result.PageModel = Service_CenterDAO.LoadPagingViewModel(totalCount, currentPageNumber, PageSize);
                 }
-             
-                result.vDdlStatus = Service_CenterDAO.GetLookups("STATUS", API_Path_Main + API_Path_Sub, null);
-                result.vDdlOrg = Service_CenterDAO.GetDropdownOrganization(API_Path_Main + API_Path_Sub, null);
 
+                result.vDdlStatus = Service_CenterDAO.GetLookups("STATUS", API_Path_Main + API_Path_Sub, null);
+
+                var serviceCenter = new ServiceCenter(_configuration, _callAPIService);
+                result.vDdlOrg = serviceCenter.GetDdlDepartment(API_Path_Main + API_Path_Sub, "business-units").Result;
+                ViewBag.DDLDepartment = new SelectList(result.vDdlOrg.DropdownList.OrderBy(x => x.Code), "Code", "Name");
 
                 ViewBag.vDdlStatus = new SelectList(result.vDdlStatus.DropdownList.OrderBy(x => x.Code), "Code", "Name");
                 ViewBag.vDdlOrg = new SelectList(result.vDdlOrg.DropdownList.OrderBy(x => x.Code), "Code", "Name");
@@ -103,7 +111,6 @@ namespace SME_WEB_ApiManagement.Controllers
             {
                 return View(result);
             }
-
         }
         public IActionResult SubSysMasterAPI()
         {
@@ -112,7 +119,7 @@ namespace SME_WEB_ApiManagement.Controllers
         public IActionResult SysMasterAPIConnect(ViewSystemApiModels vm, string previous, string first, string next, string last, string hidcurrentpage, string hidtotalpage,
 
             string searchNews = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null, string SystemCode = null
-            , string sortColumn=null, string sortOrder=null)
+            , string sortColumn = null, string sortOrder = null)
         {
             #region panging
             int curpage = 0;
@@ -157,7 +164,7 @@ namespace SME_WEB_ApiManagement.Controllers
                 {
 
                 }
-                else if ((!string.IsNullOrEmpty(SystemCode))&&(string.IsNullOrEmpty(sortColumn)) && (string.IsNullOrEmpty(sortOrder)))
+                else if ((!string.IsNullOrEmpty(SystemCode)) && (string.IsNullOrEmpty(sortColumn)) && (string.IsNullOrEmpty(sortOrder)))
                 {
                     TSystemApiMappingModels ma = new TSystemApiMappingModels();
 
@@ -168,7 +175,7 @@ namespace SME_WEB_ApiManagement.Controllers
                     ms.SystemCode = SystemCode;
                     result.LSysApi = SystemDAO.GetTSystemMappingBySearch(ms, API_Path_Main + API_Path_Sub, null);
                 }
-                else if (((!string.IsNullOrEmpty(sortColumn)) || (!string.IsNullOrEmpty(sortOrder)))&& (!string.IsNullOrEmpty(SystemCode)))
+                else if (((!string.IsNullOrEmpty(sortColumn)) || (!string.IsNullOrEmpty(sortOrder))) && (!string.IsNullOrEmpty(SystemCode)))
                 {
                     sortColumn ??= "Id";
                     sortOrder = sortOrder == "asc" ? "desc" : "asc"; // เปลี่ยน asc <-> desc
@@ -178,7 +185,7 @@ namespace SME_WEB_ApiManagement.Controllers
 
                     var data = SystemDAO.GetTSystemMappingBySearch(ms, API_Path_Main + API_Path_Sub, null);
 
-                  
+
                     var sortedData = sortColumn switch
                     {
                         "Name" => sortOrder == "asc" ? data.OrderBy(x => x.ApiServiceName) : data.OrderByDescending(x => x.ApiServiceName),
@@ -187,9 +194,9 @@ namespace SME_WEB_ApiManagement.Controllers
                     };
                     result.LSysApi = sortedData.ToList(); // ✅ แปลงเป็น List<T>
                 }
-                else 
+                else
                 {
-                
+
                 }
                 #region dropdown 
                 //  result.LSystem = SystemDAO.GetSystem(API_Path_Main + API_Path_Sub, null);
@@ -217,22 +224,16 @@ namespace SME_WEB_ApiManagement.Controllers
 
         }
 
-
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int id)
+        [HttpPost]
+        public JsonResult DeleteSystem(int id)
         {
-            try
-            {
-                string  aaaa =id.ToString();
-              
-
+            // ลบข้อมูลจากฐานข้อมูลหรือ DAO
+            // ตัวอย่าง: สมมติว่ามี MSystemDAO.DeleteSystemById
+            string result = SystemDAO.DeleteSystem(id.ToString(), API_Path_Main + API_Path_Sub, null);
+            if (!string.IsNullOrEmpty(result))
                 return Json(new { success = true });
-            }
-            catch (Exception ex)
-            {
-                // Log the error
-                return Json(new { success = false, message = "Error occurred while deleting item." });
-            }
+            else
+                return Json(new { success = false, message = "ไม่พบระบบหรือเกิดข้อผิดพลาด" });
         }
 
     }

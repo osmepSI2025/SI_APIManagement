@@ -10,7 +10,7 @@ namespace SME_WEB_ApiManagement.Models
 
         public string? SystemName { get; set; }
 
-        public bool? FlagActive { get; set; }
+        public bool FlagActive { get; set; }
 
         public string? FlagDelete { get; set; }
 

@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\ErrorList\**" />
+    <Content Remove="Views\ErrorList\**" />
+    <EmbeddedResource Remove="Views\ErrorList\**" />
+    <None Remove="Views\ErrorList\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Views\Shared\Error.cshtml" />
     <None Include="Views\Shared\_Layout.cshtml" />
     <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
@@ -55,6 +62,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.16" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
