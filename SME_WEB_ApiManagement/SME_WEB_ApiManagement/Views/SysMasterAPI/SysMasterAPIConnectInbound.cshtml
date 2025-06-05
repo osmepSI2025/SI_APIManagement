@@ -1,11 +1,11 @@
 ﻿@model SME_WEB_ApiManagement.Models.ViewSystemApiModels
 @{
-
-    ViewData["Title"] = "System API";
-    var vDdlStatus = @ViewBag.vDdlStatus;
-    var vDdlSystem = ViewBag.vDdlSystem;
-    var vDdlMethodApi = ViewBag.vDdlMethodApi;
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewData["Title"] = "System API";
+    // var vDdlStatus = @ViewBag.vDdlStatus;
+    var vDdlSystem = ViewBag.vDdlSystem;
+  //  var vDdlMethodApi = ViewBag.vDdlMethodApi;
+ 
 }
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -118,87 +118,90 @@
 
                     </div>
                     <div class="line"></div>
-
-                    <div class="table-responsive">
-                        <table class=" table table-stand">
-                            <thead>
-                                <tr>
-
-
-                                    <th scope="col">#</th>
-
-
-                                    <th scope="col">Method</th>
-                                    <th scope="col">End Point</th>
-                                    <th scope="col">สถานะ</th>
-
-                                    <th scope="col"> </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-
-
-
-
-                                <tr>
-
-                                    @if (Model.LSysApi != null)
-                                    {
-
-                                        int Nox = 0;
-                                        @foreach (var w in Model.LSysApi)
-                                        {
+                        @if (@Model.LSysApi.Count != 0)
+                        {
+                            <div class="table-responsive">
+                                <table class=" table table-stand">
+                                    <thead>
                                         <tr>
-                                            <td>
-                                            </td>
-                                            <td class="align_text" style="width:auto">
-                                                @w.ApiMethod
-                                            </td>
-                                            <td class="align_text" style="width:auto">
-                                                @w.ApiUrlProdInbound
-                                            </td>
-                                                <td class="align_text" style="width:auto">
-                                                    @(w.FlagActive ? "ใช้งาน" : "ปิดการใช้งาน")
-                                                </td>
-
-                                            <td>
-                                                <button type="button" class="btn btn-sm editbtn btn-primary"
-                                                        data-id="@w.Id"
-                                                        data-method="@w.ApiMethod"
-                                                        data-service="@w.ApiServiceName"
-                                                        @*            data-prod="@w.ApiUrlProd"
-                                                            data-uat="@w.ApiUrlUat" *@
-                                                        data-request="@w.ApiRequestExample"
-                                                        data-response="@w.ApiResponseExample"
-                                                        data-note="@w.ApiNote">
-                                                    Edit
-                                                </button>
-                                                <!-- ปุ่มลบ -->
-                                                <button class="btn btn-danger btn-sm deletebtn" data-id="@w.Id">
-                                                    Delete
-                                                </button>
-                                            </td>
 
 
+                                            <th scope="col">#</th>
+
+
+                                            <th scope="col">Method</th>
+                                            <th scope="col">End Point</th>
+                                            <th scope="col">สถานะ</th>
+
+                                            <th scope="col"> </th>
                                         </tr>
-                                    }
-                                }
-                                else
-                                {
-                                    <tr id="trNodata" runat="server" visible="false">
-                                        <td colspan="12" valign="middle">
-                                            <b>No Data</b>
-                                        </td>
-                                    </tr>
-                                }
+                                    </thead>
+                                    <tbody>
 
 
 
 
-                            </tbody>
-                        </table>
-                    </div>
+
+                                        <tr>
+
+                                            @if (Model.LSysApi != null && Model.LSysApi.Count != 0)
+                                            {
+
+                                                int Nox = 0;
+                                                @foreach (var w in Model.LSysApi)
+                                                {
+                                                <tr>
+                                                    <td>
+                                                    </td>
+                                                    <td class="align_text" style="width:auto">
+                                                        @w.ApiMethod
+                                                    </td>
+                                                    <td class="align_text" style="width:auto">
+                                                        @w.ApiUrlProdInbound
+                                                    </td>
+                                                    <td class="align_text" style="width:auto">
+                                                        @(w.FlagActive ? "ใช้งาน" : "ปิดการใช้งาน")
+                                                    </td>
+
+                                                    <td>
+                                                        <button type="button" class="btn btn-sm editbtn btn-primary"
+                                                                data-id="@w.Id"
+                                                                data-method="@w.ApiMethod"
+                                                                data-service="@w.ApiServiceName"
+                                                                @*            data-prod="@w.ApiUrlProd"
+                                                            data-uat="@w.ApiUrlUat" *@
+                                                                data-request="@w.ApiRequestExample"
+                                                                data-response="@w.ApiResponseExample"
+                                                                data-note="@w.ApiNote">
+                                                            Edit
+                                                        </button>
+                                                        <!-- ปุ่มลบ -->
+                                                        <button class="btn btn-danger btn-sm deletebtn" data-id="@w.Id">
+                                                            Delete
+                                                        </button>
+                                                    </td>
+
+
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr id="trNodata" runat="server" visible="false">
+                                                <td colspan="12" valign="middle">
+                                                    <b>No Data</b>
+                                                </td>
+                                            </tr>
+                                        }
+
+
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                     
 
                     <button type="button" class="btn btn-link text-primary px-0" style="font-size: 1.6rem; font-weight: 400;" onclick="$('#CreateApiModal').modal('show')">
                         <span style="font-size:2rem; vertical-align:middle;">+</span> เพิ่ม API

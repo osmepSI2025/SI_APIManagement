@@ -226,7 +226,7 @@ namespace SME_WEB_ApiManagement.DAO
             }
             catch (Exception ex)
             {
-                return null;
+                return new List<TApiPermisionMappingModels>();
             }
         }
         public static List<TSystemApiMappingModels> GetTSystemMappingBySearch(MSystemModels vm, string apipath = null, string TokenStr = null)
@@ -552,7 +552,7 @@ namespace SME_WEB_ApiManagement.DAO
                         model = JsonConvert.DeserializeObject<MSystemInfoModels>(result);
                         if (model == null)
                         {
-                            return null;
+                            return new MSystemInfoModels();
                         }
                         return model;
 
@@ -561,7 +561,7 @@ namespace SME_WEB_ApiManagement.DAO
                 }
                 catch (Exception ex)
                 {
-                    return null;
+                    return new MSystemInfoModels();
                 }
             }
             catch (Exception ex) { return null; }

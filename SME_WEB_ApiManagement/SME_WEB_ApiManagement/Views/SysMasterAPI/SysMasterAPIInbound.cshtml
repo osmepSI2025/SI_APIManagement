@@ -244,7 +244,7 @@
                             <th style="width: 120px;">สถานะ API</th>
                             <th style="width: 180px;">วันที่สร้าง</th>
                             <th style="width: 180px;">วันที่แก้ไขล่าสุด</th>
-                            <th style="width: 90px;"></th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -268,19 +268,7 @@
                                     </td>
                                     <td>@(w.CreateDate.HasValue? w.CreateDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : "-")</td>
                                     <td>@(w.UpdateDate.HasValue? w.UpdateDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : "-")</td>
-                                    <td>
-                                        <button type="button" class="action-btn editbtn"
-                                                data-id="@w.Id"
-                                                data-systemname="@w.SystemName"
-                                                data-flagactive="@w.FlagActive"
-                                                data-ownersystemcode="@w.OwnerSystemCode"
-                                                title="แก้ไข">
-                                            <i class="fa fa-pen"></i>
-                                        </button>
-                                        <button type="button" class="action-btn delete" onclick="deleteSystem(@w.Id)" title="ลบ">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </td>
+                                  
                                 </tr>
                                 index++;
                             }

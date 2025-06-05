@@ -115,7 +115,8 @@ namespace SME_WEB_ApiManagement.Controllers
         public async Task<IActionResult> SubSysMasterAPI(string systemcode)
         {
             var result = new ViewSystemApiModels();
-            try {
+            try
+            {
                 if (systemcode != "")
                 {
                     // get data tsystemlist
@@ -125,22 +126,115 @@ namespace SME_WEB_ApiManagement.Controllers
                 {
                     return View(result);
                 }
-            } catch (Exception ex) 
+            }
+            catch (Exception ex)
             {
                 return View(result);
             }
-          
-            
-        }
-        public IActionResult SysMasterAPIConnectInbound(ViewSystemApiModels vm, string previous, string first, string next, string last, string hidcurrentpage, string hidtotalpage,
 
-            string searchNews = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null, string SystemCode = null
-            , string sortColumn = null, string sortOrder = null,string saveSubData =null)
+
+        }
+        public IActionResult SysMasterAPIInbound(ViewSystemApiModels vm, string previous, string first, string next, string last, string hidcurrentpage, string hidtotalpage,
+    string searchData = null, string clearSearcData = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null)
         {
             #region panging
             int curpage = 0;
             int totalpage = 0;
+
+            if (!string.IsNullOrEmpty(hidcurrentpage)) curpage = Convert.ToInt32(hidcurrentpage);
+            if (!string.IsNullOrEmpty(hidtotalpage)) totalpage = Convert.ToInt32(hidtotalpage);
+            if (!string.IsNullOrEmpty(first)) currentPageNumber = 1;
+            else if (!string.IsNullOrEmpty(previous)) currentPageNumber = (curpage == 1) ? 1 : curpage - 1;
+            else if (!string.IsNullOrEmpty(next)) currentPageNumber = (curpage == totalpage) ? totalpage : curpage + 1;
+            else if (!string.IsNullOrEmpty(last)) currentPageNumber = totalpage;
+
+            int PageSizeDummy = PageSize;
+            int totalCount = 0;
+            PageSize = PageSizeDummy;
+            #endregion End panging
+
             ViewSystemApiModels result = new ViewSystemApiModels();
+            try
+            {
+                if (!string.IsNullOrEmpty(searchData))
+                {
+                    result.LSystem = SystemDAO.GetSystemBySearch(vm.MSystem, API_Path_Main + API_Path_Sub, null);
+                    if (result.LSystem != null)
+                    {
+                        totalCount = SystemDAO.GetSystemBySearch(vm.MSystem, API_Path_Main + API_Path_Sub, "Y", 0, 0, null).Count();
+                    }
+                    else
+                    {
+                        totalCount = 0;
+                    }
+
+                    result.PageModel = Service_CenterDAO.LoadPagingViewModel(totalCount, currentPageNumber, PageSize);
+                }
+                else if (!string.IsNullOrEmpty(clearSearcData))
+                {
+                    return Redirect("SysMasterAPI");
+                }
+                else if (!string.IsNullOrEmpty(saveData))
+                {
+                    int? save = SystemDAO.UpsertSystem(vm.InsMSystem, API_Path_Main + API_Path_Sub, null);
+                    return Redirect("SysMasterAPI");
+                }
+                else if (!string.IsNullOrEmpty(DeleteData))
+                {
+                    var del = SystemDAO.DeleteSystem(vm.MSystem.Id.ToString(), API_Path_Main + API_Path_Sub, null);
+                    return Redirect("SysMasterAPI");
+                }
+                else
+                {
+                    MSystemModels model = new MSystemModels();
+                    model.FlagDelete = "N";
+
+                    result.LSystem = SystemDAO.GetSystemBySearch(model, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
+                    totalCount = SystemDAO.GetSystemBySearch(model, API_Path_Main + API_Path_Sub, "Y", 0, 0, null).Count();
+                    result.PageModel = Service_CenterDAO.LoadPagingViewModel(totalCount, currentPageNumber, PageSize);
+                }
+
+                result.vDdlStatus = Service_CenterDAO.GetLookups("STATUS", API_Path_Main + API_Path_Sub, null);
+
+                var serviceCenter = new ServiceCenter(_configuration, _callAPIService);
+                result.vDdlOrg = serviceCenter.GetDdlDepartment(API_Path_Main + API_Path_Sub, "business-units").Result;
+                ViewBag.DDLDepartment = new SelectList(result.vDdlOrg.DropdownList.OrderBy(x => x.Code), "Code", "Name");
+
+                ViewBag.vDdlStatus = new SelectList(result.vDdlStatus.DropdownList.OrderBy(x => x.Code), "Code", "Name");
+                ViewBag.vDdlOrg = new SelectList(result.vDdlOrg.DropdownList.OrderBy(x => x.Code), "Code", "Name");
+                return View(result);
+            }
+            catch (Exception ex)
+            {
+                return View(result);
+            }
+        }
+
+        public IActionResult SysMasterAPIConnectInbound(ViewSystemApiModels vm, string previous, string first, string next, string last, string hidcurrentpage, string hidtotalpage,
+
+            string searchNews = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null, string SystemCode = null
+            , string sortColumn = null, string sortOrder = null, string saveSubData = null)
+        {
+            #region panging
+            int curpage = 0;
+            int totalpage = 0;
+            //set data to view
+            ViewSystemApiModels result = new ViewSystemApiModels
+            {
+                LSysApi = new List<TSystemApiMappingModels>(), // Always initialize to empty list
+                InsMSystem = new MSystemModels(), // Initialize to a new instance
+                LMSystemInfo = new List<MSystemInfoModels>(), // Initialize to an empty list
+                LSystem = new List<MSystemModels>(), // Initialize to an empty list
+                MSystem = new MSystemModels(), // Initialize to a new instance
+                MSystemInfo = new MSystemInfoModels(), // Initialize to a new instance
+                PageModel = new PagingModel() // Initialize to a new instance
+                         ,
+                TSystemAPI = new TSystemApiMappingModels() // Initialize to a new instance
+                         ,
+                vDdlStatus = new vDropdownDTO(), // Initialize to a new instance
+                vDdlSystem = new vDropdownDTO(), // Initialize to a new instance
+                vDdlMethodApi = new vDropdownDTO() // Initialize to a new instance
+            };
 
             if (!string.IsNullOrEmpty(hidcurrentpage)) curpage = Convert.ToInt32(hidcurrentpage);
             if (!string.IsNullOrEmpty(hidtotalpage)) totalpage = Convert.ToInt32(hidtotalpage);
@@ -163,7 +257,7 @@ namespace SME_WEB_ApiManagement.Controllers
                     if (vm.TSystemAPI != null)
                     {
                         MSystemInfoModels um = new MSystemInfoModels();
-                       um.Note = vm.TSystemAPI.ApiNote;
+                        um.Note = vm.TSystemAPI.ApiNote;
                         um.ApiUrlProdInbound = vm.TSystemAPI.ApiUrlProdInbound;
                         um.ApiUrlUatInbound = vm.TSystemAPI.ApiUrlUatInbound;
                         um.ApiUser = vm.TSystemAPI.ApiUser;
@@ -174,7 +268,7 @@ namespace SME_WEB_ApiManagement.Controllers
                         um.FlagDelete = "N"; // default N
                         um.CreateBy = "system"; // ใช้ชื่อผู้ใช้ที่ล็อกอินปัจจุบัน
                         um.CreateDate = DateTime.Now; // ใช้วันที่ปัจจุบัน
-                       
+
                         var Upsert = SystemDAO.MSystemInfoUpsertSystem(um, API_Path_Main + API_Path_Sub, null);
 
                         return RedirectToAction("SysMasterAPIConnectInbound", "SysMasterAPI", new { SystemCode = vm.TSystemAPI.OwnerSystemCode });
@@ -205,14 +299,21 @@ namespace SME_WEB_ApiManagement.Controllers
                 else if ((!string.IsNullOrEmpty(SystemCode)) && (string.IsNullOrEmpty(sortColumn)) && (string.IsNullOrEmpty(sortOrder)))
                 {
                     TSystemApiMappingModels ma = new TSystemApiMappingModels();
-
+                    List<TSystemApiMappingModels> xts = new List<TSystemApiMappingModels>();
                     ma.OwnerSystemCode = SystemCode;
                     result.TSystemAPI = ma;
                     // list data Tsystem by Owner
                     MSystemModels ms = new MSystemModels();
                     ms.SystemCode = SystemCode;
-                    result.LSysApi = SystemDAO.GetTSystemMappingBySearch(ms, API_Path_Main + API_Path_Sub, null);
+                    xts = SystemDAO.GetTSystemMappingBySearch(ms, API_Path_Main + API_Path_Sub, null);
+                    if (xts == null)
+                    {
+                        xts = new List<TSystemApiMappingModels>();
+                    }
+                    result.LSysApi = xts;
+
                     result.MSystemInfo = SystemDAO.GetSystemInfoByCode(SystemCode, API_Path_Main + API_Path_Sub, null);
+                    
                 }
                 else if (((!string.IsNullOrEmpty(sortColumn)) || (!string.IsNullOrEmpty(sortOrder))) && (!string.IsNullOrEmpty(SystemCode)))
                 {
@@ -254,6 +355,9 @@ namespace SME_WEB_ApiManagement.Controllers
                 ViewBag.SortOrder = sortOrder;
                 ViewBag.SystemCode = SystemCode; // ส่งค่า SystemCode ไปที่ View
                 #endregion dropdown
+
+
+
                 return View(result);
             }
             catch (Exception)

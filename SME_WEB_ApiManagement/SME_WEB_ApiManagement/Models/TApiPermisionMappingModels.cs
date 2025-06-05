@@ -32,5 +32,9 @@ namespace SME_WEB_ApiManagement.Models
         public string? SystemName { get; set; }
         public bool IsSelected { get; set; }
 
+        public int? SystemApiMappingId { get; set; }
+        public string? ServiceName { get; set; }
+
+
     }
 }

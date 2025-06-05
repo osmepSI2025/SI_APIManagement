@@ -188,18 +188,25 @@ namespace SME_WEB_ApiManagement.Controllers
                     {
                         UpSertRegisterApiModels um = new UpSertRegisterApiModels();
                         um.MRegister = vm.MRegister;
+                        um.LSystem = new List<MSystemModels>();
                         if (vm.LApi != null)
                         {
-                            List<MSystemModels> lsysApi = new List<MSystemModels>();
+                            List<TApiPermisionMappingModels> lsysApi = new List<TApiPermisionMappingModels>();
                             foreach (var item in vm.LApi)
                             {
-                                lsysApi.Add(new MSystemModels
+                                lsysApi.Add(new TApiPermisionMappingModels
                                 {
                                     SystemCode = item.SystemCode,
                                     IsSelected = item.IsSelected,
+                                    OrganizationCode = item.OrganizationCode,
+                                    ApiKey = item.ApiKey,
+                                    ApiSystemCode = item.ApiSystemCode,
+                                    StartDate = item.StartDate,
+                                    EndDate = item.EndDate,
+                                    SystemApiMappingId = item.SystemApiMappingId,
                                 });
                             }
-                            um.LSystem = lsysApi;
+                            um.LPerMapApi = lsysApi;
 
                         }
                         // insert/update TB register
@@ -222,12 +229,21 @@ namespace SME_WEB_ApiManagement.Controllers
 
 
                     mo.OrganizationCode = OrgCode;
+
                     result.LApi = SystemDAO.GetTApiMappingBySearch(mo, API_Path_Main + API_Path_Sub, null);
+
                     if (result.LApi != null)
                     {
-                        og.OrganizationCode = result.LApi[0].OrganizationCode;
+                        og.OrganizationCode = OrgCode;
                         og.StartDate = result.LApi[0].StartDate;
                         og.EndDate = result.LApi[0].EndDate;
+                        result.MRegister = og;
+                    }
+                    else 
+                    {
+                        og.OrganizationCode = OrgCode;
+                        og.StartDate = null;
+                        og.EndDate = null;
                         result.MRegister = og;
                     }
 

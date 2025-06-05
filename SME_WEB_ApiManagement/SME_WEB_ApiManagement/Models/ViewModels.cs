@@ -8,6 +8,7 @@
         public PagingModel PageModel { get; set; }
         public MRegisterModels MRegister { get; set; }
         public List<TApiPermisionMappingModels> LApi { get; set; }
+        public List<TApiPermisionMappingModels> LPerMapApiSelect { get; set; }
         public List<MSystemModels> LSystem { get; set; }
         public List<MRegisterModels> LRegis { get; set; }
         public MOrganizationModels MOrg { get; set; }
@@ -18,8 +19,11 @@
     {
      
         public MRegisterModels MRegister { get; set; }
-       
+
         public List<MSystemModels> LSystem { get; set; }
+
+        public List<TApiPermisionMappingModels> LPerMapApi { get; set; }
+      
 
     }
 }
