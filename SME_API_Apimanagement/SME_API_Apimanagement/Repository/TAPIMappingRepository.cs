@@ -67,13 +67,13 @@ namespace SME_API_Apimanagement.Repository
 
                 if (result != 0)
                 {
-                    foreach (var item in xModels.LSystem)
+                    foreach (var item in xModels.LPerMapApi)
                     {
                         var xRaw = new TApiPermisionMapping
                         {
                             StartDate = xModels.MRegister.StartDate,
                             EndDate = xModels.MRegister.EndDate,
-                            OrganizationCode = xModels.MRegister.OrganizationCode,
+                            OrganizationCode = item.OrganizationCode,
                             SystemCode = item.SystemCode,
                             ApiKey = apiKey,
                             FlagActive = item.IsSelected,
@@ -81,7 +81,10 @@ namespace SME_API_Apimanagement.Repository
                             UpdateDate = DateTime.Now,
                             CreateDate = DateTime.Now,
                             CreateBy = xModels.MRegister.CreateBy,
-                            UpdateBy = xModels.MRegister.CreateBy
+                            UpdateBy = xModels.MRegister.CreateBy,
+                            SystemApiMappingId = item.SystemApiMappingId,
+                            
+
                         };
 
                         _context.TApiPermisionMappings.Add(xRaw);
@@ -102,27 +105,31 @@ namespace SME_API_Apimanagement.Repository
         }
         public async Task<List<TApiPermisionMappingModels>> GetTApiMappingBySearch(TApiPermisionMappingModels xModels)
         {
+            var result = new List<TApiPermisionMappingModels>();
             try
             {
-                var query = (from r in _context.TApiPermisionMappings
-                             join s in _context.MSystems on r.SystemCode equals s.SystemCode
-                             select new TApiPermisionMappingModels
+                var query = (
+                  from ts in _context.TSystemApiMappings
+                  join ms in _context.MSystems
+                      on ts.OwnerSystemCode equals ms.SystemCode
+                  join ta in _context.TApiPermisionMappings
+                      on ts.Id equals ta.SystemApiMappingId into taGroup
+                  from ta in taGroup.DefaultIfEmpty()
+                  select new TApiPermisionMappingModels
                              {
-                                 Id = r.Id,
-                                 ApiSystemCode = r.SystemCode,
-                                 SystemCode = r.SystemCode,
-                                 CreateBy = r.CreateBy,
-                                 EndDate = r.EndDate,
-                                 FlagActive = r.FlagActive,
-                                 FlagDelete = r.FlagDelete,
-                                 OrganizationCode = r.OrganizationCode,
-                                 StartDate = r.StartDate,
-                                 UpdateBy = r.UpdateBy,
-                                 ApiKey = r.ApiKey,
-                                 CreateDate = r.CreateDate,
-                                 UpdateDate = r.UpdateDate,
-                                 SystemName = s.SystemName,
-                             }).AsQueryable(); // ทำให้ Query เป็น IQueryable
+                                    SystemCode = ms.SystemCode,
+                                    SystemName = ms.SystemName,
+                                  
+                                    ApiKey = ta.ApiKey,
+                                    FlagActive = ta.FlagActive,
+                                    StartDate =ta.StartDate,
+                                     EndDate = ta.EndDate,
+                                     OrganizationCode = ta.OrganizationCode
+                                     ,ServiceName = ts.ApiServiceName,
+                      SystemApiMappingId = ts.Id,
+                      IsSelected = ta.FlagActive,
+
+                  }).AsQueryable(); // ทำให้ Query เป็น IQueryable
 
                 // Apply Filters
                 if (!string.IsNullOrEmpty(xModels?.OrganizationCode))
@@ -135,7 +142,79 @@ namespace SME_API_Apimanagement.Repository
                     query = query.Where(u => u.ApiKey == xModels.ApiKey);
                 }
 
-                return await query.ToListAsync();
+                if (query.ToList().Count>0)
+                {
+                    //check all api
+                    var queryCheckdata = (
+                 from ts in _context.TSystemApiMappings
+                 join ms in _context.MSystems
+                     on ts.OwnerSystemCode equals ms.SystemCode
+
+                 select new TApiPermisionMappingModels
+                 {
+                     SystemCode = ms.SystemCode,
+                     SystemName = ms.SystemName,
+                     ServiceName = ts.ApiServiceName,
+                     SystemApiMappingId = ts.Id,
+
+
+                 }).AsQueryable(); // ทำให้ Query เป็น IQueryable
+                    if (queryCheckdata.ToList().Count == query.ToList().Count)
+                    {
+                        result = await query.ToListAsync();
+                    }
+                    else 
+                    {
+
+                        var bDict = query.ToList().ToDictionary(
+         x => new { x.SystemCode, x.SystemApiMappingId }, x => x.FlagActive
+     );
+
+                        result = queryCheckdata.ToList().Select(a =>
+                        {
+                            var key = new { a.SystemCode, a.SystemApiMappingId };
+                            var isSelected = bDict.TryGetValue(key, out bool? flagActive) ? flagActive : false;
+
+                            return new TApiPermisionMappingModels
+                            {
+                                Id = a.Id,
+                                SystemCode = a.SystemCode,
+                                SystemName = a.SystemName,
+                                SystemApiMappingId = a.SystemApiMappingId,
+                                ServiceName = a.ServiceName,
+                                OrganizationCode = a.OrganizationCode,
+                                ApiKey = a.ApiKey,
+                                StartDate = a.StartDate,
+                                EndDate = a.EndDate,
+                                FlagActive = isSelected,
+                                IsSelected = isSelected // Use FlagActive as IsSelected
+                            };
+                        }).ToList();
+
+                    }
+                   
+                }
+                else 
+                {
+                    var queryNodata = (
+                 from ts in _context.TSystemApiMappings
+                 join ms in _context.MSystems
+                     on ts.OwnerSystemCode equals ms.SystemCode
+            
+                 select new TApiPermisionMappingModels
+                 {
+                     SystemCode = ms.SystemCode,
+                     SystemName = ms.SystemName,
+                     ServiceName = ts.ApiServiceName,
+                     SystemApiMappingId = ts.Id,
+                     IsSelected =false,
+
+                 }).AsQueryable(); // ทำให้ Query เป็น IQueryable
+                    result = await queryNodata.ToListAsync();
+                   
+                }
+
+                return result;
             }
             catch (Exception ex)
             {
