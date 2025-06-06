@@ -12,6 +12,6 @@ namespace SME_API_Apimanagement.Repository
         Task DeleteRegisterAsync(int id);
         Task<string> UpdateOrInsertRegister(UpSertRegisterApiModels xModels);
         Task<List<MRegister>> GetRegister(MRegisterModels Orgcode);
-        Task<List<MRegisterModels>> GetRegisterBySearch(MRegisterModels xModels);
+        Task<ViewRegisterApiModels> GetRegisterBySearch(MRegisterModels xModels);
     }
 }

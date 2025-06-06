@@ -248,6 +248,7 @@ public partial class ApiMangeDBContext : DbContext
             entity.Property(e => e.StartDate)
                 .HasColumnType("datetime")
                 .HasColumnName("Start_Date");
+            entity.Property(e => e.SystemApiMappingId).HasColumnName("System_API_Mapping_ID");
             entity.Property(e => e.SystemCode)
                 .HasMaxLength(50)
                 .HasColumnName("System_Code");

@@ -53,8 +53,9 @@ namespace SME_API_Apimanagement.Repository
                 return new List<MRegister>(); // ควร return List เปล่าแทน null
             }
         }
-        public async Task<List<MRegisterModels>> GetRegisterBySearch(MRegisterModels xModels)
-        {
+        public async Task<ViewRegisterApiModels> GetRegisterBySearch(MRegisterModels xModels)
+        { 
+            var result = new ViewRegisterApiModels();
             try
             {
                 var query = from r in _context.MRegisters
@@ -97,14 +98,16 @@ namespace SME_API_Apimanagement.Repository
                 {
                     query = query.Where(u => u.UpdateDate.Value.Date == xModels.UpdateDate.Value.Date);
                 }
-
+                result .TotalRowsList = await query.CountAsync(); // นับจำนวนแถวทั้งหมด
                 if (xModels.rowFetch != 0)
                     query = query.Skip<MRegisterModels>(xModels.rowOFFSet).Take(xModels.rowFetch);
-                return await query.ToListAsync();
+
+                result.LRegis = await query.ToListAsync(); // ดึงข้อมูลตามเงื่อนไขที่กำหนด
+                return result;
             }
             catch (Exception ex)
             {
-                return new List<MRegisterModels>(); // Return List เปล่าแทน null
+                return new ViewRegisterApiModels(); // Return List เปล่าแทน null
             }
         }
         // 📌 เพิ่มข้อมูล

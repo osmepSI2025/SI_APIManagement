@@ -76,7 +76,7 @@ namespace SME_API_Apimanagement.Controllers
             try
             {
                 var xdata = await _repository.GetTApiMappingBySearch(xModels); // ใช้ await
-                if (xdata == null || !xdata.Any())
+                if (xdata == null)
                 {
                     return NotFound(); // หากไม่พบข้อมูล, คืนค่า 404
                 }

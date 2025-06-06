@@ -28,4 +28,8 @@ public partial class TApiPermisionMapping
     public string? UpdateBy { get; set; }
 
     public DateTime? UpdateDate { get; set; }
+
+    public int? SystemApiMappingId { get; set; }
+
+  
 }

@@ -30,5 +30,9 @@ namespace SME_API_Apimanagement.Models
 
         public DateTime? UpdateDate { get; set; }
         public string? SystemName { get; set; }
+
+        public int? SystemApiMappingId { get; set; }
+        public string? ServiceName { get; set; }
+        public bool? IsSelected { get; set; }
     }
 }

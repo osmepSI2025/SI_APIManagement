@@ -59,12 +59,12 @@ public class MRegisterController : ControllerBase
     [Route("GetRegisterBySearch")]
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
-    public async Task<ActionResult<List<MRegisterModels>>> GetRegisterBySearch(MRegisterModels xModels)
+    public async Task<ActionResult> GetRegisterBySearch(MRegisterModels xModels)
     {
         try
         {
             var xdata = await _repository.GetRegisterBySearch(xModels); // ใช้ await
-            if (xdata == null || !xdata.Any())
+            if (xdata == null)
             {
                 return NotFound(); // หากไม่พบข้อมูล, คืนค่า 404
             }

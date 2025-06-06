@@ -7,8 +7,14 @@
         public vDropdownDTO vDdlStatus { get; set; }
         public PagingModel PageModel { get; set; }
         public MRegisterModels MRegister { get; set; }
-        public List<TSystemApiMappingModels> LApi { get; set; }
+        public List<TApiPermisionMappingModels> LApi { get; set; }
+        public List<TApiPermisionMappingModels> LPerMapApiSelect { get; set; }
         public List<MSystemModels> LSystem { get; set; }
+        public List<MRegisterModels> LRegis { get; set; }
+        public int? TotalRowsList { get; set; }
+        public MOrganizationModels MOrg { get; set; }
+        public List<MOrganizationModels> LOrg { get; set; }
+        public MOrganizationModels InsMOrg { get; set; }
 
     }
     public class UpSertRegisterApiModels
@@ -17,6 +23,8 @@
         public MRegisterModels MRegister { get; set; }
 
         public List<MSystemModels> LSystem { get; set; }
+        public List<TApiPermisionMappingModels> LPerMapApi { get; set; }
+     
 
     }
     public class ViewSystemApiModels
