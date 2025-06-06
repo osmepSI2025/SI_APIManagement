@@ -1,6 +1,6 @@
 ﻿@model SME_WEB_ApiManagement.Models.ViewRegisterApiModels
 @{
-    ViewData["Title"] = "หน่วยงานหรือบริษัท";
+    ViewData["Title"] = "API Outbound";
     var vDdlStatus = @ViewBag.vDdlStatus;
     var vDdlOrg = @ViewBag.vDdlOrg;
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
@@ -28,12 +28,9 @@
     <div class="wrap-boder">
         <div class="wrap-content">
             <div class="header">
-                <div class="nav-navigation">
-                    <p>HOME </p> <p>></p>
-                    <p> หน่วยงานที่ลงทะเบียนเรียบร้อยแล้ว</p>
-                </div>
+           
                 <div class="header_content">
-                    <h1>หน่วยงานที่ลงทะเบียนเรียบร้อยแล้ว</h1>
+                        <h1>API Outbound</h1>
                 </div>
             </div>
             <div class="content_body">
@@ -80,12 +77,7 @@
 
                     </div>
                     <div class="line"></div>
-                    <div class="m-b-10">
-
-                        <input type="button" class="btn btn_search text-color-botton" name="create"
-                               value="+ADD" onclick="window.location.href='/RegisterAPI/RegisterAPI';" />
-
-                    </div>
+                 
                     <div class="table-responsive">
                         <table class=" table table-stand">
                             <thead>
@@ -138,14 +130,7 @@
                                             <td class="align_text" style="width:auto">
                                                 @(w.UpdateDate.HasValue? w.UpdateDate.Value.ToString("dd/MM/yyyy") : "-")
                                             </td>
-                                            <td class="align_text" style="width:auto">
-                                                <a type="button">
-                                                    <i class="fas fa-edit" style="color: #34A5EB; cursor: pointer;"></i>
-                                                </a>
-                                                <a type="button" style="cursor: pointer;">
-                                                    <i class="fas fa-trash m-l-10 btn_delete-icon "></i>
-                                                </a>
-                                            </td>
+                                          
                                         </tr>
                                         index++;
                                     }

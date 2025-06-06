@@ -234,7 +234,7 @@ namespace SME_WEB_ApiManagement.DAO
                 return new List<TApiPermisionMappingModels>();
             }
         }
-        public static List<TSystemApiMappingModels> GetTSystemMappingBySearch(MSystemModels vm, string apipath = null, string TokenStr = null)
+        public static List<TSystemApiMappingModels> GetTSystemMappingBySearch(TSystemApiMappingModels vm, string apipath = null, string TokenStr = null)
         {
 
 
@@ -248,14 +248,14 @@ namespace SME_WEB_ApiManagement.DAO
             {
                 using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                 {
-                    MSystemModels Req; // กำหนด Type ชัดเจน
+                    TSystemApiMappingModels Req; // กำหนด Type ชัดเจน
                     if (vm != null)
                     {
                         Req = vm;
                     }
                     else
                     {
-                        Req = new MSystemModels();
+                        Req = new TSystemApiMappingModels();
                     }
 
                     var json = JsonConvert.SerializeObject(Req, Formatting.Indented);
@@ -611,6 +611,34 @@ namespace SME_WEB_ApiManagement.DAO
             catch (Exception ex)
             {
                 return null;
+            }
+        }
+        public static bool DeleteSystemAPIDetail(string id = null, string apipath = null, string TokenStr = null)
+        {
+
+
+            APIpath = apipath + "TSystemAPI/" + id;
+            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(APIpath);
+            httpWebRequest.ContentType = "application/json";
+            //  httpWebRequest.Headers.Add("Authorization", "Bearer " + TokenStr);
+            httpWebRequest.Method = "DELETE";
+
+            try
+            {
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+
+                    var result = streamReader.ReadToEnd();
+                    var Llist = JsonConvert.DeserializeObject<bool>(result);
+                    return Llist;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
 

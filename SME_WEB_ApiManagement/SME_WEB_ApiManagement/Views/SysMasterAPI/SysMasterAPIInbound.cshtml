@@ -1,6 +1,6 @@
 ﻿@model SME_WEB_ApiManagement.Models.ViewSystemApiModels
 @{
-    ViewData["Title"] = "Inbound API";
+    ViewData["Title"] = "API Inbound";
     var vDdlStatus = ViewBag.vDdlStatus;
     var vDdlOrg = ViewBag.vDdlOrg;
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
@@ -198,7 +198,7 @@
     }
 </script>
 
-@using (Html.BeginForm("SysMasterAPI", "SysMasterAPI", FormMethod.Post, htmlAttributes: new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("SysMasterAPIInbound", "SysMasterAPI", FormMethod.Post, htmlAttributes: new { enctype = "multipart/form-data" }))
 {
     <div class="container-fluid" style="background: #205d7a; min-height: 100vh; padding: 24px;">
         <!-- Search Card -->
@@ -243,10 +243,9 @@
         <div class="card-custom">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="card-title mb-0">รายการ Inbound API</div>
-                <button type="button" class="btn btn-primary btn-custom" onclick="GetCreate();">
-                    <i class="fa fa-plus"></i> สร้าง
-                </button>
+                
             </div>
+            <div class="line"></div>
             <div class="table-responsive">
                 <table class="table table-custom table-bordered">
                     <thead>

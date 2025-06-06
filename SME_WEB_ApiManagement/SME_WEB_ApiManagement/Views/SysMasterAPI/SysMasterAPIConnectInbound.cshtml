@@ -2,270 +2,161 @@
 @{
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
     ViewData["Title"] = "System API";
-    // var vDdlStatus = @ViewBag.vDdlStatus;
     var vDdlSystem = ViewBag.vDdlSystem;
-  //  var vDdlMethodApi = ViewBag.vDdlMethodApi;
- 
 }
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
 <form method="post" asp-action="SysMasterAPIConnectInbound" asp-controller="SysMasterAPI">
-<div class="wrap-content">
-    <div class="header">
-        <div class="nav-navigation">
-            <p>HOME</p>
-            <p>></p>
-            <p>API-Connect</p>
-
-        </div>
-        <div class="header_content">
-            <h1>รายละเอียด API</h1>
-            <div id="Batch">
-                <div class="content_body">
-                    <div class="row">
-                        <div class="col-md-3 offset-md-3">
-                            <div>  <div><label>Owner sys. :</label></div></div>
-
-                        </div>
-
-                        <div class="col-md-3">
-
-                                <select asp-for="TSystemAPI.OwnerSystemCode" asp-items="vDdlSystem" class="form-control" value="@Model.MSystemInfo.SystemCode">
-                                <option value="">-- กรุณาเลือก --</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3 offset-md-3">
-                            <div>  <div><label>API-Key</label></div></div>
-
-                        </div>
-
-                        <div class="col-md-3">
-
-                                <input class="form-control" id="TSystem_APIKey" type="text" placeholder="https:..." asp-for="TSystemAPI.ApiKey" value="@Model.MSystemInfo.ApiKey" />
-
-                        </div>
-                        <div class="col-md-3 offset-md-3">
-                            <div><label>URL-Path-Prod :</label></div>
-
-                        </div>
-                        <div class="col-md-6">
-
-                                <input class="form-control" id="TSystemAPI_ApiUrlProdInbound" type="text" placeholder="Ex..." asp-for="TSystemAPI.ApiUrlProdInbound" value="@Model.MSystemInfo.ApiUrlProdInbound" />
-
-                        </div>
-                        <div class="col-md-3 offset-md-3">
-                            <div><label>URL-Path-UAT :</label></div>
-
-                        </div>
-                        <div class="col-md-6">
-
-                                <input class="form-control" id="TSystemAPI_ApiUrlUatInbound" type="text" placeholder="Ex..." asp-for="TSystemAPI.ApiUrlUatInbound" value="@Model.MSystemInfo.ApiUrlUatInbound" />
-
-                        </div>
-                        <div class="col-md-3 offset-md-3">
-                            <div><label>UserName :</label></div>
-
-                        </div>
-                        <div class="col-md-6">
-
-                                <input class="form-control" id="TSystemAPI_ApiUser" type="text" placeholder="Ex..." asp-for="TSystemAPI.ApiUser" value="@Model.MSystemInfo.ApiUser" />
-
-                        </div>
-                        <div class="col-md-3 offset-md-3">
-                            <div><label>Password :</label></div>
-
-                        </div>
-                        <div class="col-md-6">
-
-                                <input class="form-control" id="TSystemAPI_ApiPassword" type="text" placeholder="Ex..." asp-for="TSystemAPI.ApiPassword" value="@Model.MSystemInfo.ApiPassword" />
-
-                        </div>
-
-                        <div class="col-md-3 offset-md-3">
-                            <div><label>รายละเอียด : </label></div>
-
-                        </div>
-                        <div class="col-md-6">
-                                <textarea class="form-control" name="TSystemAPI.ApiNote" placeholder="กรุณาระบุ">@Model.MSystemInfo.Note</textarea>
+    <div class="wrap-content">
+        <div class="header">
+            <div class="nav-navigation">
+                <p>HOME</p>
+                <p>></p>
+                <p>API-Connect</p>
+            </div>
+            <div class="header_content">
+                <h1>รายละเอียด API</h1>
+                <div id="Batch">
+                    <div class="content_body">
+                        <div class="row">
+                            <div class="col-md-3 offset-md-3">
+                                <label>Owner sys. :</label>
+                            </div>
+                            <div class="col-md-3">
+                                <select asp-for="TSystemAPI.OwnerSystemCode" asp-items="vDdlSystem" class="form-control">
+                                    <option value="">-- กรุณาเลือก --</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 offset-md-3">
+                                <label>API-Key</label>
+                            </div>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" asp-for="TSystemAPI.ApiKey" />
+                            </div>
+                            <div class="col-md-3 offset-md-3">
+                                <label>URL-Path-Prod :</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input class="form-control" type="text" asp-for="TSystemAPI.ApiUrlProdInbound" />
+                            </div>
+                            <div class="col-md-3 offset-md-3">
+                                <label>URL-Path-UAT :</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input class="form-control" type="text" asp-for="TSystemAPI.ApiUrlUatInbound" />
+                            </div>
+                            <div class="col-md-3 offset-md-3">
+                                <label>UserName :</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input class="form-control" type="text" asp-for="TSystemAPI.ApiUser" />
+                            </div>
+                            <div class="col-md-3 offset-md-3">
+                                <label>Password :</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input class="form-control" type="text" asp-for="TSystemAPI.ApiPassword" />
+                            </div>
+                            <div class="col-md-3 offset-md-3">
+                                <label>รายละเอียด : </label>
+                            </div>
+                            <div class="col-md-6">
+                                <textarea class="form-control" asp-for="TSystemAPI.ApiNote" placeholder="กรุณาระบุ"></textarea>
+                            </div>
+                            <div class="col-md-3 offset-md-3">
+                                <label>สถานะ : </label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="checkbox" asp-for="TSystemAPI.FlagActive" value="true" />
+                                <label class="form-check-label" for="TSystemAPI_FlagActive">เปิดใช้งาน</label>
+                            </div>
+                            <input type="hidden" asp-for="TSystemAPI.Id" />
                            
                         </div>
-                        <div class="col-md-3 offset-md-3">
-                            <div><label>สถานะ : </label></div>
-
-                        </div>
-                        <div class="col-md-6">
-                            <input type="checkbox" name="InsMSystem.FlagActive" id="InsMSystem_FlagActive"
-                                   @(Model.TSystemAPI.FlagActive == true ? "checked" : "") value="true" />
-                            <label class="form-check-label" for="InsMSystem_FlagActive">เปิดใช้งาน</label>
-                        </div>
-
-
-                        <input class="form-control" id="TSystemAPI_Id" type="text" asp-for="TSystemAPI.Id" />
-
-
+                        <br />
                     </div>
-
-                    <br />
-      
-
-
-                </div>
-                <div class="content_table">
-                    <div class="content_table_head d-flex align-items-center">
-                        <h6>รายการ API </h6>
-
-                    </div>
-                    <div class="line"></div>
-                        @if (@Model.LSysApi.Count != 0)
-                        {
-                            <div class="table-responsive">
-                                <table class=" table table-stand">
-                                    <thead>
-                                        <tr>
-
-
-                                            <th scope="col">#</th>
-
-
-                                            <th scope="col">Method</th>
-                                            <th scope="col">End Point</th>
-                                            <th scope="col">สถานะ</th>
-
-                                            <th scope="col"> </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-
-
-
-
-                                        <tr>
-
-                                            @if (Model.LSysApi != null && Model.LSysApi.Count != 0)
-                                            {
-
-                                                int Nox = 0;
-                                                @foreach (var w in Model.LSysApi)
-                                                {
-                                                <tr>
-                                                    <td>
-                                                    </td>
-                                                    <td class="align_text" style="width:auto">
-                                                        @w.ApiMethod
-                                                    </td>
-                                                    <td class="align_text" style="width:auto">
-                                                        @w.ApiUrlProdInbound
-                                                    </td>
-                                                    <td class="align_text" style="width:auto">
-                                                        @(w.FlagActive ? "ใช้งาน" : "ปิดการใช้งาน")
-                                                    </td>
-
-                                                    <td>
-                                                        <button type="button" class="btn btn-sm editbtn btn-primary"
-                                                                data-id="@w.Id"
-                                                                data-method="@w.ApiMethod"
-                                                                data-service="@w.ApiServiceName"
-                                                                @*            data-prod="@w.ApiUrlProd"
-                                                            data-uat="@w.ApiUrlUat" *@
-                                                                data-request="@w.ApiRequestExample"
-                                                                data-response="@w.ApiResponseExample"
-                                                                data-note="@w.ApiNote">
-                                                            Edit
-                                                        </button>
-                                                        <!-- ปุ่มลบ -->
-                                                        <button class="btn btn-danger btn-sm deletebtn" data-id="@w.Id">
-                                                            Delete
-                                                        </button>
-                                                    </td>
-
-
-                                                </tr>
-                                            }
-                                        }
-                                        else
+                    <div class="content_table">
+                        <div class="content_table_head d-flex align-items-center">
+                            <h6>รายการ API </h6>
+                        </div>
+                        <div class="line"></div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th style="width:40px;text-align:center;">#</th>
+                                        <th>Method</th>
+                                        <th>Service Name</th>
+                                        <th>End Point</th>
+                                        <th>สถานะ</th>
+                                        <th style="width:80px;text-align:center;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.LSysApi != null && Model.LSysApi.Count != 0)
+                                    {
+                                        int no = 1;
+                                        foreach (var w in Model.LSysApi)
                                         {
-                                            <tr id="trNodata" runat="server" visible="false">
-                                                <td colspan="12" valign="middle">
-                                                    <b>No Data</b>
+                                            <tr>
+                                                <td style="text-align:center;">@no</td>
+                                                <td>@w.ApiMethod</td>
+                                                <td>@w.ApiServiceName</td>
+                                                <td>@w.EndPoint</td>
+                                                <td>@(w.FlagActive ? "ใช้งาน" : "ปิดการใช้งาน")</td>
+                                                <td style="text-align:center;">
+                                                    <button type="button" class="btn btn-link editbtn" data-id="@w.Id" title="Edit">
+                                                        <i class="fa fa-pen-to-square" style="color:#2580c2;font-size:1.3rem;"></i>
+                                                    </button>
+                                                    <button type="button" class="action-btn delete" onclick="deleteSystem(@w.Id)" title="ลบ">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
                                                 </td>
                                             </tr>
+                                            no++;
                                         }
-
-
-
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        }
-                     
-
-                    <button type="button" class="btn btn-link text-primary px-0" style="font-size: 1.6rem; font-weight: 400;" onclick="$('#CreateApiModal').modal('show')">
-                        <span style="font-size:2rem; vertical-align:middle;">+</span> เพิ่ม API
-                    </button>
-
-
-
-
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="5" class="text-center"><b>No Data</b></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" class="btn btn-link text-primary px-0" style="font-size: 1.6rem; font-weight: 400;" onclick="showCreateModal()">
+                            <span style="font-size:2rem; vertical-align:middle;">+</span> เพิ่ม API
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
             <div class="text-center m-t-10">
-
                 <button class="btn btn_search text-color-botton m-r-10" id="saveData" value="saveData" runat="server" name="saveData">Submit</button>
                 <button class="btn btn_cancel ">Cancel</button>
             </div>
-    </div>
-
-</div>
-<div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ViewCancelModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document" style="min-width: 80%;">
-        <div class="modal-content">
-            <div class="modal-header  ">
-                <h5 class="modal-title" id="reqDetailModalLabel">Confirm Delete</h5>
-
-                <button type="button" class="close button_close" data-dismiss="modal" aria-label="Close">
-                    <span class="x-sign" aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="card" style=" margin-top: 1px; ">
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="CLeaveRequestModel_EmpCode">Are you sure you want to Delete this item?</label>
-                        <input type="hidden" id="TArrivalDetaiModels_Id" />
-
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="modal-footer n-border" style="align-self: center;">
-                <button class="btn btn_search text-color-botton m-r-10" name="DeleteEmp" id="DeleteEmp" value="DeleteEmp">Submit</button>
-                <button class="btn btn_cancel ">Cancel</button>
-            </div>
         </div>
     </div>
-</div>
+</form>
 
-<!-- Modal: Create API -->
-
-    <div class="modal fade" id="CreateApiModal" tabindex="-1" role="dialog" aria-labelledby="CreateApiModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl" role="document">
-            <div class="modal-content">
+<!-- Modal: Create/Edit API -->
+<div class="modal fade" id="CreateApiModal" tabindex="-1" role="dialog" aria-labelledby="CreateApiModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <form method="post" asp-action="SysMasterAPIConnectInbound" asp-controller="SysMasterAPI">
                 <div class="modal-header" style="background: #2580c2; color: #fff;">
-                    <h5 class="modal-title w-100 text-center" id="CreateApiModalLabel">สร้าง API</h5>
+                    <h5 class="modal-title w-100 text-center" id="CreateApiModalLabel">สร้าง/แก้ไข API</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span class="x-sign" aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
+                    <input type="hidden" name="TSystemAPI.Id" id="TSystemAPI_Id_Modal" />
                     <div class="form-row mb-3 align-items-end">
                         <div class="form-group col-md-4">
                             <label>HTTP Method<span class="text-danger">*</span></label>
-                            <select class="form-control" name="TSystemAPI.ApiMethod">
+                            <select class="form-control" name="TSystemAPI.ApiMethod" id="TSystemAPI_ApiMethod_Modal">
                                 <option value="">กรุณาระบุ</option>
                                 <option value="GET">GET</option>
                                 <option value="POST">POST</option>
@@ -275,11 +166,11 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label>Service name<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="TSystemAPI.ApiServiceName" placeholder="กรุณาระบุ" />
+                            <input type="text" class="form-control" name="TSystemAPI.ApiServiceName" id="TSystemAPI_ApiServiceName_Modal" placeholder="Ex. Employee" />
                         </div>
                         <div class="form-group col-md-6">
                             <label>End point<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="TSystemAPI.EndPoint" placeholder="กรุณาระบุ" />
+                            <input type="text" class="form-control" name="TSystemAPI.EndPoint" id="TSystemAPI_EndPoint_Modal" placeholder="Ex. www.xxx.com/getdata" />
                         </div>
                         <div class="form-group col-md-2 d-flex align-items-center" style="margin-top: 30px;">
                             <label class="mr-2 mb-0">สถานะ<span class="text-danger">*</span></label>
@@ -287,6 +178,7 @@
                             <label class="form-check-label ml-2 mb-0" for="apiActive">เปิดใช้งาน</label>
                         </div>
                     </div>
+                    <!-- Request/Response Fields (ตามเดิม) -->
                     <h6 class="mt-4 mb-2">Request Fields</h6>
                     <div class="table-responsive mb-3">
                         <table class="table table-bordered">
@@ -331,55 +223,100 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <input type="hidden" asp-for="MSystemInfo.SystemCode" value="@Model.MSystemInfo.SystemCode" />
+                    <input type="hidden" asp-for="TSystemAPI.OwnerSystemCode" value="@Model.MSystemInfo.SystemCode" />
+
                     <button type="button" class="btn btn-outline-primary" data-dismiss="modal">ยกเลิก</button>
                     <button type="submit" class="btn btn-primary" name="saveSubData" value="saveSubData">บันทึก</button>
                 </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Confirm Delete -->
+<div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ViewCancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="min-width: 80%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reqDetailModalLabel">Confirm Delete</h5>
+                <button type="button" class="close button_close" data-dismiss="modal" aria-label="Close">
+                    <span class="x-sign" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="card" style="margin-top: 1px;">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Are you sure you want to Delete this item?</label>
+                        <input type="hidden" id="TArrivalDetaiModels_Id" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer n-border" style="align-self: center;">
+                <button class="btn btn_search text-color-botton m-r-10" name="DeleteEmp" id="DeleteEmp" value="DeleteEmp">Submit</button>
+                <button class="btn btn_cancel ">Cancel</button>
             </div>
         </div>
     </div>
-</form>
+</div>
+
 <script>
-    function addRequestField() {
-        $('#requestFieldsBody').append(`
-            <tr>
-                <td><input type="text" class="form-control"  /></td>
-                <td><input type="text" class="form-control" /></td>
-                <td><textarea class="form-control" placeholder="กรุณาระบุ"></textarea></td>
-                <td><textarea class="form-control" placeholder="กรุณาระบุ"></textarea></td>
-            </tr>
-        `);
-    }
-    function addResponseField() {
-        $('#responseFieldsBody').append(`
-            <tr>
-                <td><input type="text" class="form-control"  /></td>
-                <td><input type="text" class="form-control" /></td>
-                <td><textarea class="form-control" placeholder="กรุณาระบุ"></textarea></td>
-                <td><textarea class="form-control" placeholder="กรุณาระบุ"></textarea></td>
-            </tr>
-        `);
+    function showCreateModal() {
+        // Clear modal fields for create
+        $('#TSystemAPI_Id_Modal').val('');
+        $('#TSystemAPI_ApiMethod_Modal').val('');
+        $('#TSystemAPI_ApiServiceName_Modal').val('');
+        $('#TSystemAPI_EndPoint_Modal').val('');
+        $('#apiActive').prop('checked', false);
+        $('#CreateApiModal').modal('show');
     }
 
-    function submitSysMasterAPIConnectInbound() {
-        // เก็บข้อมูลจากฟอร์มใน modal
-        var data = {
-            ApiMethod: $('#CreateApiModal select').val(),
-            ApiUrlProdInbound: $('#CreateApiModal input[type="text"]').eq(0).val(),
-            FlagActive: $('#apiActive').is(':checked'),
-            // เพิ่ม field อื่นๆ ตามที่ต้องการ
-        };
+    $(document).ready(function () {
+        // Edit
+        $('.editbtn').on('click', function () {
+            var id = $(this).data('id');
+            $.ajax({
+                url: '/SysMasterAPI/GetApiDetail',
+                type: 'GET',
+                data: { id: id },
+                success: function (data) {
+                    if (data && data.id) {
+                        $('#TSystemAPI_Id_Modal').val(data.id);
+                        $('#TSystemAPI_ApiMethod_Modal').val(data.apiMethod);
+                        $('#TSystemAPI_ApiServiceName_Modal').val(data.apiServiceName);
+                        $('#TSystemAPI_EndPoint_Modal').val(data.endPoint);
+                        $('#apiActive').prop('checked', data.flagActive);
+                        $('#CreateApiModal').modal('show');
+                    } else {
+                        alert('ไม่พบข้อมูล');
+                    }
+                },
+                error: function () {
+                    alert('เกิดข้อผิดพลาด');
+                }
+            });
+        });
+    });
 
+     function deleteSystem(id) {
+        if (!confirm('คุณต้องการลบระบบนี้ใช่หรือไม่?')) {
+            return;
+        }
         $.ajax({
-            url: '/SysMasterAPI/SysMasterAPIConnectInbound',
+            url: '@Url.Action("DeleteApiDetail", "SysMasterAPI")',
             type: 'POST',
-            data: data,
-            success: function (result) {
-                // ปิด modal และ refresh หรือแจ้งเตือน
-                $('#CreateApiModal').modal('hide');
-                location.reload();
+            data: { id: id },
+            success: function (res) {
+                if (res.success) {
+                    alert('ลบข้อมูลสำเร็จ');
+                    location.reload();
+                } else {
+                    alert(res.message || 'เกิดข้อผิดพลาดในการลบข้อมูล');
+                }
             },
             error: function () {
-                alert('เกิดข้อผิดพลาดในการบันทึก');
+                alert('เกิดข้อผิดพลาดในการลบข้อมูล');
             }
         });
     }

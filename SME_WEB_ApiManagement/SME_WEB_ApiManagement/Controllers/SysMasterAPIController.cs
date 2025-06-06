@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using SME_WEB_ApiManagement.DAO;
 using SME_WEB_ApiManagement.Models;
 using SME_WEB_ApiManagement.Services;
+using System.Diagnostics;
 
 namespace SME_WEB_ApiManagement.Controllers
 {
@@ -278,6 +279,8 @@ namespace SME_WEB_ApiManagement.Controllers
                 {
                     if (vm.TSystemAPI != null)
                     {
+                        string syscode = vm.MSystemInfo.SystemCode;
+
                         UpSerTSystemApiMappingModels um = new UpSerTSystemApiMappingModels();
                         um.TSystemAPI = vm.TSystemAPI;
                         // um.LSystem = vm.LSystem;
@@ -285,7 +288,7 @@ namespace SME_WEB_ApiManagement.Controllers
                         // insert/update TB register
                         var Upsert = SystemDAO.UpsertSystemApi(um, API_Path_Main + API_Path_Sub, null);
 
-                        return RedirectToAction("SysMasterAPIConnectInbound", "SysMasterAPI", new { SystemCode = vm.TSystemAPI.OwnerSystemCode });
+                        return RedirectToAction("SysMasterAPIConnectInbound", "SysMasterAPI", new { SystemCode = syscode });
                     }
                 }
                 else if (!string.IsNullOrEmpty(editData))
@@ -303,9 +306,8 @@ namespace SME_WEB_ApiManagement.Controllers
                     ma.OwnerSystemCode = SystemCode;
                     result.TSystemAPI = ma;
                     // list data Tsystem by Owner
-                    MSystemModels ms = new MSystemModels();
-                    ms.SystemCode = SystemCode;
-                    xts = SystemDAO.GetTSystemMappingBySearch(ms, API_Path_Main + API_Path_Sub, null);
+                 
+                    xts = SystemDAO.GetTSystemMappingBySearch(ma, API_Path_Main + API_Path_Sub, null);
                     if (xts == null)
                     {
                         xts = new List<TSystemApiMappingModels>();
@@ -320,8 +322,8 @@ namespace SME_WEB_ApiManagement.Controllers
                     sortColumn ??= "Id";
                     sortOrder = sortOrder == "asc" ? "desc" : "asc"; // เปลี่ยน asc <-> desc
 
-                    MSystemModels ms = new MSystemModels();
-                    ms.SystemCode = SystemCode;
+                    TSystemApiMappingModels ms = new TSystemApiMappingModels();
+                    ms.OwnerSystemCode = SystemCode;
 
                     var data = SystemDAO.GetTSystemMappingBySearch(ms, API_Path_Main + API_Path_Sub, null);
 
@@ -421,17 +423,17 @@ namespace SME_WEB_ApiManagement.Controllers
                     ma.OwnerSystemCode = SystemCode;
                     result.TSystemAPI = ma;
                     // list data Tsystem by Owner
-                    MSystemModels ms = new MSystemModels();
-                    ms.SystemCode = SystemCode;
-                    result.LSysApi = SystemDAO.GetTSystemMappingBySearch(ms, API_Path_Main + API_Path_Sub, null);
+             
+                    result.LSysApi = SystemDAO.GetTSystemMappingBySearch(ma, API_Path_Main + API_Path_Sub, null);
                 }
                 else if (((!string.IsNullOrEmpty(sortColumn)) || (!string.IsNullOrEmpty(sortOrder))) && (!string.IsNullOrEmpty(SystemCode)))
                 {
                     sortColumn ??= "Id";
                     sortOrder = sortOrder == "asc" ? "desc" : "asc"; // เปลี่ยน asc <-> desc
 
-                    MSystemModels ms = new MSystemModels();
-                    ms.SystemCode = SystemCode;
+                    TSystemApiMappingModels ms = new TSystemApiMappingModels();
+                    ms.OwnerSystemCode = SystemCode;
+
 
                     var data = SystemDAO.GetTSystemMappingBySearch(ms, API_Path_Main + API_Path_Sub, null);
 
@@ -486,5 +488,31 @@ namespace SME_WEB_ApiManagement.Controllers
                 return Json(new { success = false, message = "ไม่พบระบบหรือเกิดข้อผิดพลาด" });
         }
 
+        [HttpGet]
+        public JsonResult GetApiDetail(int id)
+        {
+            // ดึงข้อมูลจาก DAO ตาม id
+            TSystemApiMappingModels xdata = new TSystemApiMappingModels();
+            TSystemApiMappingModels result = new TSystemApiMappingModels();
+            xdata.Id = id;
+
+            var api = SystemDAO.GetTSystemMappingBySearch(xdata, API_Path_Main + API_Path_Sub, null);
+            result = api.FirstOrDefault();
+            if (api != null)
+                return Json(result);
+            else
+                return Json(new { success = false, message = "ไม่พบข้อมูล" });
+        }
+
+        [HttpPost]
+        public JsonResult DeleteApiDetail(int id)
+        {
+            // Fix: Ensure the return type matches the expected 'bool' type
+            bool result = SystemDAO.DeleteSystemAPIDetail(id.ToString(), API_Path_Main + API_Path_Sub, null);
+            if (result)
+                return Json(new { success = true });
+            else
+                return Json(new { success = false, message = "ไม่พบระบบหรือเกิดข้อผิดพลาด" });
+        }
     }
 }

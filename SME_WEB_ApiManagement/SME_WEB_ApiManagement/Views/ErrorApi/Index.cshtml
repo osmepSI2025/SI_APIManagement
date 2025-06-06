@@ -133,7 +133,7 @@
                     <input class="form-control" type="text" asp-for="ErrorModel.Message" placeholder="กรุณาระบุ" />
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">สถานะ</label>
+                    <label class="form-label">ระบบ</label>
                     <div class="input-group">
                         <select asp-for="ErrorModel.SystemCode"
                                 asp-items="@(Model.LSystem.Select(system => new SelectListItem
@@ -142,11 +142,9 @@
                                     Value = system.SystemCode
                                 }))"
                             class="form-select">
-                        <option value="">กรุณาระบุ</option>
+                        <option value="">--เลือก--</option>
                     </select>
-                        <span class="input-group-text bg-white border-0">
-                            <i class="fa fa-chevron-down"></i>
-                        </span>
+                    
                     </div>
                 </div>
             
@@ -171,8 +169,9 @@
                             <th>ชื่อระบบ</th>
                             <th >ชื่อ API</th>                          
                             <th >API Key</th>
-                            <th>รายละเอียด</th>
+                           
                             <th >HTTP</th>
+                            <th>รายละเอียด</th>
                             <th >วันที่ Error</th>
                           
                         </tr>

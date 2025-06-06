@@ -288,7 +288,7 @@
                                                 data-flagactive="@w.FlagActive"
                                                 data-ownersystemcode="@w.OwnerSystemCode"
                                                 title="แก้ไข">
-                                            <i class="fa fa-pen"></i>
+                                            <i class="fas fa-edit" style="color: #34A5EB; cursor: pointer;"></i>
                                         </button>
                                         <button type="button" class="action-btn delete" onclick="deleteSystem(@w.Id)" title="ลบ">
                                             <i class="fa fa-trash"></i>
@@ -348,8 +348,8 @@
                     <div class="container-fluid">
                         <div class="col-md-6">
                             <label class="form-label">หน่วยงานเจ้าของ API <span class="text-danger">*</span></label>
-                            <select asp-for="InsMSystem.OwnerSystemCode" asp-items="vDdlOrg" class="form-select search-dropdown" style="width:100%" id="InsMSystem_OwnerSystemCode">
-                                <option value="">กรุณาระบุ</option>
+                            <select asp-for="InsMSystem.OwnerSystemCode" asp-items="vDdlOrg" class="form-control search-dropdown" style="width:100%" id="InsMSystem_OwnerSystemCode">
+                                <option value="">--กรุณาเลือก--</option>
                             </select>
                         </div>
                         <div class="row mb-6">
