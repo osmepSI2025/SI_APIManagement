@@ -9,9 +9,9 @@ namespace SME_API_Apimanagement.Repository
         Task<TSystemApiMapping> GetByIdAsync(int id);
         Task AddAsync(TSystemApiMapping api);
         Task UpdateAsync(TSystemApiMapping api);
-        Task DeleteAsync(int id);
+        Task<bool> DeleteAsync(int id);
         Task<int> UpsertSystemApi(UpSertSystemApiModels xModels);
-        Task<List<TSystemApiMappingModels>> GetTSystemMappingBySearch(MSystemModels xModels);
+        Task<List<TSystemApiMappingModels>> GetTSystemMappingBySearch(TSystemApiMappingModels xModels);
        
     }
 }

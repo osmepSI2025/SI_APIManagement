@@ -50,15 +50,27 @@ namespace SME_API_Apimanagement.Repository
             }
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var api = await _context.TSystemApiMappings.FindAsync(id);
-            if (api != null)
+            try
             {
-                api.FlagDelete = "Y";
-                api.UpdateDate = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
+                var api = await _context.TSystemApiMappings.FindAsync(id);
+                if (api != null)
+                {
+
+                    _context.TSystemApiMappings.Remove(api);
+                    await _context.SaveChangesAsync();
+                 
+                }
+                return true;
             }
+            catch 
+            {
+                return false;
+            }
+        
+
+            
         }
         public async Task<int> UpsertSystemApi(UpSertSystemApiModels xModels)
         {
@@ -163,12 +175,13 @@ namespace SME_API_Apimanagement.Repository
             return success;
         }
     
-        public async Task<List<TSystemApiMappingModels>> GetTSystemMappingBySearch(MSystemModels xModels)
+        public async Task<List<TSystemApiMappingModels>> GetTSystemMappingBySearch(TSystemApiMappingModels xModels)
         {
             try
             {
                 var query = (from r in _context.TSystemApiMappings
                              join s in _context.MSystems on r.OwnerSystemCode equals s.SystemCode
+                             where r.FlagDelete =="N"
                              select new TSystemApiMappingModels
                              {
                                  Id = r.Id,
@@ -207,15 +220,15 @@ namespace SME_API_Apimanagement.Repository
                              }).AsQueryable(); // ทำให้ Query เป็น IQueryable
 
                 // Apply Filters
-                if (!string.IsNullOrEmpty(xModels?.SystemCode))
+                if (!string.IsNullOrEmpty(xModels?.OwnerSystemCode))
                 {
-                    query = query.Where(u => u.OwnerSystemCode == xModels.SystemCode);
+                    query = query.Where(u => u.OwnerSystemCode == xModels.OwnerSystemCode);
                 }
 
-                //if (!string.IsNullOrEmpty(xModels?.ApiKey))
-                //{
-                //    query = query.Where(u => u.ApiKey == xModels.ApiKey);
-                //}
+                if (xModels?.Id != null && xModels?.Id !=0)
+                {
+                    query = query.Where(u => u.Id == xModels.Id);
+                }
 
                 return await query.ToListAsync();
             }

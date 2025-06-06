@@ -125,15 +125,15 @@ namespace SME_API_Apimanagement.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _repository.DeleteAsync(id);
-            return NoContent();
+            var result = await _repository.DeleteAsync(id);
+            return result ? Ok() : BadRequest();
         }
 
         [HttpPost]
         [Route("GetTSystemMappingBySearch")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<List<MSystemModels>>> GetTSystemMappingBySearch(MSystemModels xModels)
+        public async Task<ActionResult> GetTSystemMappingBySearch(TSystemApiMappingModels xModels)
         {
             try
             {
