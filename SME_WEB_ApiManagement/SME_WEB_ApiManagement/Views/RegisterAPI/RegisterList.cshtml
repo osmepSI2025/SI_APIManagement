@@ -106,54 +106,50 @@
                             </thead>
                             <tbody>
 
-                                @if (Model.LRegis !=null)
+                                @if (Model.LRegis != null)
                                 {
-
-                                    @foreach (var w in Model.LRegis)
+                                    var index = 1 + ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize);
+                                    foreach (var w in Model.LRegis)
                                     {
-                                          <tr>
-                                    <td class="align_text">
-                                        
-                                    </td>
-                                    <td class="align_text" style="width:auto">
+                                        <tr>
+                                            <td>@index</td>
+                                            <td class="align_text" style="width:auto">
                                                 @Html.ActionLink(w.OrganizationName, "RegisterAPIDetail", "RegisterAPI", new { OrgCode = w.OrganizationCode }, null)
-                                    </td>
-                                    <td class="align_text" style="width:auto">
-                                            @w.ApiKey
-                                    </td>
-                                     <td class="align_text" style="width:auto">
-      @if (w.FlagActive ?? false)
-      {
-          <span style="color: green;">ใช้งาน</span>
-      }
-      else
-      {
-          <span style="color: red;">ปิดการใช้งาน</span>
-      }
-  </td>
-                                    <td class="align_text" style="width:auto">
-                                            @(w.StartDate?.ToString("dd/MM/yyyy") ?? "-") - @(w.EndDate?.ToString("dd/MM/yyyy") ?? "-")
-                                    </td>
-                                    <td class="align_text" style="width:auto">
-                                            @(w.CreateDate.HasValue ? w.CreateDate.Value.ToString("dd/MM/yyyy") : "-")
-                                    </td>
-                                    <td class="align_text" style="width:auto">
-                                            @(w.UpdateDate.HasValue ? w.UpdateDate.Value.ToString("dd/MM/yyyy") : "-")
-
-                                    </td>
-                                    <td class="align_text" style="width:auto">
-                                        <a type="button"  
-                                                      >
+                                            </td>
+                                            <td class="align_text" style="width:auto">
+                                                @w.ApiKey
+                                            </td>
+                                            <td class="align_text" style="width:auto">
+                                                @if (w.FlagActive ?? false)
+                                                {
+                                                    <span style="color: green;">ใช้งาน</span>
+                                                }
+                                                else
+                                                {
+                                                    <span style="color: red;">ปิดการใช้งาน</span>
+                                                }
+                                            </td>
+                                            <td class="align_text" style="width:auto">
+                                                @(w.StartDate?.ToString("dd/MM/yyyy") ?? "-") - @(w.EndDate?.ToString("dd/MM/yyyy") ?? "-")
+                                            </td>
+                                            <td class="align_text" style="width:auto">
+                                                @(w.CreateDate.HasValue? w.CreateDate.Value.ToString("dd/MM/yyyy") : "-")
+                                            </td>
+                                            <td class="align_text" style="width:auto">
+                                                @(w.UpdateDate.HasValue? w.UpdateDate.Value.ToString("dd/MM/yyyy") : "-")
+                                            </td>
+                                            <td class="align_text" style="width:auto">
+                                                <a type="button">
                                                     <i class="fas fa-edit" style="color: #34A5EB; cursor: pointer;"></i>
-                                        </a>
-                                        <a type="button" style="cursor: pointer;"
-                                                      >
+                                                </a>
+                                                <a type="button" style="cursor: pointer;">
                                                     <i class="fas fa-trash m-l-10 btn_delete-icon "></i>
-                                                       </a>
+                                                </a>
+                                            </td>
                                         </tr>
+                                        index++;
                                     }
-                                       
-                                } 
+                                }
                                 else
                                 {
                                     <tr id="trNodata" runat="server" visible="false">
@@ -164,32 +160,42 @@
                                 }
 
 
-
                             </tbody>
                         </table>
                     </div>
 
 
-                    <div class="d-flex justify-content-start">
-                        <input type="hidden" name="hidcurrentpage" id="hidcurrentpage" value="@Model.PageModel.CurrentPageNumber"></input>
-                        <input type="hidden" name="hidtotalpage" id="hidtotalpage" value="@Model.PageModel.TotalPage"></input>
-                        <!-- Start pagiantion -->
-                        <nav aria-label="Page navigation example ">
-                            <ul class="pagination pull-right layout_align m-t-10">
+      
 
-                                <li class="page-item"><input type="submit" class="page-link" name="first" value="<<"></input></li>
-                                <li class="page-item"><input type="submit" class="page-link" name="previous" value="<"></input></li>
-
-                                <li class="page-item text_padding_nav"> @Model.PageModel.CurrentPageNumber of @Model.PageModel.TotalPage</li>
-                                <li class="page-item"><input type="submit" class="page-link" name="next" value=">"></input></li>
-                                <li class="page-item"><input type="submit" class="page-link" name="last" value=">>"></input></li>
-
-                            </ul>
-                        </nav>
+                    <div class="table-footer d-flex justify-content-between align-items-center p-2" style="background: #f7f9fa; border-top: 1px solid #e9ecef;">
+                        <div class="pagination-custom d-flex align-items-center gap-2">
+                            <button type="submit" class="btn btn-light px-2 @(Model.PageModel.CurrentPageNumber <= 1 ? "disabled" : "")" name="first" value="first" title="หน้าแรก">
+                                <i class="fa fa-angle-double-left"></i>
+                            </button>
+                            <button type="submit" class="btn btn-light px-2 @(Model.PageModel.CurrentPageNumber <= 1 ? "disabled" : "")" name="previous" value="previous" title="ก่อนหน้า">
+                                <i class="fa fa-angle-left"></i>
+                            </button>
+                            <span class="mx-2">Page</span>
+                            <input type="hidden" name="hidtotalpage" id="hidtotalpage" value="@Model.PageModel.TotalPage" />
+                            <input type="text" name="hidcurrentpage" id="hidcurrentpage" value="@Model.PageModel.CurrentPageNumber" readonly
+                                   style="width: 40px; text-align: center; border: 1px solid #ced4da; border-radius: 4px; background: #fff;" />
+                            <span class="mx-2">of @Model.PageModel.TotalPage</span>
+                            <button type="submit" class="btn btn-light px-2 @(Model.PageModel.CurrentPageNumber >= Model.PageModel.TotalPage ? "disabled" : "")" name="next" value="next" title="ถัดไป">
+                                <i class="fa fa-angle-right"></i>
+                            </button>
+                            <button type="submit" class="btn btn-light px-2 @(Model.PageModel.CurrentPageNumber >= Model.PageModel.TotalPage ? "disabled" : "")" name="last" id="btnLast" value="last" title="หน้าสุดท้าย">
+                                <i class="fa fa-angle-double-right"></i>
+                            </button>
+                        </div>
+                        <div class="text-end" style="min-width: 220px;">
+                            @{
+                                var start = (Model.LRegis?.Count() ?? 0) > 0 ? 1 + ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize) : 0;
+                                var end = (Model.LRegis?.Count() ?? 0) > 0 ? ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize) + Model.LRegis.Count() : 0;
+                                var total = Model.TotalRowsList ?? 0;
+                            }
+                            แสดง @start - @end จาก @total รายการ
+                        </div>
                     </div>
-
-
-
 
                 </div>
 
@@ -290,3 +296,14 @@
         </div>
     </div>
 }
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var btnLast = document.getElementById("btnLast");
+        if (btnLast) {
+            btnLast.addEventListener("click", function (e) {
+                document.getElementById("hidcurrentpage").value = document.getElementById("hidtotalpage").value;
+            });
+        }
+    });
+</script>

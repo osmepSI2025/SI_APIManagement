@@ -75,6 +75,7 @@ namespace SME_WEB_ApiManagement.Controllers
                     {
                         totalCount = 0;
                     }
+                    result.TotalRowsList = totalCount;
                     result.PageModel = Service_CenterDAO.LoadPagingViewModel(totalCount, currentPageNumber, PageSize);
                 }
                 else if (!string.IsNullOrEmpty(clearSearcData))
@@ -106,6 +107,7 @@ namespace SME_WEB_ApiManagement.Controllers
                     result.LOrg = SystemDAO.GetOrgBySeach(vm.MOrg, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
                     totalCount = SystemDAO.GetOrgBySeach(vm.MOrg, API_Path_Main + API_Path_Sub, "Y", currentPageNumber, PageSize, null).Count();
                     result.PageModel = Service_CenterDAO.LoadPagingViewModel(totalCount, currentPageNumber, PageSize);
+                    result.TotalRowsList = totalCount;
                 }
                 #region dropdown 
                 result.LSystem = SystemDAO.GetSystem(API_Path_Main + API_Path_Sub, null);
@@ -125,6 +127,19 @@ namespace SME_WEB_ApiManagement.Controllers
                 return View(result);
             }
 
+        }
+
+
+        [HttpPost]
+        public JsonResult DeleteAgencyCompany(int id)
+        {
+            // ลบข้อมูลจากฐานข้อมูลหรือ DAO
+            // สมมติ EmployeeDAO.DeleteUserById(id);
+            bool result =  SystemDAO.DeleteOrg(id.ToString(), API_Path_Main + API_Path_Sub, null);
+            if (result)
+                return Json(new { success = true });
+            else
+                return Json(new { success = false, message = "ไม่พบผู้ใช้งานหรือเกิดข้อผิดพลาด" });
         }
     }
 }

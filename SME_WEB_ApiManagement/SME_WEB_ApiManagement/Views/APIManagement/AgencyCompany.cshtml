@@ -8,10 +8,18 @@
 <link rel="stylesheet" href="~/css/custom-api.css" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
     .close {
         pointer-events: none;
+    }
+
+    .pagination-custom .btn {
+        min-width: 36px;
+        min-height: 36px;
+        padding: 0;
+        font-size: 1.1rem;
     }
 </style>
 
@@ -20,27 +28,107 @@
         $("#CreateModal").modal("show");
     }
 
-    function OpenConfirmDeleteModal(ReqID) {
-        document.getElementById("TArrivalDetaiModels_Id").value = ReqID;
-        $("#ConfirmDeleteModal").modal();
-    }
+    $(document).on('click', '.editbtn', function () {
+        $("#InsMOrg_OrganizationId").val($(this).data("organizationid"));
+        $("#InsMOrg_OrganizationCode").val($(this).data("organizationcode"));
+        $("#InsMOrg_OrganizationName").val($(this).data("organizationname"));
+        $("#InsMOrg_Description").val($(this).data("description"));
+        $("#InsMOrg_FlagActive").val($(this).data("flagactive"));
+        $("#CreateModal").modal("show");
+    });
 
-    $(document).ready(function () {
-        $(".editbtn").click(function () {
-            var organizationId = $(this).data("organizationid");
-            var organizationCode = $(this).data("organizationcode");
-            var organizationName = $(this).data("organizationname");
-            var description = $(this).data("description");
-            var flagActive = $(this).data("flagactive");
+    $(document).on('click', '.btn_Delete', function () {
+        var orgId = $(this).data('organizationid');
+        if (!orgId) {
+            alert('ไม่พบข้อมูลที่จะลบ');
+            return;
+        }
+        if (confirm('คุณต้องการลบข้อมูลนี้ใช่หรือไม่?')) {
+            $.ajax({
+                url: '@Url.Action("DeleteAgencyCompany", "APIManagement")',
+                type: 'POST',
+                data: { id: orgId },
+                success: function (res) {
+                    if (res.success) {
+                        alert('ลบสำเร็จ!');
+                        location.reload();
+                    } else {
+                        alert(res.message || 'เกิดข้อผิดพลาดในการลบข้อมูล');
+                    }
+                },
+                error: function () {
+                    alert('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
+                }
+            });
+        }
+    });
 
-            $("#InsMOrg_OrganizationId").val(organizationId);
-            $("#InsMOrg_OrganizationCode").val(organizationCode);
-            $("#InsMOrg_OrganizationName").val(organizationName);
-            $("#InsMOrg_Description").val(description);
-            $("#InsMOrg_FlagActive").val(flagActive);
-
-            $("#CreateModal").modal("show");
+    $(document).on('click', '#DeleteData', function (e) {
+        e.preventDefault();
+        var orgId = $('#TArrivalDetaiModels_Id').val();
+        if (!orgId) {
+            Swal.fire('ผิดพลาด', 'ไม่พบข้อมูลที่จะลบ', 'error');
+            return;
+        }
+        Swal.fire({
+            title: 'ยืนยันการลบ',
+            text: "คุณต้องการลบข้อมูลนี้ใช่หรือไม่?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ใช่, ลบเลย!',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '@Url.Action("DeleteAgencyCompany", "APIManagement")',
+                    type: 'POST',
+                    data: { id: orgId },
+                    success: function (res) {
+                        if (res.success) {
+                            Swal.fire('ลบสำเร็จ!', '', 'success').then(() => location.reload());
+                        } else {
+                            Swal.fire('ผิดพลาด', res.message || 'เกิดข้อผิดพลาดในการลบข้อมูล', 'error');
+                        }
+                    },
+                    error: function () {
+                        Swal.fire('ผิดพลาด', 'เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์', 'error');
+                    }
+                });
+            }
         });
+    });
+
+    $(document).on('click', '#saveData', function (e) {     
+        var orgCode = $('#InsMOrg_OrganizationCode').val();
+        var orgName = $('#InsMOrg_OrganizationName').val();
+        var errorMsg = "";
+        if (!orgCode) errorMsg += "กรุณาเลือกหน่วยงานเจ้าของ API\n";
+        if (!orgName) errorMsg += "กรุณาระบุชื่อระบบ\n";
+        if (errorMsg) {
+            alert(errorMsg);
+            e.preventDefault();
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var btnLast = document.getElementById("btnLast");
+        if (btnLast) {
+            btnLast.addEventListener("click", function () {
+                document.getElementById("hidcurrentpage").value = document.getElementById("hidtotalpage").value;
+            });
+        }
+    });
+
+    $(document).on('click', '#btnShowConfirmSave', function () {
+        $('#ConfirmSaveModal').modal('show');
+    });
+
+    $(document).on('click', '#btnConfirmSave', function () {
+        $('#CreateModal').closest('form').submit();
+        $('#ConfirmSaveModal').modal('hide');
+        $('#CreateModal').modal('hide');
     });
 </script>
 
@@ -62,19 +150,19 @@
                 <div class="content_body">
                     <div class="row">
                         <div class="col-md-6">
-                            <div><label>รหัสผู้ใช้บริการ</label></div>
+                            <label>รหัสผู้ใช้บริการ</label>
                             <input class="form-control" type="text" asp-for="MOrg.OrganizationCode" placeholder="Ex. ORG..." />
                         </div>
                         <div class="col-md-6">
-                            <div><label>ผู้ใช้บริการ</label></div>
+                            <label>ผู้ใช้บริการ</label>
                             <input class="form-control" type="text" asp-for="MOrg.OrganizationName" placeholder="Ex. ฝ่าย..." />
                         </div>
                         <div class="col-md-6">
-                            <div><label>วันที่สร้าง</label></div>
+                            <label>วันที่สร้าง</label>
                             <input class="form-control" type="date" asp-for="MOrg.CreateDate" />
                         </div>
                         <div class="col-md-6">
-                            <div><label>วันที่แก้ไขล่าสุด</label></div>
+                            <label>วันที่แก้ไขล่าสุด</label>
                             <input class="form-control" type="date" asp-for="MOrg.UpdateDate" />
                         </div>
                     </div>
@@ -82,8 +170,7 @@
                         <button class="btn btn_search text-color-botton" name="searchData" id="searchData" value="searchData">ค้นหา</button>
                         <button class="btn btn_search text-color-botton" name="clearSearcData" id="clearSearcData" value="clearSearcData">Clear</button>
                     </div>
-                    <br />
-                    <br />
+                    <br /><br />
                 </div>
             </div>
         </div>
@@ -104,36 +191,36 @@
                         <table class="table table-stand">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">รหัสใช้บริการ</th>
-                                    <th scope="col">ผู้ใช้บริการ</th>
-                                    <th scope="col">สถานะ</th>
-                                    <th scope="col">วันที่สร้าง</th>
-                                    <th scope="col">วันที่แก้ไขล่าสุด</th>
-                                    <th scope="col"></th>
+                                    <th>#</th>
+                                    <th>รหัสใช้บริการ</th>
+                                    <th>ผู้ใช้บริการ</th>
+                                    <th>สถานะ</th>
+                                    <th>วันที่สร้าง</th>
+                                    <th>วันที่แก้ไขล่าสุด</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @if (Model.LOrg != null)
                                 {
+                                    var index = 1 + ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize);
                                     foreach (var w in Model.LOrg)
                                     {
                                         <tr>
-                                            <td class="align_text"></td>
-                                            <td class="align_text" style="width:auto">@w.OrganizationCode</td>
-                                            <td class="align_text" style="width:auto">@w.OrganizationName</td>
-                                            <td class="align_text" style="width:auto">
-                                                @(w.FlagActive ?? false ? "ใช้งาน" : "ปิดการใช้งาน")
+                                            <td class="align_text">@index</td>
+                                            <td class="align_text">@w.OrganizationCode</td>
+                                            <td class="align_text">@w.OrganizationName</td>
+                                            <td class="align_text">
+                                                @(w.FlagActive ? "ใช้งาน" : "ปิดการใช้งาน")
                                             </td>
-                                            <td class="align_text" style="width:auto">
+                                            <td class="align_text">
                                                 @(w.CreateDate.HasValue? w.CreateDate.Value.ToString("dd/MM/yyyy") : "-")
                                             </td>
-                                            <td class="align_text" style="width:auto">
+                                            <td class="align_text">
                                                 @(w.UpdateDate.HasValue? w.UpdateDate.Value.ToString("dd/MM/yyyy") : "-")
                                             </td>
                                             <td>
-                                                <a type="button"
-                                                   class="editbtn"
+                                                <a href="javascript:void(0);" class="editbtn"
                                                    data-organizationid="@w.OrganizationId"
                                                    data-organizationcode="@w.OrganizationCode"
                                                    data-organizationname="@w.OrganizationName"
@@ -141,17 +228,19 @@
                                                    data-flagactive="@w.FlagActive">
                                                     <i class="fas fa-edit" style="color: #34A5EB; cursor: pointer;"></i>
                                                 </a>
-                                                <a type="button" style="cursor: pointer;"
-                                                   onclick="OpenConfirmDeleteModal(@w.OrganizationId)" name="btn_Delete" value="Delete">
+                                                <a href="javascript:void(0);" class="btn_Delete"
+                                                   data-organizationid="@w.OrganizationId"
+                                                   style="cursor: pointer;">
                                                     <i class="fas fa-trash m-l-10 btn_delete-icon"></i>
                                                 </a>
                                             </td>
                                         </tr>
+                                        index++;
                                     }
                                 }
                                 else
                                 {
-                                    <tr id="trNodata" runat="server" visible="false">
+                                    <tr id="trNodata">
                                         <td colspan="12" valign="middle">
                                             <b>No Data</b>
                                         </td>
@@ -160,96 +249,76 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="d-flex justify-content-end">
-                        <input type="hidden" name="hidcurrentpage" id="hidcurrentpage" value="@Model.PageModel.CurrentPageNumber" />
-                        <input type="hidden" name="hidtotalpage" id="hidtotalpage" value="@Model.PageModel.TotalPage" />
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination pull-right layout_align m-t-10">
-                                <li class="page-item"><input type="submit" class="page-link" name="first" value="<<"></li>
-                                <li class="page-item"><input type="submit" class="page-link" name="previous" value="<"></li>
-                                <li class="page-item text_padding_nav">@Model.PageModel.CurrentPageNumber of @Model.PageModel.TotalPage</li>
-                                <li class="page-item"><input type="submit" class="page-link" name="next" value=">"></li>
-                                <li class="page-item"><input type="submit" class="page-link" name="last" value=">>"></li>
-                            </ul>
-                        </nav>
+                    <div class="table-footer">
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                            <div class="pagination-custom my-2">
+                                <input type="hidden" name="hidtotalpage" id="hidtotalpage" value="@Model.PageModel.TotalPage" />
+                                <button type="submit" class="btn btn-light rounded-circle mx-1 @(Model.PageModel.CurrentPageNumber <= 1 ? "disabled" : "")" name="first" value="first" title="หน้าแรก">
+                                    <i class="fa fa-angle-double-left"></i>
+                                </button>
+                                <button type="submit" class="btn btn-light rounded-circle mx-1 @(Model.PageModel.CurrentPageNumber <= 1 ? "disabled" : "")" name="previous" value="previous" title="ก่อนหน้า">
+                                    <i class="fa fa-angle-left"></i>
+                                </button>
+                                <span class="mx-2">Page</span>
+                                <input type="text" name="hidcurrentpage" id="hidcurrentpage" value="@Model.PageModel.CurrentPageNumber" readonly style="width: 40px; text-align: center;" />
+                                <span class="mx-2">of @Model.PageModel.TotalPage</span>
+                                <button type="submit" class="btn btn-light rounded-circle mx-1 @(Model.PageModel.CurrentPageNumber >= Model.PageModel.TotalPage ? "disabled" : "")" name="next" value="next" title="ถัดไป">
+                                    <i class="fa fa-angle-right"></i>
+                                </button>
+                                <button type="submit" class="btn btn-light rounded-circle mx-1 @(Model.PageModel.CurrentPageNumber >= Model.PageModel.TotalPage ? "disabled" : "")" name="last" id="btnLast" value="last" title="หน้าสุดท้าย">
+                                    <i class="fa fa-angle-double-right"></i>
+                                </button>
+                            </div>
+                            <div class="my-2">
+                                แสดง @((Model.LOrg?.Count() ?? 0) > 0 ? $"{1 + ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize)} - {((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize) + Model.LOrg.Count()} จาก {Model.PageModel.TotalRows} รายการ" : "0 รายการ")
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Create/Edit Modal -->
-    <div class="modal fade" id="CreateModal" tabindex="-1" role="dialog" aria-labelledby="ViewCancelModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document" style="min-width: 80%;">
+    <div class="modal fade" id="CreateModal" tabindex="-1" role="dialog" aria-labelledby="CreateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content custom-modal-content">
-                <div class="modal-header custom-modal-header">
-                    <h5 class="modal-title custom-modal-title" id="reqDetailModalLabel">สร้างระบบ API</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                <div class="modal-header" style="background-color: #2196f3; color: #fff; justify-content: center;">
+                    <h4 class="modal-title font-weight-bold" id="CreateModalLabel">หน่วยงานหรือบริษัท</h4>
                 </div>
-                <div class="card" style="margin-top: 1px;">
-                    <input class="form-control" type="text" asp-for="InsMOrg.OrganizationId" id="InsMOrg_OrganizationId" />
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>ชื่อระหัสหน่วยงาน</label>
-                                    <input class="form-control" type="text" asp-for="InsMOrg.OrganizationCode" placeholder="Ex. GXD001..." id="InsMOrg_OrganizationCode" />
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>ชื่อระบบ</label>
-                                    <input class="form-control" type="text" asp-for="InsMOrg.OrganizationName" placeholder="Ex. ฝ่าย..." id="InsMOrg_OrganizationName" />
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>สถานะ</label>
-                                    <select asp-for="InsMOrg.FlagActive" asp-items="vDdlStatus" class="form-control" id="InsMOrg_FlagActive"></select>
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>หมายเหตุ</label>
-                                    <textarea class="form-control" asp-for="InsMOrg.Description" placeholder="Ex. เพิ่มเติม..." id="InsMOrg_Description"></textarea>
-                                </div>
-                            </div>
+                <div class="modal-body px-5 py-4">
+                    <input type="hidden" asp-for="InsMOrg.OrganizationId" id="InsMOrg_OrganizationId" />
+                    <div class="form-group mb-4">
+                        <label for="InsMOrg_OrganizationCode" class="font-weight-bold" style="font-size:1.3rem;">
+                            หน่วยงานเจ้าของ API <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="InsMOrg.OrganizationCode" asp-items="vDdlOrg" class="form-control" id="InsMOrg_OrganizationCode" style="font-size:1.1rem;">
+                            <option value="">กรุณาระบุ</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="InsMOrg_OrganizationName" class="font-weight-bold" style="font-size:1.3rem;">
+                            ชื่อระบบ <span class="text-danger">*</span>
+                        </label>
+                        <input class="form-control" type="text" asp-for="InsMOrg.OrganizationName" id="InsMOrg_OrganizationName" placeholder="กรุณาระบุ" style="font-size:1.1rem;" />
+                    </div>
+                    <div class="form-group mb-4">
+                        <label class="font-weight-bold" style="font-size:1.3rem;">
+                            สถานะ <span class="text-danger">*</span>
+                        </label>
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" asp-for="InsMOrg.FlagActive" id="InsMOrg_FlagActive" />
+                            <label class="form-check-label" for="InsMOrg_FlagActive" style="font-size:1.1rem;">
+                                ใช้งาน
+                            </label>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer n-border custom-modal-footer" style="align-self: center;">
-                    <button type="button" class="btn btn-cancel" data-dismiss="modal">ยกเลิก</button>
-                    <button class="btn btn-save" value="saveData" id="saveData" name="saveData">บันทึก</button>
+                <div class="modal-footer justify-content-center border-0 pb-4">
+                    <button type="button" class="btn btn-outline-primary px-5 mr-3" data-bs-dismiss="modal" style="font-size:1.2rem;">ยกเลิก</button>
+                    <button type="submit" class="btn btn-primary px-5" name="saveData" id="saveData" value="saveData" style="font-size:1.2rem;">บันทึก</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Confirm Delete Modal -->
-    <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ViewCancelModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document" style="min-width: 80%;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="reqDetailModalLabel">Confirm Delete</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="card" style="margin-top: 1px;">
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="CLeaveRequestModel_EmpCode">Are you sure you want to Delete this item?</label>
-                            <input type="hidden" id="TArrivalDetaiModels_Id" asp-for="MOrg.OrganizationId" />
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer n-border" style="align-self: center;">
-                    <button class="btn btn_search text-color-botton m-r-10" name="DeleteData" id="DeleteData" value="DeleteData">Submit</button>
-                    <button type="button" class="btn btn-cancel" data-dismiss="modal">ยกเลิก</button>
-                </div>
-            </div>
-        </div>
-    </div>
 }

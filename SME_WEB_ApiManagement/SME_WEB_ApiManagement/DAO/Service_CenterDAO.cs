@@ -211,7 +211,7 @@ namespace SME_WEB_ApiManagement.DAO
             page.TotalPage = Math.Ceiling(totalRow / dPageSize); // แสดงค่าหน้าทั้งหมด
             page.CurrentPageNumber = (currentpage == 0) ? 1 : currentpage;
             page.PageSize = PageSize;
-
+            page.TotalRows = rowcount;
 
             return page;
         }

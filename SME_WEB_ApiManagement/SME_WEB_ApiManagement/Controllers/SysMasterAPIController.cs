@@ -172,17 +172,17 @@ namespace SME_WEB_ApiManagement.Controllers
                 }
                 else if (!string.IsNullOrEmpty(clearSearcData))
                 {
-                    return Redirect("SysMasterAPI");
+                    return Redirect("SysMasterAPIInbound");
                 }
                 else if (!string.IsNullOrEmpty(saveData))
                 {
                     int? save = SystemDAO.UpsertSystem(vm.InsMSystem, API_Path_Main + API_Path_Sub, null);
-                    return Redirect("SysMasterAPI");
+                    return Redirect("SysMasterAPIInbound");
                 }
                 else if (!string.IsNullOrEmpty(DeleteData))
                 {
                     var del = SystemDAO.DeleteSystem(vm.MSystem.Id.ToString(), API_Path_Main + API_Path_Sub, null);
-                    return Redirect("SysMasterAPI");
+                    return Redirect("SysMasterAPIInbound");
                 }
                 else
                 {

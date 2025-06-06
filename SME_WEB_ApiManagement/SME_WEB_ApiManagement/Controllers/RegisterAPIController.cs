@@ -55,17 +55,19 @@ namespace SME_WEB_ApiManagement.Controllers
             #endregion
             if (!string.IsNullOrEmpty(searchDate))
             {
-                result.LRegis = SystemDAO.GetRegister(vm, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
+                var xlist = SystemDAO.GetRegister(vm, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
+
+                result.LRegis = xlist.LRegis;
                 if (result.LRegis != null)
                 {
-                    totalCount = SystemDAO.GetRegister(vm, API_Path_Main + API_Path_Sub, "Y", currentPageNumber, PageSize, null).Count();
+                    result.PageModel = Service_CenterDAO.LoadPagingViewModel(xlist.TotalRowsList ?? 0, currentPageNumber, PageSize);
                 }
                 else
                 {
-                    totalCount = 0;
-                }
-                result.PageModel = Service_CenterDAO.LoadPagingViewModel(totalCount, currentPageNumber, PageSize);
+                    result.PageModel = Service_CenterDAO.LoadPagingViewModel( 0, currentPageNumber, PageSize);
 
+                }
+                result.TotalRowsList = xlist.TotalRowsList;
             }
             else if (!string.IsNullOrEmpty(clearSearcData)) 
             {
@@ -73,17 +75,20 @@ namespace SME_WEB_ApiManagement.Controllers
             }
             else
             {
-                result.LRegis = SystemDAO.GetRegister(vm, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
+               
+                var xlist    = SystemDAO.GetRegister(vm, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
+
+                result.LRegis = xlist.LRegis;
                 if (result.LRegis != null)
                 {
-                    totalCount = SystemDAO.GetRegister(vm, API_Path_Main + API_Path_Sub, "Y", currentPageNumber, PageSize, null).Count();
+                    result.PageModel = Service_CenterDAO.LoadPagingViewModel(xlist.TotalRowsList ?? 0, currentPageNumber, PageSize);
                 }
                 else
                 {
-                    totalCount = 0;
-                }
-                result.PageModel = Service_CenterDAO.LoadPagingViewModel(totalCount, currentPageNumber, PageSize);
+                    result.PageModel = Service_CenterDAO.LoadPagingViewModel(0, currentPageNumber, PageSize);
 
+                }
+                result.TotalRowsList = xlist.TotalRowsList;
             }
             result.vDdlStatus = Service_CenterDAO.GetLookups("STATUS", API_Path_Main + API_Path_Sub, null);
             result.vDdlOrg = Service_CenterDAO.GetDropdownOrganization(API_Path_Main + API_Path_Sub, null);

@@ -44,62 +44,67 @@ namespace SME_WEB_ApiManagement.DAO
                 return null;
             }
         }
-        public static List<MRegisterModels> GetRegister(ViewRegisterApiModels vm, string apipath = null, string flagCount = null, int currentpage = 0, int PageSize = 0, string TokenStr = null)
+        public static ViewRegisterApiModels GetRegister(ViewRegisterApiModels vm, string apipath = null, string flagCount = null, int currentpage = 0, int PageSize = 0, string TokenStr = null)
         {
-
-
-            APIpath = apipath + "MRegister/GetRegisterBySearch";
-            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(APIpath);
-            httpWebRequest.ContentType = "application/json";
-            //  httpWebRequest.Headers.Add("Authorization", "Bearer " + TokenStr);
-            httpWebRequest.Method = "POST";
-            List<MRegisterModels> Llist = new List<MRegisterModels>();
-            try
-            {
-                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            try {
+                APIpath = apipath + "MRegister/GetRegisterBySearch";
+                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(APIpath);
+                httpWebRequest.ContentType = "application/json";
+                //  httpWebRequest.Headers.Add("Authorization", "Bearer " + TokenStr);
+                httpWebRequest.Method = "POST";
+                ViewRegisterApiModels Llist = new ViewRegisterApiModels();
+                try
                 {
-                    MRegisterModels Req; // กำหนด Type ชัดเจน
-                    if (vm.MRegister != null)
+                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                     {
-                        Req = vm.MRegister;
+                        MRegisterModels Req; // กำหนด Type ชัดเจน
+                        if (vm.MRegister != null)
+                        {
+                            Req = vm.MRegister;
+                        }
+                        else
+                        {
+                            Req = new MRegisterModels();
+                        }
+                        if (flagCount != "Y")
+                        {
+                            Req.rowOFFSet = (currentpage - 1) * PageSize;
+                            Req.rowFetch = PageSize;
+                        }
+                        else
+                        {
+                            Req.rowOFFSet = 0;
+                            Req.rowFetch = 0;
+
+                        }
+                        var json = JsonConvert.SerializeObject(Req, Formatting.Indented);
+
+
+                        streamWriter.Write(json);
+                        streamWriter.Flush();
+                        streamWriter.Close();
                     }
-                    else
+                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                     {
-                        Req = new MRegisterModels();
-                    }
-                    if (flagCount != "Y")
-                    {
-                        Req.rowOFFSet = (currentpage - 1) * PageSize;
-                        Req.rowFetch = PageSize;
-                    }
-                    else
-                    {
-                        Req.rowOFFSet = 0;
-                        Req.rowFetch = 0;
+
+                        var result = streamReader.ReadToEnd();
+                        Llist = JsonConvert.DeserializeObject<ViewRegisterApiModels>(result);
+                        return Llist;
 
                     }
-                    var json = JsonConvert.SerializeObject(Req, Formatting.Indented);
 
-
-                    streamWriter.Write(json);
-                    streamWriter.Flush();
-                    streamWriter.Close();
                 }
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                catch (Exception ex)
                 {
-
-                    var result = streamReader.ReadToEnd();
-                    Llist = JsonConvert.DeserializeObject<List<MRegisterModels>>(result);
-                    return Llist;
-
+                    return new ViewRegisterApiModels();
                 }
-
-            }
-            catch (Exception ex)
+            } catch 
             {
-                return null;
+                return new ViewRegisterApiModels();
             }
+
+         
         }
         public static int? UpsertRegister(UpSertRegisterApiModels vm =null,string apipath = null, string TokenStr = null)
         {
@@ -502,7 +507,7 @@ namespace SME_WEB_ApiManagement.DAO
                 return null;
             }
         }
-        public static string? DeleteOrg(string id = null, string apipath = null, string TokenStr = null)
+        public static bool DeleteOrg(string id = null, string apipath = null, string TokenStr = null)
         {
 
 
@@ -520,14 +525,15 @@ namespace SME_WEB_ApiManagement.DAO
 
                     var result = streamReader.ReadToEnd();
                     string Llist = JsonConvert.DeserializeObject<string>(result);
-                    return Llist;
+                    return true;
+
 
                 }
 
             }
             catch (Exception ex)
             {
-                return null;
+                return false;
             }
         }
         public static MSystemInfoModels? GetSystemInfoByCode(string syscode = null, string apipath = null, string TokenStr = null)

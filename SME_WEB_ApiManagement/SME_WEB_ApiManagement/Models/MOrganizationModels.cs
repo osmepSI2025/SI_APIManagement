@@ -38,7 +38,7 @@ namespace SME_WEB_ApiManagement.Models
 
         public string? Status { get; set; }
 
-        public bool? FlagActive { get; set; }
+        public bool FlagActive { get; set; }
 
         public string? FlagDelete { get; set; }
 

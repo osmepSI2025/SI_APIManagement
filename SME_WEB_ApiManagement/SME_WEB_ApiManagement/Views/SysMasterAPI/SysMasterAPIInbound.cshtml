@@ -1,6 +1,6 @@
 ﻿@model SME_WEB_ApiManagement.Models.ViewSystemApiModels
 @{
-    ViewData["Title"] = "System Master API";
+    ViewData["Title"] = "Inbound API";
     var vDdlStatus = ViewBag.vDdlStatus;
     var vDdlOrg = ViewBag.vDdlOrg;
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
@@ -120,11 +120,11 @@
     function GetCreate() {
         $("#CreateModal").modal("show");
     }
-    
+
     $(document).ready(function () {
         $(".editbtn").click(function () {
             var id = $(this).data("id");
-            var systemName = $(this).data("systemname");
+            var systemName = $("#InsMSystem_SystemName").val();
             var flagActive = $(this).data("flagactive");
             var ownerSystemCode = $(this).data("ownersystemcode");
             $("#InsMSystem_Id").val(id);
@@ -139,14 +139,28 @@
             $("#CreateModal").modal("show");
         });
 
-        // Confirmation popup before save
         $("#saveData").click(function (e) {
+            var ownerSystemCode = $("#InsMSystem_OwnerSystemCode").val();
+            var systemName = $("#InsMSystem_SystemName").val();
+
+            if (!ownerSystemCode || ownerSystemCode.trim() === "") {
+                alert("กรุณาเลือกหน่วยงานเจ้าของ API");
+                $("#InsMSystem_OwnerSystemCode").focus();
+                e.preventDefault();
+                return false;
+            }
+            if (!systemName || systemName.trim() === "") {
+                alert("กรุณาระบุชื่อระบบ");
+                $("#InsMSystem_SystemName").focus();
+                e.preventDefault();
+                return false;
+            }
+
             var confirmed = confirm("คุณต้องการบันทึกข้อมูลใช่หรือไม่?");
             if (!confirmed) {
                 e.preventDefault();
                 return false;
             }
-            // else, allow form submission
         });
     });
 </script>
@@ -189,7 +203,7 @@
     <div class="container-fluid" style="background: #205d7a; min-height: 100vh; padding: 24px;">
         <!-- Search Card -->
         <div class="card-custom">
-            <div class="card-title">ค้นหาระบบ API</div>
+            <div class="card-title">ค้นหาระบบ</div>
             <div class="row mb-3">
                 <div class="col-md-6 mb-3">
                     <label class="form-label">ชื่อระบบ</label>
@@ -210,14 +224,12 @@
                     <label class="form-label">วันที่สร้าง</label>
                     <div class="input-group">
                         <input class="form-control" type="date" asp-for="MSystem.CreateDate" placeholder="กรุณาระบุ" />
-                      
                     </div>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">วันที่สิ้นสุด</label>
                     <div class="input-group">
                         <input class="form-control" type="date" asp-for="MSystem.UpdateDate" placeholder="กรุณาระบุ" />
-                       
                     </div>
                 </div>
             </div>
@@ -230,7 +242,7 @@
         <!-- Table Card -->
         <div class="card-custom">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <div class="card-title mb-0">รายการระบบ API</div>
+                <div class="card-title mb-0">รายการ Inbound API</div>
                 <button type="button" class="btn btn-primary btn-custom" onclick="GetCreate();">
                     <i class="fa fa-plus"></i> สร้าง
                 </button>
@@ -244,11 +256,9 @@
                             <th style="width: 120px;">สถานะ API</th>
                             <th style="width: 180px;">วันที่สร้าง</th>
                             <th style="width: 180px;">วันที่แก้ไขล่าสุด</th>
-
                         </tr>
                     </thead>
                     <tbody>
-
                         @if (Model.LSystem != null && Model.LSystem.Any())
                         {
                             var index = 1 + ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize);
@@ -268,7 +278,6 @@
                                     </td>
                                     <td>@(w.CreateDate.HasValue? w.CreateDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : "-")</td>
                                     <td>@(w.UpdateDate.HasValue? w.UpdateDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : "-")</td>
-                                  
                                 </tr>
                                 index++;
                             }
@@ -284,25 +293,31 @@
             </div>
             <div class="table-footer">
                 <div class="pagination-custom">
-                    <button type="submit" class="btn btn-light" name="first" value="first" title="หน้าแรก"><i class="fa fa-angle-double-left"></i></button>
-                    <button type="submit" class="btn btn-light" name="previous" value="previous" title="ก่อนหน้า"><i class="fa fa-angle-left"></i></button>
+                    <input type="hidden" name="hidtotalpage" id="hidtotalpage" value="@Model.PageModel.TotalPage" />
+                    <button type="submit" class="btn btn-light @(Model.PageModel.CurrentPageNumber <= 1 ? "disabled" : "")" name="first" value="first" title="หน้าแรก">
+                        <i class="fa fa-angle-double-left"></i>
+                    </button>
+                    <button type="submit" class="btn btn-light @(Model.PageModel.CurrentPageNumber <= 1 ? "disabled" : "")" name="previous" value="previous" title="ก่อนหน้า">
+                        <i class="fa fa-angle-left"></i>
+                    </button>
                     <span>Page</span>
                     <input type="text" name="hidcurrentpage" id="hidcurrentpage" value="@Model.PageModel.CurrentPageNumber" readonly />
                     <span>of @Model.PageModel.TotalPage</span>
-                    <button type="submit" class="btn btn-light" name="next" value="next" title="ถัดไป"><i class="fa fa-angle-right"></i></button>
-                    <button type="submit" class="btn btn-light" name="last" value="last" title="หน้าสุดท้าย"><i class="fa fa-angle-double-right"></i></button>
+                    <button type="submit" class="btn btn-light @(Model.PageModel.CurrentPageNumber >= Model.PageModel.TotalPage ? "disabled" : "")" name="next" value="next" title="ถัดไป">
+                        <i class="fa fa-angle-right"></i>
+                    </button>
+                    <button type="submit" class="btn btn-light @(Model.PageModel.CurrentPageNumber >= Model.PageModel.TotalPage ? "disabled" : "")" name="last" id="btnLast" value="last" title="หน้าสุดท้าย">
+                        <i class="fa fa-angle-double-right"></i>
+                    </button>
                 </div>
                 <div>
-                    แสดง @((Model.LSystem?.Count() ?? 0) > 0 ? $"{1 + ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize)} - {((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize) + Model.LSystem.Count()} จาก {Model.PageModel.TotalPage} รายการ" : "0 รายการ")
+                    แสดง @((Model.LSystem?.Count() ?? 0) > 0 ? $"{1 + ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize)} - {((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize) + Model.LSystem.Count()} จาก {Model.PageModel.TotalRows} รายการ" : "0 รายการ")
                 </div>
             </div>
-          
         </div>
     </div>
 
- 
-
-   <!-- Create/Edit Modal -->
+    <!-- Create/Edit Modal -->
     <div class="modal fade" id="CreateModal" tabindex="-1" role="dialog" aria-labelledby="CreateModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document" style="min-width: 40%;">
             <div class="modal-content">
@@ -321,9 +336,8 @@
                             <input class="form-control" type="hidden" asp-for="InsMSystem.Id" id="InsMSystem_Id" />
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">ชื่อระบบ<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" asp-for="InsMSystem.SystemName" placeholder="กรุณาระบุ" />
+                                <input class="form-control" type="text" asp-for="InsMSystem.SystemName" placeholder="กรุณาระบุ" id="InsMSystem_SystemName" />
                             </div>
-                          
                         </div>
                         <div class="row mb-4">
                             <div class="col-md-12">
@@ -370,3 +384,13 @@
         </div>
     </div>
 }
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var btnLast = document.getElementById("btnLast");
+        if (btnLast) {
+            btnLast.addEventListener("click", function () {
+                document.getElementById("hidcurrentpage").value = document.getElementById("hidtotalpage").value;
+            });
+        }
+    });
+</script>
