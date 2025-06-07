@@ -37,6 +37,8 @@ namespace SME_API_Apimanagement
             //add service 
             builder.Services.AddDbContext<ApiMangeDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
+
+
             builder.Services.AddScoped<ITAPIMappingRepository, TAPIMappingRepository>();
             builder.Services.AddScoped<IMSystemRepository, MSystemRepository>();
             builder.Services.AddScoped<ITSystemAPIRepository, TSystemAPIRepository>();
@@ -47,12 +49,14 @@ namespace SME_API_Apimanagement
             builder.Services.AddScoped<UserManagementRepository>();
             builder.Services.AddScoped<UserManagementService>();
             builder.Services.AddScoped<HrEmployeeService>();
-
-             builder.Services.AddScoped<ITErrorApiLogRepository, TErrorApiLogRepository>();
+            builder.Services.AddScoped<ApiMappingService>();
+            builder.Services.AddScoped<ITErrorApiLogRepository, TErrorApiLogRepository>();
+     
+          
             builder.Services.AddScoped<ITErrorApiLogService, TErrorApiLogService>();
             builder.Services.AddScoped<IMSystemInfoRepository, MSystemInfoRepository>();
             builder.Services.AddScoped<IMSystemInfoService, MSystemInfoService>();
-
+     
             builder.Services.AddScoped<IApiInformationRepository, ApiInformationRepository>();
             builder.Services.AddScoped<ICallAPIService, CallAPIService>(); // Register ICallAPIService with CallAPIService
             builder.Services.AddHttpClient<CallAPIService>();
@@ -93,7 +97,7 @@ namespace SME_API_Apimanagement
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
-
+            app.UseMiddleware<ExceptionMiddleware>();
             if (app.Environment.IsDevelopment()||app.Environment.IsProduction())
             {
                 app.UseSwagger();

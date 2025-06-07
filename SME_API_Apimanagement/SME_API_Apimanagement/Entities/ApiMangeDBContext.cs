@@ -285,6 +285,7 @@ public partial class ApiMangeDBContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.ErrorDate).HasColumnType("datetime");
+            entity.Property(e => e.HttpCode).HasMaxLength(50);
             entity.Property(e => e.HttpMethod).HasMaxLength(50);
             entity.Property(e => e.InnerException).HasColumnType("ntext");
             entity.Property(e => e.Message).HasColumnType("ntext");
@@ -355,8 +356,11 @@ public partial class ApiMangeDBContext : DbContext
             entity.Property(e => e.ApiResponseParamaterType)
                 .HasMaxLength(50)
                 .HasColumnName("API_Response_Paramater_Type");
-            entity.Property(e => e.ApiServiceName)
+            entity.Property(e => e.ApiServiceCode)
                 .HasMaxLength(50)
+                .HasColumnName("API_Service_Code");
+            entity.Property(e => e.ApiServiceName)
+                .HasMaxLength(250)
                 .HasColumnName("API_Service_Name");
             entity.Property(e => e.ApiServiceType)
                 .HasMaxLength(50)

@@ -2,6 +2,7 @@
 using SME_API_Apimanagement.Entities;
 using SME_API_Apimanagement.Models;
 using SME_API_Apimanagement.Repository;
+using SME_API_Apimanagement.Service;
 
 namespace SME_API_Apimanagement.Controllers
 {
@@ -10,10 +11,11 @@ namespace SME_API_Apimanagement.Controllers
     public class TAPIMappingController : ControllerBase
     {
         private readonly ITAPIMappingRepository _repository;
-
-        public TAPIMappingController(ITAPIMappingRepository repository)
+        private readonly ApiMappingService _apiMappingService;
+        public TAPIMappingController(ITAPIMappingRepository repository,ApiMappingService apiMappingService)
         {
             _repository = repository;
+            _apiMappingService = apiMappingService;
         }
 
         [HttpGet]
@@ -87,6 +89,23 @@ namespace SME_API_Apimanagement.Controllers
                 // อาจจะใส่ log หรือรายละเอียดเพิ่มเติมของข้อผิดพลาดใน ex
                 return BadRequest(new { message = ex.Message }); // คืน 400 พร้อมข้อความข้อผิดพลาด
             }
+        }
+
+        [HttpGet("GetAPIList/businessId={businessId}")]
+        public async Task<IActionResult> GetAllByBusinessIdAsync(string businessId)
+        {
+            var result = new ApiPermisionApiRespone();
+            if (string.IsNullOrWhiteSpace(businessId))
+            {
+                result.responseCode = "400";
+                result.responseMsg = "businessId is required.";
+                result.result = new List<TApiPermisionRespone>();
+                return BadRequest(result);
+            }
+
+           
+            result = await _apiMappingService.GetAllByBusinessIdAsync(businessId);
+            return result != null ? Ok(result) : NotFound();
         }
     }
 

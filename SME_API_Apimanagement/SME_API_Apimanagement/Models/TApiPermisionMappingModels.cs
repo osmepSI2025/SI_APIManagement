@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SME_API_Apimanagement.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace SME_API_Apimanagement.Models
 {
@@ -35,4 +36,26 @@ namespace SME_API_Apimanagement.Models
         public string? ServiceName { get; set; }
         public bool? IsSelected { get; set; }
     }
+    public partial class ApiPermisionApiRespone
+    {
+        public string? responseCode { get; set; }
+        public string? responseMsg { get; set; }
+        public List<TApiPermisionRespone> result { get; set; } = new List<TApiPermisionRespone>();
+    }
+    public class TApiPermisionRespone   
+    {
+     
+        public string? BusinessId { get; set; }      
+
+        public DateTime? StartDate { get; set; }
+
+        public DateTime? EndDate { get; set; }
+
+        public string? SystemName { get; set; }
+
+        public string? ServiceName { get; set; }
+
+        public bool? IsSelected { get; set; }
+    }
 }
+

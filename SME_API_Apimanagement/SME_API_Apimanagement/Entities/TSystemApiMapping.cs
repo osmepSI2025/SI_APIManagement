@@ -11,6 +11,8 @@ public partial class TSystemApiMapping
 
     public string? ApiServiceName { get; set; }
 
+    public string? ApiServiceCode { get; set; }
+
     public string? ApiMethod { get; set; }
 
     public string? ApiUrlProdInbound { get; set; }

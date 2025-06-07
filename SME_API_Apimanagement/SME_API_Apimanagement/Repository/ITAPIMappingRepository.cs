@@ -11,7 +11,7 @@ namespace SME_API_Apimanagement.Repository
         Task UpdateAsync(TApiPermisionMapping mapping);
         Task DeleteAsync(int id);
         Task<int> UpdateOrInsertTApiMapping(UpSertRegisterApiModels xModels,string apiKey);
-
+        Task<List<TApiPermisionMappingModels>> GetAllByBusinessIdAsync(string businessId);
         Task<List<TApiPermisionMappingModels>> GetTApiMappingBySearch(TApiPermisionMappingModels xModels);
     }
 }

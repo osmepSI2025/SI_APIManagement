@@ -30,6 +30,4 @@ public partial class TApiPermisionMapping
     public DateTime? UpdateDate { get; set; }
 
     public int? SystemApiMappingId { get; set; }
-
-  
 }

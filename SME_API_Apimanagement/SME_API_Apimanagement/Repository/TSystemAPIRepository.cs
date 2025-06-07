@@ -116,7 +116,7 @@ namespace SME_API_Apimanagement.Repository
                         ,ApiResponseParamaterType = xModels.TSystemAPI.ApiResponseParamaterType
                        
                         ,EndPoint = xModels.TSystemAPI.EndPoint
-                        ,
+                        , ApiServiceCode = xModels.TSystemAPI.ApiServiceCode
                     };
                     var updatex = UpdateAsync(xRaw);
                 }
@@ -154,7 +154,7 @@ namespace SME_API_Apimanagement.Repository
                         ,ApiRequestParamaterType = xModels.TSystemAPI.ApiRequestParamaterType
                         ,ApiResponseParamater = xModels.TSystemAPI.ApiResponseParamater
                         ,ApiResponseParamaterType = xModels.TSystemAPI.ApiResponseParamaterType
-                
+                 ,ApiServiceCode = xModels.TSystemAPI.ApiServiceCode
 
                     };
 
@@ -214,6 +214,7 @@ namespace SME_API_Apimanagement.Repository
                                       ,ApiResponseParamaterType = r.ApiResponseParamaterType
                                     
                                       ,EndPoint = r.EndPoint
+                                      ,ApiServiceCode = r.ApiServiceCode
 
 
 

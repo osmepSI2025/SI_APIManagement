@@ -7,10 +7,11 @@ namespace SME_API_Apimanagement.Repository
     public class TAPIMappingRepository : ITAPIMappingRepository
     {
         private readonly ApiMangeDBContext _context;
-
-        public TAPIMappingRepository(ApiMangeDBContext context)
+        private readonly IErrorApiLogRepository _errorApiLogRepository;
+        public TAPIMappingRepository(ApiMangeDBContext context, IErrorApiLogRepository errorApiLogRepository)
         {
             _context = context;
+            _errorApiLogRepository = errorApiLogRepository;
         }
 
         public async Task<IEnumerable<TApiPermisionMapping>> GetAllAsync() =>
@@ -128,6 +129,7 @@ namespace SME_API_Apimanagement.Repository
                                      ,ServiceName = ts.ApiServiceName,
                       SystemApiMappingId = ts.Id,
                       IsSelected = ta.FlagActive,
+                      
 
                   }).AsQueryable(); // ทำให้ Query เป็น IQueryable
 
@@ -220,6 +222,39 @@ namespace SME_API_Apimanagement.Repository
             {
                 return new List<TApiPermisionMappingModels>(); // Return List เปล่าแทน null
             }
+        }
+
+        public async Task<List<TApiPermisionMappingModels>> GetAllByBusinessIdAsync(string businessId)
+        {
+          
+                var query = (
+                 from ts in _context.TSystemApiMappings 
+                 join ms in _context.MSystems
+                     on ts.OwnerSystemCode equals ms.SystemCode
+                 join ta in _context.TApiPermisionMappings 
+                     on ts.Id equals ta.SystemApiMappingId into taGroup 
+                 from ta in taGroup.DefaultIfEmpty()
+                 where ta.OrganizationCode == businessId
+                 select new TApiPermisionMappingModels
+                 {
+                     SystemCode = ms.SystemCode,
+                     SystemName = ms.SystemName,
+
+                     ApiKey = ta.ApiKey,
+                     FlagActive = ta.FlagActive,
+                     StartDate = ta.StartDate,
+                     EndDate = ta.EndDate,
+                     OrganizationCode = ta.OrganizationCode
+                                    ,
+                     ServiceName = ts.ApiServiceName,
+                     SystemApiMappingId = ts.Id,
+                     IsSelected = ta.FlagActive,
+
+
+                 }).ToList(); // ทำให้ Query เป็น IQueryable
+             
+                return query;
+           
         }
     }
 

@@ -37,30 +37,29 @@ namespace SME_API_Apimanagement.Repository
                                  InnerException = e.InnerException,
                                  Source = e.Source,
                                  SystemName = s.SystemName,
-                                 ApiKey =r.ApiKey
-
-                             }).AsQueryable(); // ทำให้ Query เป็น IQueryable
+                                 ApiKey = r.ApiKey,
+                                    HttpCode = e.HttpCode,
+                             }).AsQueryable();
 
                 // Apply Filters
                 if (!string.IsNullOrEmpty(xmodel.SystemCode))
                 {
-                    query = query.Where(u => u.SystemCode==xmodel.SystemCode);
+                    query = query.Where(u => u.SystemCode == xmodel.SystemCode);
                 }
                 if (!string.IsNullOrEmpty(xmodel.SystemName))
                 {
-                    query = query.Where(u => u.SystemName.Contains( xmodel.SystemName));
+                    query = query.Where(u => u.SystemName.Contains(xmodel.SystemName));
                 }
                 if (xmodel?.Createdate != null)
                 {
                     query = query.Where(u => u.Createdate.Value.Date == xmodel.Createdate.Value.Date);
                 }
-                xresult.totalList = query.ToList().Count;
+                xresult.totalList = query.Count();
                 if (xmodel.rowFetch != 0)
-                    query = query.Skip<TErrorApiLogModels>(xmodel.rowOFFSet).Take(xmodel.rowFetch);
+                    query = query.Skip(xmodel.rowOFFSet).Take(xmodel.rowFetch);
 
                 xresult.LError = await query.ToListAsync();
                 return xresult;
-
             }
             catch
             {
