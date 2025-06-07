@@ -146,11 +146,11 @@
                                                 @(w.UpdateDate.HasValue? w.UpdateDate.Value.ToString("dd/MM/yyyy") : "-")
                                             </td>
                                             <td style="text-align:center;">
-                                                <button type="button" class="btn btn-link editbtn" onclick='GetEdit(@Html.Raw(json))' title="Edit">
-                                                    <i class="fa fa-pen-to-square" style="color:#2580c2;font-size:1.3rem;"></i>
+                                                <button type="button" class="action-btn editbtn" onclick='GetEdit(@Html.Raw(json))' title="Edit">
+                                                    <i class="fa fa-pen-to-square" style="color: #34A5EB; cursor: pointer;"></i>
                                                 </button>
-                                                <button type="button" class="action-btn delete btn btn-danger btn-sm" onclick="OpenConfirmDeleteModal('@w.Id')" title="ลบ">
-                                                    <i class="fa fa-trash"></i> ลบ
+                                                <button type="button" class="action-btn delete   btn-sm" onclick="OpenConfirmDeleteModal('@w.Id')" title="ลบ">
+                                                    <i class="fa fa-trash"></i> 
                                                 </button>
                                             </td>
                                         </tr>

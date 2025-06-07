@@ -102,29 +102,27 @@
         <!-- Search Card -->
         <div class="card-custom">
             <div class="card-title">ค้นหาระบบ</div>
-            <div class="row mb-3">
-                <div class="col-md-6 mb-3">
+            <div class="row ">
+                <div class="col-md-6  ">
                     <label class="form-label">ชื่อระบบ</label>
                     <input class="form-control" type="text" asp-for="MSystem.SystemName" placeholder="กรุณาระบุ" />
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6  ">
                     <label class="form-label">สถานะ</label>
                     <div class="input-group">
                         <select asp-for="MSystem.FlagActive" asp-items="vDdlStatus" class="form-select">
                             <option value="">กรุณาระบุ</option>
                         </select>
-                        <span class="input-group-text bg-white border-0">
-                            <i class="fa fa-chevron-down"></i>
-                        </span>
+                       
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6  ">
                     <label class="form-label">วันที่สร้าง</label>
                     <div class="input-group">
                         <input class="form-control" type="date" asp-for="MSystem.CreateDate" placeholder="กรุณาระบุ" />
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6  ">
                     <label class="form-label">วันที่สิ้นสุด</label>
                     <div class="input-group">
                         <input class="form-control" type="date" asp-for="MSystem.UpdateDate" placeholder="กรุณาระบุ" />
@@ -148,11 +146,11 @@
                 <table class="table table-custom table-bordered">
                     <thead>
                         <tr>
-                            <th style="width: 60px;">ลำดับ</th>
-                            <th>ชื่อระบบ</th>
-                            <th style="width: 120px;">สถานะ API</th>
-                            <th style="width: 180px;">วันที่สร้าง</th>
-                            <th style="width: 180px;">วันที่แก้ไขล่าสุด</th>
+                            <th>ลำดับ</th>
+                            <th style="width:65%">ชื่อระบบ</th>
+                            <th >สถานะ API</th>
+                            <th >วันที่สร้าง</th>
+                            <th >วันที่แก้ไขล่าสุด</th>
                         </tr>
                     </thead>
                     <tbody>

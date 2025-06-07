@@ -365,6 +365,14 @@ body {
 .table-responsive {
     margin-bottom: 0;
 }
+.header-card {
+    padding:0  var(--bs-card-spacer-x);
+    color: var(--bs-card-color);
+    display: flex;
+}
+    .header-card p {
+    margin:0;
+    }
 
 .table-footer {
     padding: 12px 0 0 0;
