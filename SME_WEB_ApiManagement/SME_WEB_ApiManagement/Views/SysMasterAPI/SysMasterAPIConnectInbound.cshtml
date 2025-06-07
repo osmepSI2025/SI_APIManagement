@@ -6,7 +6,7 @@
 }
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <form method="post" asp-action="SysMasterAPIConnectInbound" asp-controller="SysMasterAPI">
     <div class="wrap-content">
         <div class="header">
@@ -169,6 +169,10 @@
                             <input type="text" class="form-control" name="TSystemAPI.ApiServiceName" id="TSystemAPI_ApiServiceName_Modal" placeholder="Ex. Employee" />
                         </div>
                         <div class="form-group col-md-6">
+                            <label>Service Code<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="TSystemAPI.ApiServiceCode" id="TSystemAPI_ApiServiceCode_Modal" placeholder="Ex. Employee" />
+                        </div>
+                        <div class="form-group col-md-6">
                             <label>End point<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="TSystemAPI.EndPoint" id="TSystemAPI_EndPoint_Modal" placeholder="Ex. www.xxx.com/getdata" />
                         </div>
@@ -267,6 +271,7 @@
         $('#TSystemAPI_Id_Modal').val('');
         $('#TSystemAPI_ApiMethod_Modal').val('');
         $('#TSystemAPI_ApiServiceName_Modal').val('');
+        $('#TSystemAPI_ApiServiceCode_Modal').val('');
         $('#TSystemAPI_EndPoint_Modal').val('');
         $('#apiActive').prop('checked', false);
         $('#CreateApiModal').modal('show');
@@ -285,8 +290,21 @@
                         $('#TSystemAPI_Id_Modal').val(data.id);
                         $('#TSystemAPI_ApiMethod_Modal').val(data.apiMethod);
                         $('#TSystemAPI_ApiServiceName_Modal').val(data.apiServiceName);
+                        $('#TSystemAPI_ApiServiceCode_Modal').val(data.apiServiceCode);
                         $('#TSystemAPI_EndPoint_Modal').val(data.endPoint);
                         $('#apiActive').prop('checked', data.flagActive);
+
+                        // เพิ่มเติม: set request/response fields
+                        $('input[name="TSystemAPI.ApiRequestParamater"]').val(data.apiRequestParamater);
+                        $('input[name="TSystemAPI.ApiRequestParamaterType"]').val(data.apiRequestParamaterType);
+                        $('textarea[name="TSystemAPI.ApiRequestDescription"]').val(data.apiRequestDescription);
+                        $('textarea[name="TSystemAPI.ApiRequestExample"]').val(data.apiRequestExample);
+
+                        $('input[name="TSystemAPI.ApiResponseParamater"]').val(data.apiResponseParamater);
+                        $('input[name="TSystemAPI.ApiResponseParamaterType"]').val(data.apiResponseParamaterType);
+                        $('textarea[name="TSystemAPI.ApiResponseDescription"]').val(data.apiResponseDescription);
+                        $('textarea[name="TSystemAPI.ApiResponseExample"]').val(data.apiResponseExample);
+
                         $('#CreateApiModal').modal('show');
                     } else {
                         alert('ไม่พบข้อมูล');
@@ -299,7 +317,7 @@
         });
     });
 
-     function deleteSystem(id) {
+    function deleteSystem(id) {
         if (!confirm('คุณต้องการลบระบบนี้ใช่หรือไม่?')) {
             return;
         }

@@ -5,88 +5,95 @@
     var vDdlOrg = @ViewBag.vDdlOrg;
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    // เปิด modal สำหรับสร้าง
     function GetCreate() {
-
-        $("#CreateModal").modal()
+        $('#CreateEditModalLabel').text('สร้างข้อมูล API Outbound');
+        $('#createEditRegisterForm').attr('action', '/RegisterAPI/Add');
+        $('#RegisterId').val('');
+        $('#OrganizationName').val('');
+        $('#ApiKey').val('');
+        $('#FlagActive').val('true');
+        $('#StartDate').val('');
+        $('#EndDate').val('');
+        $('#CreateEditModal').modal('show');
     }
 
-    function OpenConfirmDeleteModal(ReqID) {
-
-
-        document.getElementById("TArrivalDetaiModels_Id").value = ReqID;
-
-        $("#ConfirmDeleteModal").modal();
-
+    // เปิด modal สำหรับแก้ไข
+    function GetEdit(register) {
+        $('#CreateEditModalLabel').text('แก้ไขข้อมูล API Outbound');
+        $('#createEditRegisterForm').attr('action', '/RegisterAPI/EditRegister');
+        $('#RegisterId').val(register.RegisterId);
+        $('#OrganizationName').val(register.OrganizationName);
+        $('#ApiKey').val(register.ApiKey);
+        $('#FlagActive').val(register.FlagActive ? 'true' : 'false');
+        $('#StartDate').val(register.StartDate ? register.StartDate.substring(0,10) : '');
+        $('#EndDate').val(register.EndDate ? register.EndDate.substring(0,10) : '');
+        $('#CreateEditModal').modal('show');
     }
 
-  
+    // เปิด modal สำหรับยืนยันการลบ
+    function OpenConfirmDeleteModal(registerId) {
+        $('#TArrivalDetaiModels_Id').val(registerId);
+        $('#ConfirmDeleteModal').modal('show');
+    }
 </script>
 @using (Html.BeginForm("RegisterList", "RegisterAPI", FormMethod.Post, htmlAttributes: new { enctype = "multipart/form-data" }))
 {
-     <div class="main-content">
-    <div class="wrap-boder">
-        <div class="wrap-content">
-            <div class="header">
-           
-                <div class="header_content">
+    <div class="main-content">
+        <div class="wrap-boder">
+            <div class="wrap-content">
+                <div class="header">
+                    <div class="header_content d-flex justify-content-between align-items-center">
                         <h1>API Outbound</h1>
+                    </div>
                 </div>
-            </div>
-            <div class="content_body">
-                <div class="row">
-                    <div class="col-md-6">
+                <div class="content_body">
+                    <div class="row">
+                        <div class="col-md-6">
                             <div><label>ผู้ระบบ</label></div>
-                        <input class="form-control" type="text" placeholder="Ex. ผู้ใช้บริการ..." name="MRegister.OrganizationName" asp-for="MRegister.OrganizationName" />
+                            <input class="form-control" type="text" placeholder="Ex. ผู้ใช้บริการ..." name="MRegister.OrganizationName" asp-for="MRegister.OrganizationName" />
+                        </div>
+                        <div class="col-md-6">
+                            <div><label>API-Key</label></div>
+                            <input class="form-control" type="text" placeholder="Ex. ระบบ..." name="MRegister.ApiKey" asp-for="MRegister.ApiKey" />
+                        </div>
+                        <div class="col-md-6">
+                            <div><label>วันที่ลงทะเบียน</label></div>
+                            <input class="form-control" type="date" placeholder="Ex.dd/MM/yyyy" name="MRegister.StartDate" asp-for="MRegister.CreateDate" />
+                        </div>
+                        <div class="col-md-6">
+                            <div><label>วันที่แก้ไขล่าสุด</label></div>
+                            <input class="form-control" type="date" placeholder="Ex.dd/MM/yyyy" name="MRegister.EndDate" asp-for="MRegister.UpdateDate" />
+                        </div>
                     </div>
-
-                    <div class="col-md-6">
-                        <div><label>API-Key</label></div>
-                        <input class="form-control" type="text" placeholder="Ex. ระบบ..." name="MRegister.ApiKey" asp-for="MRegister.ApiKey" />
-                    </div>
-
-
-                    <div class="col-md-6">
-                        <div><label>วันที่ลงทะเบียน</label></div>
-                        <input class="form-control" type="date" placeholder="Ex.dd/MM/yyyy" name="MRegister.StartDate" asp-for="MRegister.CreateDate" />
-                    </div>
-                    <div class="col-md-6">
-                        <div><label>วันที่แก้ไขล่าสุด</label></div>
-                        <input class="form-control" type="date" placeholder="Ex.dd/MM/yyyy" name="MRegister.EndDate" asp-for="MRegister.UpdateDate" />
-                    </div>
-                </div>
-               
-                
-                
-                <div class="text-center m-t-10">
+                    <div class="text-center m-t-10">
                         <button class="btn btn_search text-color-botton" name="searchDate" id="searchDate" value="searchDate">ล้างข้อมูล</button>
-                    <button class="btn btn_search text-color-botton" name="searchDate" id="searchDate" value="searchDate">ค้นหา</button>
-                </div>
-                 
+                        <button class="btn btn_search text-color-botton" name="searchDate" id="searchDate" value="searchDate">ค้นหา</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-                    <div class="main-content">
-                        <div class="wrap-boder">
-                            <div class="wrap-content">
+    <div class="main-content">
+        <div class="wrap-boder">
+            <div class="wrap-content">
                 <div class="content_table">
-                    <div class="content_table_head d-flex align-items-center">
-                            <h6>รายการ Inbound API</h6>
-
+                    <div class="header_content d-flex justify-content-between align-items-center">
+                        <h6>รายการ Inbound API</h6>
+                        <button type="button" class="btn btn-primary" onclick="GetCreate()">
+                            <i class="fa fa-plus"></i> สร้าง
+                        </button>
                     </div>
                     <div class="line"></div>
-                 
                     <div class="table-responsive">
-                        <table class=" table table-stand">
+                        <table class="table table-stand">
                             <thead>
                                 <tr>
-
-
                                     <th scope="col">ลำดับ</th>
-
-
                                     <th scope="col">ผู้ใช้บริการ</th>
                                     <th scope="col">API Key</th>
                                     <th scope="col">สถานะ</th>
@@ -97,12 +104,20 @@
                                 </tr>
                             </thead>
                             <tbody>
-
                                 @if (Model.LRegis != null)
                                 {
                                     var index = 1 + ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize);
                                     foreach (var w in Model.LRegis)
                                     {
+                                        var json = System.Text.Json.JsonSerializer.Serialize(new
+                                        {
+                                            RegisterId = w.Id,
+                                            OrganizationName = w.OrganizationName,
+                                            ApiKey = w.ApiKey,
+                                            FlagActive = w.FlagActive,
+                                            StartDate = w.StartDate?.ToString("yyyy-MM-dd"),
+                                            EndDate = w.EndDate?.ToString("yyyy-MM-dd")
+                                        });
                                         <tr>
                                             <td>@index</td>
                                             <td class="align_text" style="width:auto">
@@ -130,7 +145,14 @@
                                             <td class="align_text" style="width:auto">
                                                 @(w.UpdateDate.HasValue? w.UpdateDate.Value.ToString("dd/MM/yyyy") : "-")
                                             </td>
-                                          
+                                            <td style="text-align:center;">
+                                                <button type="button" class="btn btn-link editbtn" onclick='GetEdit(@Html.Raw(json))' title="Edit">
+                                                    <i class="fa fa-pen-to-square" style="color:#2580c2;font-size:1.3rem;"></i>
+                                                </button>
+                                                <button type="button" class="action-btn delete btn btn-danger btn-sm" onclick="OpenConfirmDeleteModal('@w.Id')" title="ลบ">
+                                                    <i class="fa fa-trash"></i> ลบ
+                                                </button>
+                                            </td>
                                         </tr>
                                         index++;
                                     }
@@ -143,15 +165,9 @@
                                         </td>
                                     </tr>
                                 }
-
-
                             </tbody>
                         </table>
                     </div>
-
-
-      
-
                     <div class="table-footer d-flex justify-content-between align-items-center p-2" style="background: #f7f9fa; border-top: 1px solid #e9ecef;">
                         <div class="pagination-custom d-flex align-items-center gap-2">
                             <button type="submit" class="btn btn-light px-2 @(Model.PageModel.CurrentPageNumber <= 1 ? "disabled" : "")" name="first" value="first" title="หน้าแรก">
@@ -181,106 +197,99 @@
                             แสดง @start - @end จาก @total รายการ
                         </div>
                     </div>
-
-                </div>
-
-                @*   <div class="text-center m-t-10">
-            <button class="btn btn_search text-color-botton m-r-10" id="Resend" name="Resend" value="Resend" onclick="submitSelected()">Resend All</button>
-            <button class="btn btn_cancel ">Cancel</button>
-            </div> *@
-            </div>
-        </div>
-    </div>
-     
-   
-
-    <div class="modal fade" id="CreateModal" tabindex="-1" role="dialog" aria-labelledby="ViewCancelModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document" style="min-width: 80%;">
-            <div class="modal-content">
-                <div class="modal-header  ">
-                    <h5 class="modal-title" id="reqDetailModalLabel">System Master Management</h5>
-
-                    <button type="button" class="close button_close" data-dismiss="modal" aria-label="Close">
-                        <span class="x-sign" aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="card" style=" margin-top: 1px; ">
-
-
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>ชื่อระบบ</label>
-                                    <input class="form-control" type="text" placeholder="Ex. ระบบ.." />
-
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>API-Key</label>
-                                    <input class="form-control" placeholder="Ex. c6633541-65e9-43f7-bb4f-e543c3963815" type="text" />
-
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>สถานะ</label>
-                                    <select class="form-control" name="cars" id="cars">
-
-                                        <option value="Completed">ใช้งาน</option>
-                                        <option value="Uncompleted">ปิดการใช้งาน</option>
-
-
-                                    </select>
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="modal-footer n-border" style="align-self: center;">
-                    <button class="btn btn_search text-color-botton m-r-10" value="saveEmp" id="saveEmp" name="saveEmp">Submit</button>
-                    <button class="btn btn_cancel ">Cancel</button>
-
                 </div>
             </div>
         </div>
     </div>
 
+ 
+    <!-- Modal Confirm Delete -->
     <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ViewCancelModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document" style="min-width: 80%;">
+        <div class="modal-dialog" role="document" style="min-width: 40%;">
             <div class="modal-content">
-                <div class="modal-header  ">
-                    <h5 class="modal-title" id="reqDetailModalLabel">Confirm Delete</h5>
-
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ViewCancelModalLabel">ยืนยันการลบ</h5>
                     <button type="button" class="close button_close" data-dismiss="modal" aria-label="Close">
                         <span class="x-sign" aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="card" style=" margin-top: 1px; ">
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="CLeaveRequestModel_EmpCode">Are you sure you want to Delete this item?</label>
-                            <input type="hidden" id="TArrivalDetaiModels_Id" />
-
-                        </div>
-                    </div>
+                <div class="modal-body">
+                    <p>คุณต้องการลบข้อมูลนี้ใช่หรือไม่?</p>
+                    <input type="hidden" id="TArrivalDetaiModels_Id" />
                 </div>
-
-
                 <div class="modal-footer n-border" style="align-self: center;">
-                    <button class="btn btn_search text-color-botton m-r-10" name="DeleteEmp" id="DeleteEmp" value="DeleteEmp">Submit</button>
-                    <button class="btn btn_cancel ">Cancel</button>
+                    <button class="btn btn_search text-color-botton m-r-10" id="DeleteEmp" name="DeleteEmp" value="DeleteEmp" onclick="submitDelete()">ลบ</button>
+                    <button class="btn btn_cancel" data-dismiss="modal">ยกเลิก</button>
                 </div>
             </div>
         </div>
     </div>
 }
+
+<!-- Modal Create/Edit -->
+<div class="modal fade" id="CreateEditModal" tabindex="-1" role="dialog" aria-labelledby="CreateEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="min-width: 60%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="CreateEditModalLabel">สร้างข้อมูล API Outbound</h5>
+                <button type="button" class="close button_close" data-dismiss="modal" aria-label="Close">
+                    <span class="x-sign" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="createEditRegisterForm" method="post" action="/RegisterAPI/Add">
+                <input type="hidden" name="RegisterId" id="RegisterId" />
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>ชื่อระบบ <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" name="OrganizationName" id="OrganizationName" placeholder="Ex. ระบบ..." required />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">หน่วยงานเจ้าของ API <span class="text-danger">*</span></label>
+                         @*    <select asp-for="InsMSystem.OwnerSystemCode" asp-items="vDdlOrg" class="form-control search-dropdown" style="width:100%" id="InsMSystem_OwnerSystemCode">
+                                <option value="">--กรุณาเลือก--</option>
+                            </select> *@
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>API-Key <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" name="ApiKey" id="ApiKey" placeholder="Ex. c6633541-65e9-43f7-bb4f-e543c3963815" required />
+                            </div>
+                        </div>
+                      
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>สถานะ</label>
+                                <select class="form-control" name="FlagActive" id="FlagActive">
+                                    <option value="true">ใช้งาน</option>
+                                    <option value="false">ปิดการใช้งาน</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>วันที่เริ่มให้บริการ</label>
+                                <input class="form-control" type="date" name="StartDate" id="StartDate" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>วันที่สิ้นสุด</label>
+                                <input class="form-control" type="date" name="EndDate" id="EndDate" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer n-border" style="align-self: center;">
+                    <button type="submit" class="btn btn_search text-color-botton m-r-10" id="modalSubmitBtn">บันทึก</button>
+                    <button type="button" class="btn btn_cancel" data-dismiss="modal">ยกเลิก</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -291,4 +300,26 @@
             });
         }
     });
+
+    // ฟังก์ชัน submit ลบ
+    function submitDelete() {
+        var id = $('#TArrivalDetaiModels_Id').val();
+        if (!id) return;
+        $.ajax({
+            url: '/RegisterAPI/DeleteRegister',
+            type: 'POST',
+            data: { id: id },
+            success: function (res) {
+                if (res.success) {
+                    $('#ConfirmDeleteModal').modal('hide');
+                    location.reload();
+                } else {
+                    alert(res.message || 'เกิดข้อผิดพลาดในการลบข้อมูล');
+                }
+            },
+            error: function () {
+                alert('เกิดข้อผิดพลาดในการลบข้อมูล');
+            }
+        });
+    }
 </script>

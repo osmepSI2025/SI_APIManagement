@@ -12,7 +12,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="ปิด"></button>
 
             </div>
-         
+            <div class="main-content p-0">
                 <!-- ส่วนค้นหา -->
                 <form id="userSearchForm">
                 <div class="content_body">
@@ -51,9 +51,9 @@
               
                 </form>
            
-            <div class="modal-body p-0">
+            <div class="modal-body  ">
                 <div class="table-responsive">
-                    <table class="table table-bordered mb-0">
+                    <table class="table table-stand mb-0">
                         <thead>
                             <tr>
                                 <th style="width:40px;"><input type="checkbox" id="selectAllUsers" /></th>
@@ -110,11 +110,12 @@
                         ข้อมูล ณ วันที่ <span id="userCount">ข้อมูล ณ วันที่ @DateTime.Now</span>
                     </div>
                 </div>
+                    <div class=" d-flex justify-content-center">
+                        <button type="button" class="btn btn-outline-primary m-r-10" data-bs-dismiss="modal">ยกเลิก</button>
+                        <button type="button" class="btn btn-primary  " id="selectUserBtn">เลือก</button> 
+                    </div>
             </div>
-            <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">ยกเลิก</button>
-                <button type="button" class="btn btn-primary" id="selectUserBtn">เลือก</button>
-                <button type="button" class="btn btn-warning" id="testSendBtn">เทส</button>
+           
             </div>
         </div>
     </div>

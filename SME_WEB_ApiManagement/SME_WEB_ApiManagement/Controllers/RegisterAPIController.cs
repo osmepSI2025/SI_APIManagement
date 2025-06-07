@@ -276,8 +276,37 @@ namespace SME_WEB_ApiManagement.Controllers
             }
 
         }
+
+        [HttpPost]
+        public IActionResult Add(MRegisterModels model)
+        {
+            if (ModelState.IsValid)
+            {
+                // เตรียมข้อมูลสำหรับบันทึก
+                var upsertModel = new UpSertRegisterApiModels
+                {
+                    MRegister = model
+                };
+
+                // เรียก DAO เพื่อเพิ่มข้อมูล
+                var result = SystemDAO.UpsertRegister(upsertModel, API_Path_Main + API_Path_Sub, null);
+
+                if (result > 0)
+                {
+                    // เพิ่มสำเร็จ กลับไปหน้ารายการ
+                    return RedirectToAction("RegisterList");
+                }
+                else
+                {
+                    // เพิ่มไม่สำเร็จ แสดง error
+                    ModelState.AddModelError("", "ไม่สามารถเพิ่มข้อมูลได้");
+                }
+            }
+            // ถ้าไม่ผ่าน validation หรือ error ให้กลับไปหน้าเดิม
+            return View("RegisterList");
+        }
+
+
     }
-
-
 
 }

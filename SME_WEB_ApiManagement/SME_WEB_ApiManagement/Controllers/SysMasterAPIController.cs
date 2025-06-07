@@ -306,7 +306,7 @@ namespace SME_WEB_ApiManagement.Controllers
                     ma.OwnerSystemCode = SystemCode;
                     result.TSystemAPI = ma;
                     // list data Tsystem by Owner
-                 
+
                     xts = SystemDAO.GetTSystemMappingBySearch(ma, API_Path_Main + API_Path_Sub, null);
                     if (xts == null)
                     {
@@ -315,7 +315,7 @@ namespace SME_WEB_ApiManagement.Controllers
                     result.LSysApi = xts;
 
                     result.MSystemInfo = SystemDAO.GetSystemInfoByCode(SystemCode, API_Path_Main + API_Path_Sub, null);
-                    
+
                 }
                 else if (((!string.IsNullOrEmpty(sortColumn)) || (!string.IsNullOrEmpty(sortOrder))) && (!string.IsNullOrEmpty(SystemCode)))
                 {
@@ -423,7 +423,7 @@ namespace SME_WEB_ApiManagement.Controllers
                     ma.OwnerSystemCode = SystemCode;
                     result.TSystemAPI = ma;
                     // list data Tsystem by Owner
-             
+
                     result.LSysApi = SystemDAO.GetTSystemMappingBySearch(ma, API_Path_Main + API_Path_Sub, null);
                 }
                 else if (((!string.IsNullOrEmpty(sortColumn)) || (!string.IsNullOrEmpty(sortOrder))) && (!string.IsNullOrEmpty(SystemCode)))
@@ -493,13 +493,29 @@ namespace SME_WEB_ApiManagement.Controllers
         {
             // ดึงข้อมูลจาก DAO ตาม id
             TSystemApiMappingModels xdata = new TSystemApiMappingModels();
-            TSystemApiMappingModels result = new TSystemApiMappingModels();
             xdata.Id = id;
 
             var api = SystemDAO.GetTSystemMappingBySearch(xdata, API_Path_Main + API_Path_Sub, null);
-            result = api.FirstOrDefault();
-            if (api != null)
-                return Json(result);
+            var result = api.FirstOrDefault();
+            if (result != null)
+                return Json(new
+                {
+                    id = result.Id,
+                    apiMethod = result.ApiMethod,
+                    apiServiceName = result.ApiServiceName,
+                    apiServiceCode = result.ApiServiceCode,
+                    endPoint = result.EndPoint,
+                    flagActive = result.FlagActive,
+                    // เพิ่ม field สำหรับ request/response
+                    apiRequestParamater = result.ApiRequestParamater,
+                    apiRequestParamaterType = result.ApiRequestParamaterType,
+                    apiRequestDescription = result.ApiRequestDescription,
+                    apiRequestExample = result.ApiRequestExample,
+                    apiResponseParamater = result.ApiResponseParamater,
+                    apiResponseParamaterType = result.ApiResponseParamaterType,
+                    apiResponseDescription = result.ApiResponseDescription,
+                    apiResponseExample = result.ApiResponseExample
+                });
             else
                 return Json(new { success = false, message = "ไม่พบข้อมูล" });
         }

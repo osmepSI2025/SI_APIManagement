@@ -108,8 +108,6 @@ namespace SME_WEB_ApiManagement.DAO
         }
         public static int? UpsertRegister(UpSertRegisterApiModels vm =null,string apipath = null, string TokenStr = null)
         {
-           
-
             APIpath = apipath + "MRegister/UpsertRegister";
             HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(APIpath);
             httpWebRequest.ContentType = "application/json";

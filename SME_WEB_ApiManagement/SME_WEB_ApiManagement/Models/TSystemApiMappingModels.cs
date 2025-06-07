@@ -58,7 +58,7 @@ namespace SME_WEB_ApiManagement.Models
 
         public string? ApiUrlUatOutbound { get; set; }
 
-    
+        public string? ApiServiceCode { get; set; }
 
         public string? EndPoint { get; set; }
     }
