@@ -30,11 +30,15 @@ namespace SME_WEB_ApiManagement.Models
 
         public DateTime? UpdateDate { get; set; }
         public string? SystemName { get; set; }
-        public bool IsSelected { get; set; }
 
         public int? SystemApiMappingId { get; set; }
         public string? ServiceName { get; set; }
+        public bool IsSelected { get; set; }
 
-
+        public string? OrganizationName { get; set; }
+        public string? ApiMethod { get; set; }
+        public string? ApiUrlUatOundbound { get; set; }
+        public string? ApiUrlProdOundbound { get; set; }
+        public string? ApiServiceCode { get; set; }
     }
 }

@@ -191,6 +191,54 @@ namespace SME_WEB_ApiManagement.DAO
             }
 
         }
+        public static async Task<EmployeeModels> GetDetaiEmp(EmployeeModels model, string apipath = null)
+        {
+
+
+            EmployeeModels ldata = new EmployeeModels();
+
+
+            try
+            {
+                APIpath = apipath + "UserManagement/GetEmployeeDetail";
+
+                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(APIpath);
+                //var refreshtoken = refreshToken();
+                //  httpWebRequest.Headers.Add("Authorization", "Bearer " + TokenStr);
+
+                httpWebRequest.ContentType = "application/json";
+
+                httpWebRequest.Method = "POST";
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    var Req = model;
+
+
+                    var json = JsonConvert.SerializeObject(Req, Formatting.Indented);
+
+                    streamWriter.Write(json);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+
+                var response = (HttpWebResponse)httpWebRequest.GetResponse();
+
+                using (var streamReader = new StreamReader(response.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+
+                    ldata = JsonConvert.DeserializeObject<EmployeeModels>(result);
+
+
+                }
+
+                return ldata;
+            }
+            catch (Exception ex)
+
+            { throw new Exception("Error in CreatePopup: " + ex.Message); }
+        }
 
     }
 }

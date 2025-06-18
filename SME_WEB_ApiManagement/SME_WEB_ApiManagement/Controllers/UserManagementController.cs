@@ -5,6 +5,7 @@ using SME_WEB_ApiManagement.Models;
 using SME_WEB_ApiManagement.Services;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 
 namespace SME_WEB_ApiManagement.Controllers
 {
@@ -39,10 +40,30 @@ namespace SME_WEB_ApiManagement.Controllers
 
         }
         // For demonstration, use static lists. Replace with your DAO or database logic.
-    
+
 
         public async Task<IActionResult> Index()
         {
+            ViewBag.EmpDetail = HttpContext.Session.GetString("EmpDetail");
+            var empDetailJson = HttpContext.Session.GetString("EmpDetail");
+
+            if (!string.IsNullOrEmpty(empDetailJson))
+            {
+                var empDetailObj = JsonSerializer.Deserialize<EmployeeRoleModels>(empDetailJson);
+                if (empDetailObj == null || string.IsNullOrEmpty(empDetailObj.RoleCode))
+                {
+                    if (empDetailObj.RoleCode == null)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             var model = new ViewEmployeeRoleModels();
             try
             {
@@ -154,5 +175,6 @@ namespace SME_WEB_ApiManagement.Controllers
                 return Json(new { success = false, message = "An error occurred while inserting users." });
             }
         }
+
     }
 }

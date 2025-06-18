@@ -138,6 +138,7 @@ namespace SME_WEB_ApiManagement.Controllers
         public IActionResult SysMasterAPIInbound(ViewSystemApiModels vm, string previous, string first, string next, string last, string hidcurrentpage, string hidtotalpage,
     string searchData = null, string clearSearcData = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null)
         {
+            ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
             #region panging
             int curpage = 0;
             int totalpage = 0;
@@ -216,6 +217,8 @@ namespace SME_WEB_ApiManagement.Controllers
             string searchNews = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null, string SystemCode = null
             , string sortColumn = null, string sortOrder = null, string saveSubData = null)
         {
+
+            ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
             #region panging
             int curpage = 0;
             int totalpage = 0;
@@ -267,7 +270,8 @@ namespace SME_WEB_ApiManagement.Controllers
                         um.SystemCode = vm.TSystemAPI.OwnerSystemCode;
                         um.FlagActive = vm.TSystemAPI.FlagActive;
                         um.FlagDelete = "N"; // default N
-                        um.CreateBy = "system"; // ใช้ชื่อผู้ใช้ที่ล็อกอินปัจจุบัน
+                        um.CreateBy = ViewBag.EmployeeId;
+                        um.UpdateBy = ViewBag.EmployeeId;
                         um.CreateDate = DateTime.Now; // ใช้วันที่ปัจจุบัน
 
                         var Upsert = SystemDAO.MSystemInfoUpsertSystem(um, API_Path_Main + API_Path_Sub, null);
@@ -275,7 +279,7 @@ namespace SME_WEB_ApiManagement.Controllers
                         return RedirectToAction("SysMasterAPIConnectInbound", "SysMasterAPI", new { SystemCode = vm.TSystemAPI.OwnerSystemCode });
                     }
                 }
-                if (!string.IsNullOrEmpty(saveSubData))
+               else if (!string.IsNullOrEmpty(saveSubData))
                 {
                     if (vm.TSystemAPI != null)
                     {

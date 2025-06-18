@@ -36,6 +36,7 @@ namespace SME_WEB_ApiManagement.Controllers
 
             string searchDate = null, string clearSearcData = null)
         {
+            ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
             #region panging
             int curpage = 0;
             int totalpage = 0;
@@ -91,7 +92,7 @@ namespace SME_WEB_ApiManagement.Controllers
                 result.TotalRowsList = xlist.TotalRowsList;
             }
             result.vDdlStatus = Service_CenterDAO.GetLookups("STATUS", API_Path_Main + API_Path_Sub, null);
-            result.vDdlOrg = Service_CenterDAO.GetDropdownOrganization(API_Path_Main + API_Path_Sub, null);
+            result.vDdlOrg = Service_CenterDAO.GetDropdownOrganizationWithOutData(result.LRegis, API_Path_Main + API_Path_Sub, null);
             ViewBag.vDdlStatus = new SelectList(result.vDdlStatus.DropdownList.OrderBy(x => x.Code), "Code", "Name");
             ViewBag.vDdlOrg = new SelectList(result.vDdlOrg.DropdownList.OrderBy(x => x.Code), "Code", "Name");
 
@@ -285,7 +286,9 @@ namespace SME_WEB_ApiManagement.Controllers
                 // เตรียมข้อมูลสำหรับบันทึก
                 var upsertModel = new UpSertRegisterApiModels
                 {
-                    MRegister = model
+                    MRegister = model,
+                    LSystem = new List<MSystemModels>(),
+                    LPerMapApi = new List<TApiPermisionMappingModels>()
                 };
 
                 // เรียก DAO เพื่อเพิ่มข้อมูล

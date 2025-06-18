@@ -1,36 +1,100 @@
 ﻿@model SME_WEB_ApiManagement.Models.ViewRegisterApiModels
 @{
     ViewData["Title"] = "API Outbound";
-    var vDdlStatus = @ViewBag.vDdlStatus;
-    var vDdlOrg = @ViewBag.vDdlOrg;
+    var vDdlStatus = ViewBag.vDdlStatus;
+    var vDdlOrg = ViewBag.vDdlOrg;
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var EmployeeId = ViewBag.EmployeeId;
 }
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<style>
+    /* Fix Select2 dropdown z-index in Bootstrap modal */
+    .modal .select2-container {
+        z-index: 1055 !important;
+    }
+
+    .modal .select2-dropdown {
+        z-index: 1060 !important;
+    }
+</style>
 <script>
+    // Initialize Select2 with dropdownParent for modal
+    function initSelect2Modal() {
+        $('#OrganizationCode').select2({
+            width: '100%',
+            placeholder: "--กรุณาเลือก--",
+            allowClear: true,
+            dropdownParent: $('#CreateEditModal')
+        });
+    }
+
+    $(document).ready(function () {
+        initSelect2Modal();
+    });
+
+    // Fix Bootstrap 4 + Select2: allow modal to close when using Select2
+    $('#CreateEditModal').on('show.bs.modal', function () {
+        var modal = $(this);
+        var enforceModalFocusFn = $.fn.modal.Constructor.prototype._enforceFocus;
+        $.fn.modal.Constructor.prototype._enforceFocus = function() {
+            if (modal.hasClass('show')) return;
+            enforceModalFocusFn.apply(this, arguments);
+        };
+    });
+
+    // Fix: Select2 inside Bootstrap modal - allow modal to close on cancel
+    $(document).on('select2:open', () => {
+        document.querySelectorAll('.select2-search__field').forEach((el) => {
+            el.focus();
+        });
+    });
+
+    $('#CreateEditModal').on('shown.bs.modal', function () {
+        // Remove enforced focus to allow Select2 to work with modal
+        $(document).off('focusin.modal');
+    });
+
+    // Fix Bootstrap 4 + Select2: allow modal to close when using Select2
+    $('#CreateEditModal').on('show.bs.modal', function () {
+        // Override enforceFocus only for this modal
+        var modal = $(this);
+        var enforceModalFocusFn = $.fn.modal.Constructor.prototype._enforceFocus;
+        $.fn.modal.Constructor.prototype._enforceFocus = function() {
+            if (modal.hasClass('show')) return;
+            enforceModalFocusFn.apply(this, arguments);
+        };
+    });
+
     // เปิด modal สำหรับสร้าง
     function GetCreate() {
         $('#CreateEditModalLabel').text('สร้างข้อมูล API Outbound');
         $('#createEditRegisterForm').attr('action', '/RegisterAPI/Add');
         $('#RegisterId').val('');
-        $('#OrganizationName').val('');
-        $('#ApiKey').val('');
+        $('#OrganizationCode').val('').trigger('change');
         $('#FlagActive').val('true');
         $('#StartDate').val('');
         $('#EndDate').val('');
+        $('#CreateBy').val('');
+        $('#UpdateBy').val('');
         $('#CreateEditModal').modal('show');
     }
 
     // เปิด modal สำหรับแก้ไข
     function GetEdit(register) {
         $('#CreateEditModalLabel').text('แก้ไขข้อมูล API Outbound');
-        $('#createEditRegisterForm').attr('action', '/RegisterAPI/EditRegister');
-        $('#RegisterId').val(register.RegisterId);
-        $('#OrganizationName').val(register.OrganizationName);
-        $('#ApiKey').val(register.ApiKey);
+        $('#createEditRegisterForm').attr('action', '/RegisterAPI/Add');
+        $('#RegisterId').val(register.RegisterId || '');
+        $('#OrganizationCode').val(register.OrganizationCode || '').trigger('change');
         $('#FlagActive').val(register.FlagActive ? 'true' : 'false');
-        $('#StartDate').val(register.StartDate ? register.StartDate.substring(0,10) : '');
-        $('#EndDate').val(register.EndDate ? register.EndDate.substring(0,10) : '');
+        $('#StartDate').val(register.StartDate ? register.StartDate.substring(0, 10) : '');
+        $('#EndDate').val(register.EndDate ? register.EndDate.substring(0, 10) : '');
+        $('#CreateBy').val(register.CreateBy || '');
+        $('#UpdateBy').val(register.UpdateBy || '');
         $('#CreateEditModal').modal('show');
     }
 
@@ -83,7 +147,7 @@
             <div class="wrap-content">
                 <div class="content_table">
                     <div class="header_content d-flex justify-content-between align-items-center">
-                        <h6>รายการ Inbound API</h6>
+                        <h6>รายการ API Outbound </h6>
                         <button type="button" class="btn btn-primary" onclick="GetCreate()">
                             <i class="fa fa-plus"></i> สร้าง
                         </button>
@@ -113,10 +177,13 @@
                                         {
                                             RegisterId = w.Id,
                                             OrganizationName = w.OrganizationName,
+                                            OrganizationCode = w.OrganizationCode,
                                             ApiKey = w.ApiKey,
                                             FlagActive = w.FlagActive,
                                             StartDate = w.StartDate?.ToString("yyyy-MM-dd"),
-                                            EndDate = w.EndDate?.ToString("yyyy-MM-dd")
+                                            EndDate = w.EndDate?.ToString("yyyy-MM-dd"),
+                                            CreateBy = EmployeeId,
+                                            UpdateBy = EmployeeId
                                         });
                                         <tr>
                                             <td>@index</td>
@@ -149,9 +216,9 @@
                                                 <button type="button" class="action-btn editbtn" onclick='GetEdit(@Html.Raw(json))' title="Edit">
                                                     <i class="fa fa-pen-to-square" style="color: #34A5EB; cursor: pointer;"></i>
                                                 </button>
-                                                <button type="button" class="action-btn delete   btn-sm" onclick="OpenConfirmDeleteModal('@w.Id')" title="ลบ">
-                                                    <i class="fa fa-trash"></i> 
-                                                </button>
+                                                @* <button type="button" class="action-btn delete btn-sm" onclick="OpenConfirmDeleteModal('@w.Id')" title="ลบ">
+                                                    <i class="fa fa-trash"></i>
+                                                </button> *@
                                             </td>
                                         </tr>
                                         index++;
@@ -202,7 +269,6 @@
         </div>
     </div>
 
- 
     <!-- Modal Confirm Delete -->
     <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ViewCancelModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document" style="min-width: 40%;">
@@ -238,27 +304,16 @@
             </div>
             <form id="createEditRegisterForm" method="post" action="/RegisterAPI/Add">
                 <input type="hidden" name="RegisterId" id="RegisterId" />
+                <input type="hidden" name="CreateBy" id="CreateBy" value="@EmployeeId" />
+                <input type="hidden" name="UpdateBy" id="UpdateBy" value="@EmployeeId" />
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>ชื่อระบบ <span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" name="OrganizationName" id="OrganizationName" placeholder="Ex. ระบบ..." required />
-                            </div>
-                        </div>
                         <div class="col-md-6">
-                            <label class="form-label">หน่วยงานเจ้าของ API <span class="text-danger">*</span></label>
-                         @*    <select asp-for="InsMSystem.OwnerSystemCode" asp-items="vDdlOrg" class="form-control search-dropdown" style="width:100%" id="InsMSystem_OwnerSystemCode">
+                            <label class="form-label">หน่วยงานขอใช้บริการ API <span class="text-danger">*</span></label>
+                            <select asp-items="vDdlOrg" class="form-control search-dropdown" style="width:100%" id="OrganizationCode" name="OrganizationCode" required>
                                 <option value="">--กรุณาเลือก--</option>
-                            </select> *@
+                            </select>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>API-Key <span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" name="ApiKey" id="ApiKey" placeholder="Ex. c6633541-65e9-43f7-bb4f-e543c3963815" required />
-                            </div>
-                        </div>
-                      
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>สถานะ</label>
@@ -290,7 +345,6 @@
         </div>
     </div>
 </div>
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         var btnLast = document.getElementById("btnLast");

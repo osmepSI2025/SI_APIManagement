@@ -73,6 +73,63 @@ namespace SME_WEB_ApiManagement.DAO
                 return null;
             }
         }
+        public static vDropdownDTO GetDropdownOrganizationWithOutData(List<MRegisterModels> Models,string apipath = null, string TokenStr = null)
+        {
+            var xdata = new List<MOrganizationModels>();
+            if (Models.Count > 0)
+            {
+                foreach (var item in Models)
+                {
+                    MOrganizationModels x = new MOrganizationModels();
+
+                    x.OrganizationCode = item.OrganizationCode;
+
+                    xdata.Add(x);
+                }
+            }
+            try
+            {
+                APIpath = apipath + "Dropdown/GetDropdownOrganizationWithOutData";
+                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(APIpath);
+                httpWebRequest.ContentType = "application/json";
+                //  httpWebRequest.Headers.Add("Authorization", "Bearer " + TokenStr);
+                httpWebRequest.Method = "POST";
+                vDropdownDTO Llist = new vDropdownDTO();
+                try
+                {
+                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                    {
+                        var Req = new List<MOrganizationModels>(); // Correctly initialize as a list
+
+                        if (xdata != null)
+                        {
+                            Req = xdata; // Assign the list directly
+                        }
+
+                        var json = JsonConvert.SerializeObject(Req, Formatting.Indented);
+
+                        streamWriter.Write(json);
+                        streamWriter.Flush();
+                        streamWriter.Close();
+                    }
+                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+
+                        var result = streamReader.ReadToEnd();
+                        Llist = JsonConvert.DeserializeObject<vDropdownDTO>(result);
+                        return Llist;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    return new vDropdownDTO();
+                }
+            }
+            catch (Exception ex) { return null; }
+       
+        }
         public static vDropdownDTO GetDropdownSystem(string apipath = null, string TokenStr = null)
         {
 

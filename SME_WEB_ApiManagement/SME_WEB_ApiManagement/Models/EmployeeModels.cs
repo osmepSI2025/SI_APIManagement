@@ -45,6 +45,7 @@ namespace SME_WEB_ApiManagement.Models
 
         public int rowOFFSet { get; set; }
         public int rowFetch { get; set; }
+        public string? RoleCode { get; set; }
     }
     public class EmployeeResult
     {
@@ -101,6 +102,7 @@ namespace SME_WEB_ApiManagement.Models
 
         [JsonPropertyName("positionId")]
         public string? PositionId { get; set; }
+        public string? RoleCode { get; set; }
     }
 
 

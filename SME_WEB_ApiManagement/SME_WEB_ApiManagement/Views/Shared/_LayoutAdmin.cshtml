@@ -1,9 +1,19 @@
-﻿<!DOCTYPE html>
+﻿@using System.Text.Json
+@{
+    // Read EmpDetai from session and deserialize
+    var empDetailJson = Context.Session.GetString("EmpDetail");
+    SME_WEB_ApiManagement.Models.EmployeeModels? empDetail = null;
+    if (!string.IsNullOrEmpty(empDetailJson))
+    {
+        empDetail = JsonSerializer.Deserialize<SME_WEB_ApiManagement.Models.EmployeeModels>(empDetailJson);
+    }
+}
+<!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@ViewData["Title"] - SME Admin</title>
+    <title>@ViewData["Title"] - SME SuperAdmin</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -34,14 +44,17 @@
                     <li class="nav-item">
                         <a class="nav-link" href="../SysMasterAPI/SysMasterAPI"><i class="fas fa-window-restore"></i>Api System Master</a>
                     </li>
-
-                    <li class="nav-item">
+                    @if (empDetail.RoleCode == "SUPERADMIN")
+                    {
+                        @*   <li class="nav-item">
                         <a class="nav-link" href="../APIManagement/AgencyCompany"><i class="fas fa-window-restore"></i>เพิ่มหน่วยงานหรือบริษัท ขอใช้ระบบ</a>
-                    </li>
+                    </li> *@
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="../UserManagement/index"><i class="fas fa-users"></i>กำหนดสิทธิ์ผู้ใช้งาน</a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../UserManagement/index"><i class="fas fa-users"></i>กำหนดสิทธิ์ผู้ใช้งาน</a>
+                        </li>
+                    }
+            
                 </ul>
                 <div class="sidebar-bottom px-3">
                     <div class="mb-2"><i class="fas fa-bell me-2"></i> การแจ้งเตือน</div>
@@ -54,8 +67,17 @@
                     <span>@ViewData["Title"]</span>
                     <span class="user-info">
                         <i class="fas fa-user-circle me-2"></i>
-                        นายสุรศักดิ์ สายสุจริตวิชญ์<br />
-                        รหัสเจ้าหน้าที่ : 01234
+                        @if (empDetail != null)
+                        {
+                            <span>
+                                @(empDetail?.NameTh ?? "-")<br />
+                                รหัสเจ้าหน้าที่ : @(empDetail?.EmployeeId ?? "-")
+                            </span>
+                        }
+                        else
+                        {
+                            <span>ไม่พบข้อมูลผู้ใช้ในระบบ</span>
+                        }
                     </span>
                 </div>
                 
