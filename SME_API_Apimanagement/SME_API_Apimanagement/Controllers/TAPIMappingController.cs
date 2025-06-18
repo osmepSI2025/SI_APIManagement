@@ -91,20 +91,12 @@ namespace SME_API_Apimanagement.Controllers
             }
         }
 
-        [HttpGet("GetAPIList/businessId={businessId}")]
-        public async Task<IActionResult> GetAllByBusinessIdAsync(string businessId)
+        [HttpPost("GetAPIList")]
+        public async Task<IActionResult> GetAllByBusinessIdAsync(searchApiPermisionRespone models)
         {
             var result = new ApiPermisionApiRespone();
-            if (string.IsNullOrWhiteSpace(businessId))
-            {
-                result.responseCode = "400";
-                result.responseMsg = "businessId is required.";
-                result.result = new List<TApiPermisionRespone>();
-                return BadRequest(result);
-            }
-
-           
-            result = await _apiMappingService.GetAllByBusinessIdAsync(businessId);
+       
+            result = await _apiMappingService.GetAllByBusinessIdAsync(models);
             return result != null ? Ok(result) : NotFound();
         }
     }

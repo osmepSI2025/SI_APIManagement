@@ -78,7 +78,7 @@ namespace SME_API_Apimanagement.Controllers
                     ,
                     Id = xModels.TSystemAPI.Id
                 };
-                var systemInfo = await _mSystemInfoService.CheckSysitemInfoUpsert(msystemInfo);
+         //       var systemInfo = await _mSystemInfoService.CheckSysitemInfoUpsert(msystemInfo);
 
                 int xdata = await _repository.UpsertSystemApi(xModels); // ใช้ await
 

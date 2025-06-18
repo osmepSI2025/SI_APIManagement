@@ -89,5 +89,35 @@ namespace SME_API_Apimanagement.Repository
                 return null;
             }
         }
+
+        
+            public List<DropdownModels> GetDropdownOrganizationWithOutData(List<MOrganizationModels> WoModels)
+        {
+
+            try
+            {
+                // Get the list of codes to exclude
+                var excludeCodes = WoModels.Select(w => w.OrganizationCode).ToList();
+
+                // Materialize the query after filtering in the database
+                var query = (from u in _context.MOrganizations
+                             where u.FlagActive == true && u.FlagDelete == "N"
+                             select new DropdownModels
+                             {
+                                 Code = u.OrganizationCode,
+                                 Name = u.OrganizationName,
+                             }
+                            ).ToList();
+
+                // Now filter out the excluded codes in memory
+                var result = query.Where(x => !excludeCodes.Contains(x.Code)).OrderBy(x => x.Name).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

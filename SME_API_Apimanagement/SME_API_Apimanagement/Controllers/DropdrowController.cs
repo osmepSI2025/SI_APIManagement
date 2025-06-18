@@ -148,5 +148,49 @@ namespace SME_API_Apimanagement.Controllers
                 return vList;
             }
         }
+
+        [HttpPost]
+        [Route("GetDropdownOrganizationWithOutData")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public vDropdownDTO GetDropdownOrganizationWithOutData(List<MOrganizationModels>  WoModels)
+        {
+            vDropdownDTO vList = new vDropdownDTO();
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var lDropdown = _Eg.GetDropdownOrganizationWithOutData(WoModels);
+                    if (lDropdown.Count > 0)
+                    {
+                        vList.responseCode = "RES-200";
+                        vList.responseDesc = "Resquest processes successfully";
+                        vList.DropdownList = lDropdown;
+                        return vList;
+                    }
+                    else
+                    {
+                        vList.responseCode = "RES-200";
+                        vList.responseDesc = "Resquest processes successfully";
+                        vList.DropdownList = null;
+                        return vList;
+                    }
+                }
+                else
+                {
+                    vList.responseCode = "RES-500";
+                    vList.responseDesc = "Resquest processes Unsuccess";
+                    return vList;
+                }
+            }
+            catch (Exception ex)
+            {
+                vList.responseCode = "RES-404";
+                vList.responseDesc = ex.Message;
+                ;
+                return vList;
+            }
+        }
     }
 }

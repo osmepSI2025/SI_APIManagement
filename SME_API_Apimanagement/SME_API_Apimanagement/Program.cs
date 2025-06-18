@@ -37,7 +37,7 @@ namespace SME_API_Apimanagement
             //add service 
             builder.Services.AddDbContext<ApiMangeDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
-
+           
 
             builder.Services.AddScoped<ITAPIMappingRepository, TAPIMappingRepository>();
             builder.Services.AddScoped<IMSystemRepository, MSystemRepository>();

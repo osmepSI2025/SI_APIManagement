@@ -22,13 +22,13 @@ namespace SME_API_Apimanagement.Repository
         }
 
         // 📌 ดึงข้อมูลตาม Id
-        public async Task<MRegister> GetRegisterByIdAsync(string id)
+        public async Task<MRegister> GetRegisterByIdAsync(string apikey)
         {
             //return await _context.MRegisters.FindAsync(id);
             try
             {
                 return await _context.MRegisters
-        .FirstOrDefaultAsync(e => e.ApiKey == id);
+        .FirstOrDefaultAsync(e => e.ApiKey == apikey);
             }
             catch (Exception ex)
             {
@@ -129,10 +129,14 @@ namespace SME_API_Apimanagement.Repository
                         apiKey = queryUpdate.ApiKey;
                         if (queryUpdate != null)
                         {
+                            if (xModels.MRegister.StartDate!=null)
                             queryUpdate.StartDate = xModels.MRegister.StartDate;
-                            queryUpdate.EndDate = xModels.MRegister.EndDate;
-                            queryUpdate.FlagActive = xModels.MRegister.FlagActive;
-                            queryUpdate.FlagDelete = xModels.MRegister.FlagDelete;
+                            if (xModels.MRegister.EndDate != null)
+                                queryUpdate.EndDate = xModels.MRegister.EndDate;
+                            if (xModels.MRegister.FlagActive != null)
+                                queryUpdate.FlagActive = xModels.MRegister.FlagActive;
+                            if (xModels.MRegister.FlagDelete != null)
+                                queryUpdate.FlagDelete = "N";
 
 
                             if (!string.IsNullOrEmpty(xModels.MRegister.UpdateBy))

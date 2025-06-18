@@ -129,7 +129,7 @@ namespace SME_API_Apimanagement.Repository
                                  FlagDelete = s.FlagDelete,
                                  UpdateBy = s.UpdateBy,
                                  FlagActive = s.FlagActive,
-                                 IsSelected = s.FlagActive,
+                                 IsSelected = s.FlagActive?? false,
                                  SystemCode = s.SystemCode,
                                  SystemName = s.SystemName,
                                  CreateDate = s.CreateDate,

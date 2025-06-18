@@ -88,5 +88,16 @@ namespace SME_API_Apimanagement.Controllers
             // var DepartmentProfile = await _service.GetAllAsync();
             return Ok(vm);
         }
+        [HttpPost("GetEmployeeDetail")]
+        public async Task<ActionResult> GetEmployeeDetail(EmployeeResult models)
+        {
+
+            var vm = await _hrEmployeeService.GetEmployeeDetailBySearch(models);
+
+
+
+            // var DepartmentProfile = await _service.GetAllAsync();
+            return Ok(vm);
+        }
     }
 }

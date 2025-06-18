@@ -7,5 +7,7 @@ namespace SME_API_Apimanagement.Repository
         List<DropdownModels> GetDropdownLookUp(string LookupType);
         List<DropdownModels> GetDropdownSystem();
         List<DropdownModels> GetDropdownOrganization();
+        List<DropdownModels> GetDropdownOrganizationWithOutData(List<MOrganizationModels> WoModels);
+        
     }
 }

@@ -64,7 +64,10 @@ namespace SME_API_Apimanagement.Repository
             
         }
 
+        public async Task<TEmployeeRole?> GetByEmpRoleAsync(string EmpId)
+        {
+            return await _context.TEmployeeRoles.FirstOrDefaultAsync(e => e.EmployeeCode == EmpId);
+        }
 
-    
     }
 }

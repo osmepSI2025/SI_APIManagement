@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using SME_API_Apimanagement.Entities;
 using SME_API_Apimanagement.Repository;
 using System.Text.Json;
@@ -49,10 +50,15 @@ namespace SME_API_Apimanagement.Controllers
         {
             try
             {
-                var jsonData = JsonSerializer.Serialize(errorLog);
-                //    errorLog.Createdate = DateTime.UtcNow;
-                await _repository.AddAsync(errorLog);
+                if (!string.IsNullOrEmpty(errorLog.HttpCode)) 
+                {
+                    var jsonData = JsonSerializer.Serialize(errorLog);
+                    //    errorLog.Createdate = DateTime.UtcNow;
+                    await _repository.AddAsync(errorLog);
+                    return CreatedAtAction(nameof(GetById), new { id = errorLog.Id }, errorLog);
+                }
                 return CreatedAtAction(nameof(GetById), new { id = errorLog.Id }, errorLog);
+
             }
             catch (Exception ex)
             {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SME_API_Apimanagement.Entities;
 using SME_API_Apimanagement.Models;
 
@@ -128,7 +129,8 @@ namespace SME_API_Apimanagement.Repository
                                      OrganizationCode = ta.OrganizationCode
                                      ,ServiceName = ts.ApiServiceName,
                       SystemApiMappingId = ts.Id,
-                      IsSelected = ta.FlagActive,
+                      IsSelected = ta.FlagActive?? false,
+                     
                       
 
                   }).AsQueryable(); // ทำให้ Query เป็น IQueryable
@@ -189,7 +191,7 @@ namespace SME_API_Apimanagement.Repository
                                 StartDate = a.StartDate,
                                 EndDate = a.EndDate,
                                 FlagActive = isSelected,
-                                IsSelected = isSelected // Use FlagActive as IsSelected
+                                IsSelected = isSelected ?? false, // Use FlagActive as IsSelected
                             };
                         }).ToList();
 
@@ -224,37 +226,98 @@ namespace SME_API_Apimanagement.Repository
             }
         }
 
-        public async Task<List<TApiPermisionMappingModels>> GetAllByBusinessIdAsync(string businessId)
+        public async Task<List<TApiPermisionMappingModels>> GetAllByBusinessIdAsync(searchApiPermisionRespone xModels)
         {
           
                 var query = (
-                 from ts in _context.TSystemApiMappings 
-                 join ms in _context.MSystems
-                     on ts.OwnerSystemCode equals ms.SystemCode
-                 join ta in _context.TApiPermisionMappings 
-                     on ts.Id equals ta.SystemApiMappingId into taGroup 
-                 from ta in taGroup.DefaultIfEmpty()
-                 where ta.OrganizationCode == businessId
+               
+                 from ms in _context.MSystems                    
+                 join msi in _context.MSystemInfos on ms.SystemCode equals msi.SystemCode
+                 join  o in _context.MOrganizations on ms.OwnerSystemCode equals o.OrganizationCode
+                 join ts in _context.TSystemApiMappings on ms.SystemCode equals ts.OwnerSystemCode
+                 
                  select new TApiPermisionMappingModels
                  {
+                     OrganizationCode = ms.OwnerSystemCode,
+                     OrganizationName =o.OrganizationName,
                      SystemCode = ms.SystemCode,
-                     SystemName = ms.SystemName,
+                     SystemName = ms.SystemName,                  
+                     FlagActive = ts.FlagActive,   
+                     ServiceName = ts.ApiServiceName.Trim(),
+                     ApiMethod =ts.ApiMethod,
+                     ApiUrlUatOundbound = msi.ApiUrlUatInbound,
+                     ApiUrlProdOundbound = msi.ApiUrlProdInbound,
+                     
+                 })  
+                 ; // ทำให้ Query เป็น IQueryable
+                   // Apply Filters
+            if (!string.IsNullOrEmpty(xModels?.System_Code))
+            {
+                query = query.Where(u => u.SystemCode == xModels.System_Code);
+            }
 
-                     ApiKey = ta.ApiKey,
-                     FlagActive = ta.FlagActive,
-                     StartDate = ta.StartDate,
-                     EndDate = ta.EndDate,
-                     OrganizationCode = ta.OrganizationCode
-                                    ,
-                     ServiceName = ts.ApiServiceName,
-                     SystemApiMappingId = ts.Id,
-                     IsSelected = ta.FlagActive,
+            if (!string.IsNullOrEmpty(xModels?.System_Name))
+            {
+                query = query.Where(u => u.SystemName.Contains(xModels.System_Name));
+            }
 
-
-                 }).ToList(); // ทำให้ Query เป็น IQueryable
-             
-                return query;
+            if (xModels?.FlagActive!=null)
+            {
+                query = query.Where(u => u.FlagActive== xModels.FlagActive);
+            }
+            return query.ToList();
            
+        }
+
+        public async Task<List<TApiPermisionMappingModels>> GetCheckTApiMappingBySearch(TApiPermisionMappingModels xModels)
+        {
+            var result = new List<TApiPermisionMappingModels>();
+            try
+            {
+                var query = (
+                  from ts in _context.TSystemApiMappings
+                  join ms in _context.MSystems
+                      on ts.OwnerSystemCode equals ms.SystemCode
+                  join ta in _context.TApiPermisionMappings
+                      on ts.Id equals ta.SystemApiMappingId
+                  where ts.ApiServiceCode != null
+                  select new TApiPermisionMappingModels
+                  {
+                      SystemCode = ms.SystemCode,
+                      SystemName = ms.SystemName,
+
+                      ApiKey = ta.ApiKey,
+                      FlagActive = ta.FlagActive,
+                      StartDate = ta.StartDate,
+                      EndDate = ta.EndDate,
+                      OrganizationCode = ta.OrganizationCode
+                                     ,
+                      ServiceName = ts.ApiServiceName,
+                      SystemApiMappingId = ts.Id,
+                      IsSelected = ta.FlagActive ?? false,
+                      ApiServiceCode  = ts.ApiServiceCode,
+                     
+
+                  }).AsQueryable(); // ทำให้ Query เป็น IQueryable
+
+                // Apply Filters
+                if (!string.IsNullOrEmpty(xModels?.OrganizationCode))
+                {
+                    query = query.Where(u => u.OrganizationCode == xModels.OrganizationCode);
+                }
+
+                if (!string.IsNullOrEmpty(xModels?.ApiKey))
+                {
+                    query = query.Where(u => u.ApiKey == xModels.ApiKey);
+                }
+
+       
+                return query.ToList();
+            }
+            catch (Exception ex)
+            {
+                return new List<TApiPermisionMappingModels>(); // Return List เปล่าแทน null
+            }
         }
     }
 

@@ -41,6 +41,33 @@ namespace SME_API_Apimanagement.Repository
             try
             {
                 _context.TSystemApiMappings.Update(api);
+                // กำหนดเฉพาะฟิลด์ที่ต้องการให้อัปเดต
+                _context.Entry(api).Property(x => x.ApiKey).IsModified = true;
+                _context.Entry(api).Property(x => x.OwnerSystemCode).IsModified = true;
+                _context.Entry(api).Property(x => x.ApiServiceName).IsModified = true;
+                _context.Entry(api).Property(x => x.ApiMethod).IsModified = true;
+                _context.Entry(api).Property(x => x.ApiRequestExample).IsModified = true;
+                _context.Entry(api).Property(x => x.ApiResponseExample).IsModified = true;
+                _context.Entry(api).Property(x => x.ApiNote).IsModified = true;
+                _context.Entry(api).Property(x => x.FlagActive).IsModified = true;
+                _context.Entry(api).Property(x => x.FlagDelete).IsModified = true;
+                _context.Entry(api).Property(x => x.UpdateBy).IsModified = true;
+                _context.Entry(api).Property(x => x.UpdateDate).IsModified = true;
+                _context.Entry(api).Property(x => x.ApiPassword).IsModified = true;
+                _context.Entry(api).Property(x => x.ApiServiceType).IsModified = true;
+                _context.Entry(api).Property(x => x.ApiUrlProdInbound).IsModified = true;
+                _context.Entry(api).Property(x => x.ApiUrlProdOutbound).IsModified = true;
+                _context.Entry(api).Property(x => x.ApiUrlUatInbound).IsModified = true;
+                _context.Entry(api).Property(x => x.ApiUrlUatOutbound).IsModified = true;
+                _context.Entry(api).Property(x => x.ApiUser).IsModified = true;
+                _context.Entry(api).Property(x => x.ApiResponseDescription).IsModified = true;
+                _context.Entry(api).Property(x => x.ApiRequestDescription).IsModified = true;
+                _context.Entry(api).Property(x => x.ApiRequestParamater).IsModified = true;
+                _context.Entry(api).Property(x => x.ApiRequestParamaterType).IsModified = true;
+                _context.Entry(api).Property(x => x.ApiResponseParamater).IsModified = true;
+                _context.Entry(api).Property(x => x.ApiResponseParamaterType).IsModified = true;
+                 
+
                 result = await _context.SaveChangesAsync();
 
             }
@@ -96,11 +123,11 @@ namespace SME_API_Apimanagement.Repository
                         FlagActive = true,
                         FlagDelete = "N",
                         UpdateDate = DateTime.Now,
-                        UpdateBy = xModels.TSystemAPI.CreateBy
+                        UpdateBy = xModels.TSystemAPI.UpdateBy
                         ,
                         CreateDate = DateTime.Now
-                        ,
-                        CreateBy = xModels.TSystemAPI.CreateBy
+                        //,
+                     //   CreateBy = xModels.TSystemAPI.CreateBy
                         ,ApiPassword = xModels.TSystemAPI.ApiPassword
                         ,ApiServiceType = xModels.TSystemAPI.ApiServiceType
                         ,ApiUrlProdInbound = xModels.TSystemAPI.ApiUrlProdInbound
@@ -139,7 +166,8 @@ namespace SME_API_Apimanagement.Repository
                         CreateDate = DateTime.Now,
                         CreateBy = xModels.TSystemAPI.CreateBy,
                         UpdateBy = xModels.TSystemAPI.CreateBy
-                        ,ApiPassword = xModels.TSystemAPI.ApiPassword
+                        ,
+                        ApiPassword = xModels.TSystemAPI.ApiPassword
                         ,ApiServiceType = xModels.TSystemAPI.ApiServiceType
                         ,
                         ApiUrlProdInbound = xModels.TSystemAPI.ApiUrlProdInbound
@@ -238,7 +266,9 @@ namespace SME_API_Apimanagement.Repository
                 return new List<TSystemApiMappingModels>(); // Return List เปล่าแทน null
             }
         }
-      
+
+
+
     }
 
 }

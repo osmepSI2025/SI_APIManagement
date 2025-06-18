@@ -57,6 +57,8 @@ namespace SME_API_Apimanagement.Services
                         ApiUrlUatInbound = xModels.ApiUrlUatInbound,
                         ApiPassword = xModels.ApiPassword,
                         ApiUser = xModels.ApiUser,
+                        CreateBy = xModels.CreateBy,
+                        CreateDate = DateTime.Now,
                     };
 
                     var success = await AddAsync(xRaw); // เรียกใช้ AddAsync เพื่อเพิ่มข้อมูลใหม่

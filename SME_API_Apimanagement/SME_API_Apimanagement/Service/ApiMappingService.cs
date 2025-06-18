@@ -25,12 +25,12 @@ namespace SME_API_Apimanagement.Service
             _tAPIMappingRepository = tAPIMappingRepository;
             _tErrorApiLogService = tErrorApiLogService;
         }
-        public async Task<ApiPermisionApiRespone> GetAllByBusinessIdAsync(string businessId)
+        public async Task<ApiPermisionApiRespone> GetAllByBusinessIdAsync(searchApiPermisionRespone models)
         {
             ApiPermisionApiRespone data = new ApiPermisionApiRespone();
             try
             {
-                var xresult = _tAPIMappingRepository.GetAllByBusinessIdAsync(businessId);
+                var xresult = _tAPIMappingRepository.GetAllByBusinessIdAsync(models);
                 if (xresult.Result == null || xresult.Result.Count == 0)
                 {
                   
@@ -44,11 +44,13 @@ namespace SME_API_Apimanagement.Service
             {
                     var datalist = xresult.Result.Select(x => new TApiPermisionRespone
                     {
-                        BusinessId = x.OrganizationCode, // Or another property that matches your business id
-                  
-                        SystemName = x.SystemName,
-                        ServiceName = x.ServiceName,
-                        IsSelected = x.IsSelected
+                        Owner_System_Code = x.OrganizationCode,
+                        Owner_System_Name = x.SystemName,
+                        API_Service_Name = x.ServiceName,
+                        API_Method = x.ApiMethod,
+                        API_URL_UAT_Outbound = x.ApiUrlUatOundbound,// Or another property that matches your business id
+                        API_URL_PROD_Outbound = x.ApiUrlProdOundbound,                       
+                        FlagActive = x.FlagActive
                     }).ToList();
                     data.responseMsg = "Success";
                 data.responseCode = "200";

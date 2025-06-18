@@ -99,7 +99,40 @@ namespace SME_API_Apimanagement.Service
 
             return apiResponse;
         }
+        public async Task<string> GetApiInformationByParamPost(string servicename, object models)
+        {
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                WriteIndented = true
+            };
 
+            var LApi = await _repositoryApi.GetAllAsync(new MapiInformationModels { ServiceNameCode = servicename });
+            var apiParam = LApi.Select(x => new MapiInformationModels
+            {
+                ServiceNameCode = x.ServiceNameCode,
+                ApiKey = x.ApiKey,
+                AuthorizationType = x.AuthorizationType,
+                ContentType = x.ContentType,
+                CreateDate = x.CreateDate,
+                Id = x.Id,
+                MethodType = x.MethodType,
+                ServiceNameTh = x.ServiceNameTh,
+                Urldevelopment = x.Urldevelopment,// Use null conditional operator to avoid null reference
+                Urlproduction = x.Urlproduction,// Use null conditional operator to avoid null reference
+                Username = x.Username,
+                Password = x.Password,
+                UpdateDate = x.UpdateDate,
+                Bearer = x.Bearer,
+                AccessToken = x.AccessToken
+            }).FirstOrDefault();
+
+
+
+            var apiResponse = await _serviceApi.GetDataApiAsync(apiParam, models);
+
+            return apiResponse;
+        }
         public async Task<BusinessUnitApiResponse> GetDepartment()
         {
             var options = new JsonSerializerOptions
@@ -342,6 +375,59 @@ namespace SME_API_Apimanagement.Service
             }
 
 
+        }
+
+        public async Task<EmployeeResult> GetEmployeeDetailBySearch(EmployeeResult models)
+        {
+            try
+            {
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                    WriteIndented = true
+                };
+
+                var strEmp = await GetApiInformationByParamPost("employee-search", models);
+                if (!string.IsNullOrEmpty(strEmp))
+                {
+                    var result = JsonSerializer.Deserialize<List<EmployeeResult>>(strEmp, options);
+
+                    // Check if result is not null and has elements
+                    if (result != null && result.Count > 0)
+                    {
+                        // emdetail
+                        var emdetail = result.FirstOrDefault();
+                        //find RoleCode in result.FirstOrDefault().RoleCode;
+                        var EmroleCode = await _repositoryUserManagement.GetByEmpRoleAsync(emdetail.EmployeeId);
+
+                        EmployeeResult newData = new EmployeeResult
+                        {
+                            EmployeeId = result.FirstOrDefault().EmployeeId,
+                            FirstNameTh = result.FirstOrDefault().FirstNameTh,
+                            LastNameTh = result.FirstOrDefault().LastNameTh,
+                            Email = result.FirstOrDefault().Email,
+                            Mobile = result.FirstOrDefault().Mobile,
+                            EmploymentDate = result.FirstOrDefault().EmploymentDate,
+                            TerminationDate = result.FirstOrDefault().TerminationDate,
+                            EmployeeType = result.FirstOrDefault().EmployeeType,
+                            EmployeeStatus = result.FirstOrDefault().EmployeeStatus,
+                            SupervisorId = result.FirstOrDefault().SupervisorId,
+                            CompanyId = result.FirstOrDefault().CompanyId,
+                            BusinessUnitId = result.FirstOrDefault().BusinessUnitId,
+                            PositionId = result.FirstOrDefault().PositionId,
+                            NameEn = result.FirstOrDefault().NameEn,
+                            NameTh = result.FirstOrDefault().NameTh,
+                            RoleCode = EmroleCode?.RoleCode ?? null,
+                        };
+                        return newData;
+                    }
+                }
+                return new EmployeeResult(); // Ensure a return value in case of empty or null result
+            }
+            catch (Exception ex)
+            {
+                return new EmployeeResult(); // Ensure a return value in case of an exception
+            }
         }
     }
 }

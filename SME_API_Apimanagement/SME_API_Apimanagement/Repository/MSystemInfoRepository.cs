@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SME_API_Apimanagement.Entities;
 using System;
 using System.Collections.Generic;
@@ -57,6 +58,26 @@ namespace SME_API_Apimanagement.Repository
             try
             {
                 _context.Set<MSystemInfo>().Update(entity);
+                if (!string.IsNullOrEmpty(entity.ApiKey)) 
+                {
+                    _context.Entry(entity).Property(x => x.ApiKey).IsModified = true;
+                }
+                if (!string.IsNullOrEmpty(entity.ApiPassword))
+                    _context.Entry(entity).Property(x => x.ApiPassword).IsModified = true;
+                if (!string.IsNullOrEmpty(entity.ApiUrlProdInbound))
+                    _context.Entry(entity).Property(x => x.ApiUrlProdInbound).IsModified = true;
+                if (!string.IsNullOrEmpty(entity.ApiUrlUatInbound))
+                    _context.Entry(entity).Property(x => x.ApiUrlUatInbound).IsModified = true;
+                if (!string.IsNullOrEmpty(entity.UpdateBy))
+                    _context.Entry(entity).Property(x => x.UpdateBy).IsModified = true;
+            
+                if (!string.IsNullOrEmpty(entity.Note))
+                    _context.Entry(entity).Property(x => x.Note).IsModified = true;
+                if (!string.IsNullOrEmpty(entity.FlagDelete))
+                    _context.Entry(entity).Property(x => x.FlagDelete).IsModified = true;
+                _context.Entry(entity).Property(x => x.UpdateDate).IsModified = true;
+                _context.Entry(entity).Property(x => x.FlagActive).IsModified = true;
+
                 return await _context.SaveChangesAsync();
             }
             catch

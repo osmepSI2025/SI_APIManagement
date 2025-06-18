@@ -2,13 +2,15 @@
 using SME_API_Apimanagement.Entities;
 using SME_API_Apimanagement.Models;
 using SME_API_Apimanagement.Repository;
+using System.Text;
 
-   [Route("api/SYS-API/[controller]")]
+[Route("api/SYS-API/[controller]")]
 [ApiController]
 public class MRegisterController : ControllerBase
 {
     private readonly IMRegisterRepository _repository;
     private readonly ITAPIMappingRepository _repTApi;
+
 
     public MRegisterController(IMRegisterRepository repository, ITAPIMappingRepository repTApi)
     {
@@ -24,13 +26,56 @@ public class MRegisterController : ControllerBase
         return Ok(registers);
     }
 
-    // 📌 GET: ดึงข้อมูลตาม Id
-    [HttpGet("{apikey}")]
-    public async Task<ActionResult<MRegister>> GetRegister(string apikey)
+    // 📌 GET: ดึงข้อมูลตาม apikey และ xUrl
+    //[HttpGet("{apikey}/{xUrl}")]
+    //public async Task<ActionResult<MRegister>> GetRegister(string apikey,string xUrl)
+    //{
+    //    var register = await _repository.GetRegisterByIdAsync(apikey);
+    //    return register == null ? NotFound() : Ok(register);
+    //}
+    [HttpGet("{apikey}/{xUrl}")]
+    public async Task<ActionResult<MRegister>> GetRegister(string apikey, string xUrl)
     {
+        string decodedPath;
+        try
+        {
+            decodedPath = Encoding.UTF8.GetString(Convert.FromBase64String(xUrl));
+        }
+        catch
+        {
+            return BadRequest("xUrl is not a valid Base64 string.");
+        }
+
         var register = await _repository.GetRegisterByIdAsync(apikey);
-        return register == null ? NotFound() : Ok(register);
+        if (register == null)
+            return NotFound();
+
+        var xparam = new TApiPermisionMappingModels { ApiKey = apikey };
+        var tmapping = await _repTApi.GetCheckTApiMappingBySearch(xparam);
+
+        if (tmapping != null && tmapping.Count > 0)
+        {
+            var uniqueMappings = tmapping
+                .Select(x => new { x.ApiServiceCode, x.SystemCode,x.FlagActive })
+                .Distinct()
+                .ToList();
+
+            foreach (var item in uniqueMappings)
+            {
+                bool hasApi = decodedPath.Contains(item.ApiServiceCode, StringComparison.OrdinalIgnoreCase);
+                bool hasSys = decodedPath.Contains(item.SystemCode, StringComparison.OrdinalIgnoreCase);
+
+                if (hasApi && hasSys && item.FlagActive == true)
+                {
+                    return Ok(register);
+                }
+            }
+        }
+
+        return Forbid(); // ไม่มีสิทธิ์
     }
+
+
 
     // 📌 POST: เพิ่มข้อมูล
     [HttpPost]
