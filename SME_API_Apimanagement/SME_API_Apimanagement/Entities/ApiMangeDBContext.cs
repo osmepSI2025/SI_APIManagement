@@ -43,17 +43,17 @@ public partial class ApiMangeDBContext : DbContext
 
     public virtual DbSet<TSystemApiMapping> TSystemApiMappings { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=27.254.173.62;Database=bluecarg_SME_API;User Id=SMEAPI;Password=tx827q9Y_;TrustServerCertificate=True;");
+    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseSqlServer("Server=192.168.9.155;Database=bluecarg_SME_API;User Id=sa;Password=Osmep@2025;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultSchema("SMEAPI");
+        modelBuilder.UseCollation("Thai_CI_AS");
 
         modelBuilder.Entity<MApiInformation>(entity =>
         {
-            entity.ToTable("M_ApiInformation", "dbo");
+            entity.ToTable("M_ApiInformation");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ApiKey).HasMaxLength(150);
@@ -73,7 +73,7 @@ public partial class ApiMangeDBContext : DbContext
 
         modelBuilder.Entity<MLookup>(entity =>
         {
-            entity.ToTable("M_Lookup");
+            entity.ToTable("M_Lookup", "SMEAPI");
 
             entity.Property(e => e.CreateBy).HasMaxLength(50);
             entity.Property(e => e.CreateDate).HasColumnType("datetime");
@@ -91,7 +91,7 @@ public partial class ApiMangeDBContext : DbContext
         {
             entity.HasKey(e => e.MenuId);
 
-            entity.ToTable("M_Menu", "dbo");
+            entity.ToTable("M_Menu");
 
             entity.Property(e => e.CreateBy).HasMaxLength(50);
             entity.Property(e => e.CreateDate).HasColumnType("datetime");
@@ -110,7 +110,7 @@ public partial class ApiMangeDBContext : DbContext
         {
             entity.HasKey(e => e.OrganizationId);
 
-            entity.ToTable("M_Organization");
+            entity.ToTable("M_Organization", "SMEAPI");
 
             entity.Property(e => e.OrganizationId).HasColumnName("OrganizationID");
             entity.Property(e => e.Address).HasMaxLength(50);
@@ -146,7 +146,7 @@ public partial class ApiMangeDBContext : DbContext
 
         modelBuilder.Entity<MRegister>(entity =>
         {
-            entity.ToTable("M_Register");
+            entity.ToTable("M_Register", "SMEAPI");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ApiKey)
@@ -168,7 +168,7 @@ public partial class ApiMangeDBContext : DbContext
 
         modelBuilder.Entity<MRole>(entity =>
         {
-            entity.ToTable("M_Role");
+            entity.ToTable("M_Role", "SMEAPI");
 
             entity.Property(e => e.CreateBy).HasMaxLength(50);
             entity.Property(e => e.CreateDate).HasColumnType("datetime");
@@ -181,7 +181,7 @@ public partial class ApiMangeDBContext : DbContext
 
         modelBuilder.Entity<MSystem>(entity =>
         {
-            entity.ToTable("M_System");
+            entity.ToTable("M_System", "SMEAPI");
 
             entity.Property(e => e.CreateBy).HasMaxLength(50);
             entity.Property(e => e.CreateDate).HasColumnType("datetime");
@@ -200,7 +200,7 @@ public partial class ApiMangeDBContext : DbContext
 
         modelBuilder.Entity<MSystemInfo>(entity =>
         {
-            entity.ToTable("M_SystemInfo");
+            entity.ToTable("M_SystemInfo", "SMEAPI");
 
             entity.Property(e => e.ApiKey)
                 .HasMaxLength(150)
@@ -232,7 +232,7 @@ public partial class ApiMangeDBContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK_T_API_Mapping");
 
-            entity.ToTable("T_API_Permision_Mapping");
+            entity.ToTable("T_API_Permision_Mapping", "SMEAPI");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ApiKey)
@@ -258,7 +258,7 @@ public partial class ApiMangeDBContext : DbContext
 
         modelBuilder.Entity<TEmployeeRole>(entity =>
         {
-            entity.ToTable("T_Employee_Roles");
+            entity.ToTable("T_Employee_Roles", "SMEAPI");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.BusinessUnitId).HasMaxLength(50);
@@ -277,7 +277,7 @@ public partial class ApiMangeDBContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK_T_ErrorLog");
 
-            entity.ToTable("T_Error_Api_Log");
+            entity.ToTable("T_Error_Api_Log", "SMEAPI");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreatedBy).HasMaxLength(100);
@@ -300,7 +300,7 @@ public partial class ApiMangeDBContext : DbContext
 
         modelBuilder.Entity<TRoleMenu>(entity =>
         {
-            entity.ToTable("T_RoleMenu");
+            entity.ToTable("T_RoleMenu", "SMEAPI");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.CreateBy).HasMaxLength(50);
@@ -312,7 +312,7 @@ public partial class ApiMangeDBContext : DbContext
 
         modelBuilder.Entity<TRolePermission>(entity =>
         {
-            entity.ToTable("T_RolePermission");
+            entity.ToTable("T_RolePermission", "SMEAPI");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreateBy).HasMaxLength(50);
@@ -328,7 +328,7 @@ public partial class ApiMangeDBContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK_T_System_API");
 
-            entity.ToTable("T_System_API_Mapping");
+            entity.ToTable("T_System_API_Mapping", "SMEAPI");
 
             entity.Property(e => e.ApiKey)
                 .HasMaxLength(150)

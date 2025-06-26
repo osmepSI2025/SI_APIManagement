@@ -2,6 +2,7 @@
 using SME_API_Apimanagement.Entities;
 using SME_API_Apimanagement.Models;
 using SME_API_Apimanagement.Repository;
+using SME_API_Apimanagement.Services;
 
 namespace SME_API_Apimanagement.Controllers
 {
@@ -10,10 +11,13 @@ namespace SME_API_Apimanagement.Controllers
     public class MOrganizationController : ControllerBase
     {
         private readonly IMOrganizationRepository _repository;
+        private readonly MOrganizationService _service;
 
-        public MOrganizationController(IMOrganizationRepository repository)
+        public MOrganizationController(IMOrganizationRepository repository
+            , MOrganizationService service)
         {
             _repository = repository;
+            _service = service;
         }
 
         [HttpGet]
@@ -114,6 +118,24 @@ namespace SME_API_Apimanagement.Controllers
             catch (Exception ex)
             {
                 return BadRequest(); // ถ้ามีข้อผิดพลาดให้คืน 400
+            }
+        }
+
+        [HttpGet]
+        [Route("Organization-Batch")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<int>> OrgBatch()
+        {
+            try
+            {
+                await _service.UpsertAsync(); // Call UpsertAsync from MOrganizationService
+                return Ok(1); // Return 200 with a success value
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(); // Return 400 in case of an error
             }
         }
     }

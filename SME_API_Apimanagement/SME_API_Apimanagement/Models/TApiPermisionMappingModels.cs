@@ -34,7 +34,13 @@ namespace SME_API_Apimanagement.Models
 
         public int? SystemApiMappingId { get; set; }
         public string? ServiceName { get; set; }
-        public bool? IsSelected { get; set; }
+        public bool IsSelected { get; set; }
+
+        public string? OrganizationName { get; set; }
+         public string? ApiMethod { get; set; }
+        public string? ApiUrlUatOundbound { get; set; }
+        public string? ApiUrlProdOundbound { get; set; }
+        public string? ApiServiceCode { get; set; }
     }
     public partial class ApiPermisionApiRespone
     {
@@ -45,17 +51,25 @@ namespace SME_API_Apimanagement.Models
     public class TApiPermisionRespone   
     {
      
-        public string? BusinessId { get; set; }      
+        public string? Owner_System_Code { get; set; }
+        public string? Owner_System_Name { get; set; }
+        public string? API_Service_Name { get; set; }
+        public string? API_Method { get; set; }
+        public string? API_URL_UAT_Outbound { get; set; }
+        public string? API_URL_PROD_Outbound { get; set; }
+        public bool? FlagActive      { get; set; }
+    }
 
-        public DateTime? StartDate { get; set; }
+    public class searchApiPermisionRespone
+    {
 
-        public DateTime? EndDate { get; set; }
+        public string? System_Code  { get; set; }
 
-        public string? SystemName { get; set; }
+        public string? System_Name { get; set; }
 
-        public string? ServiceName { get; set; }
+        public bool? FlagActive { get; set; }
 
-        public bool? IsSelected { get; set; }
+       
     }
 }
 

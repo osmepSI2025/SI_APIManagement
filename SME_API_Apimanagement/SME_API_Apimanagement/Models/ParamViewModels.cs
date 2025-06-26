@@ -20,10 +20,10 @@
     public class UpSertRegisterApiModels
     {
 
-        public MRegisterModels MRegister { get; set; }
+        public MRegisterModels MRegister { get; set; } = new MRegisterModels();
 
-        public List<MSystemModels> LSystem { get; set; }
-        public List<TApiPermisionMappingModels> LPerMapApi { get; set; }
+        public List<MSystemModels> LSystem { get; set; } = new List<MSystemModels>();
+        public List<TApiPermisionMappingModels> LPerMapApi { get; set; } = new List<TApiPermisionMappingModels>();
      
 
     }

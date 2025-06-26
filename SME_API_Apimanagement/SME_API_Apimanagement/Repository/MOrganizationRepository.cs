@@ -136,13 +136,14 @@ namespace SME_API_Apimanagement.Repository
                 }
                 else
                 {
-                    var allItems = await GetAllAsync();
-                    var resultRuning = allItems.OrderByDescending(x => x.OrganizationId).FirstOrDefault();
+                    //var allItems = await GetAllAsync();
+                    //var resultRuning = allItems.OrderByDescending(x => x.OrganizationId).FirstOrDefault();
 
 
                     var xRaw = new MOrganization
                     {
-                        OrganizationCode = xModels.OrganizationCode,
+                       // OrganizationCode = xModels.OrganizationCode,
+                       OrganizationCode = "EX_"+ Guid.NewGuid().ToString("N"),
                         OrganizationName = xModels.OrganizationName,
                         Email = xModels.Email,
 

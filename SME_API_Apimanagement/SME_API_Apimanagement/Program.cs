@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Quartz;
 using SME_API_Apimanagement.Entities;
 using SME_API_Apimanagement.Models;
 using SME_API_Apimanagement.Repository;
@@ -34,6 +35,24 @@ namespace SME_API_Apimanagement
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0a9dd1a5-c986-44a1-9f66-52afc094a621"))
                     };
                 });
+
+
+            // Add Quartz services
+            builder.Services.AddQuartz(q =>
+            {
+                q.UseMicrosoftDependencyInjectionJobFactory();
+
+                var jobKey = new JobKey("MOrganizationUpsertJob");
+                q.AddJob<MOrganizationUpsertJob>(opts => opts.WithIdentity(jobKey));
+                q.AddTrigger(opts => opts
+                    .ForJob(jobKey)
+                    .WithIdentity("MOrganizationUpsertJob-trigger")
+                    .WithCronSchedule("0 0 * * * ?")); // Every day at midnight
+            });
+            builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+
+
+
             //add service 
             builder.Services.AddDbContext<ApiMangeDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
@@ -56,7 +75,8 @@ namespace SME_API_Apimanagement
             builder.Services.AddScoped<ITErrorApiLogService, TErrorApiLogService>();
             builder.Services.AddScoped<IMSystemInfoRepository, MSystemInfoRepository>();
             builder.Services.AddScoped<IMSystemInfoService, MSystemInfoService>();
-     
+            builder.Services.AddScoped< MOrganizationService>();
+
             builder.Services.AddScoped<IApiInformationRepository, ApiInformationRepository>();
             builder.Services.AddScoped<ICallAPIService, CallAPIService>(); // Register ICallAPIService with CallAPIService
             builder.Services.AddHttpClient<CallAPIService>();

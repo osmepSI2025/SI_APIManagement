@@ -77,6 +77,8 @@ namespace SME_API_Apimanagement.Models
 
         [JsonPropertyName("positionId")]
         public string? PositionId { get; set; }
+
+        public string? RoleCode { get; set; }
     }
 
 
