@@ -16,7 +16,7 @@
     }
     var EmpDetail = ViewBag.EmpDetail;
 }
-@if (claimsDict != null && claimsDict.Any())
+@* @if (claimsDict != null && claimsDict.Any())
 {
     <ul>
         @foreach (var claim in claimsDict)
@@ -46,7 +46,7 @@ else
 else
 {
     <p>No employee details found.</p>
-}
+} *@
 <style>
     .card-box div {
         display: flex;
@@ -139,29 +139,30 @@ else
               
             </div>
         </div>
-       
-        <div class="row ">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="card-box">
-                    <a id="picjob" runat="server" href="../SysMasterAPI/SysMasterAPIInbound">
-                        <div>
-                            <img src="~/img/system.png" alt="">
-                            <span>API Inbound</span>
-                        </div>
-                    </a>
+       @if(EmpDetail !=null)
+       {
+            <div class="row ">
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="card-box">
+                        <a id="picjob" runat="server" href="../SysMasterAPI/SysMasterAPIInbound">
+                            <div>
+                                <img src="~/img/system.png" alt="">
+                                <span>API Inbound</span>
+                            </div>
+                        </a>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-md-6 .col-sm-12">
-                <div class="card-box">
-                    <a id="PicEmp" href="../RegisterAPI/RegisterList" runat="server">
-                        <div>
-                            <img src="~/img/registered.png" alt="">
-                            <span>API Outbound</span>
-                        </div>
-                    </a>
+                <div class="col-lg-3 col-md-6 .col-sm-12">
+                    <div class="card-box">
+                        <a id="PicEmp" href="../RegisterAPI/RegisterList" runat="server">
+                            <div>
+                                <img src="~/img/registered.png" alt="">
+                                <span>API Outbound</span>
+                            </div>
+                        </a>
+                    </div>
                 </div>
-            </div>
-   @*          <div class="col-lg-3 col-md-6 col-sm-12">
+                @*          <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="card-box">
                 <a href="../APIManagement/Index" runat="server">
                     <div>
@@ -171,30 +172,30 @@ else
                 </a>
                 </div>
             </div> *@
-          @*   <div class="col-lg-3 col-md-6 col-sm-12">
+                  <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="card-box">
-                    <a href="../SysMasterAPI/SysMasterAPIConnect" id="UpdateStatus" runat="server">
+                        <a href="../ErrorApi/Index" id="Errorstatus" runat="server">
                         <div>
-                            <img src="~/img/web-development.png" alt="">
-                            <span>API-Connect</span>
-                        </div>
-                    </a>
-                </div>
-            </div> *@
-           
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="card-box">
-                    <a id="picjob" runat="server" href="../APIManagement/AgencyCompany">
-                        <div>
-                            <img src="~/img/business_1.png" alt="">
-                            <span>เพิ่มหน่วยงานภายใน-ภายนอก </span>
+                            <img src="~/img/error.png" alt="">
+                            <span>Error list</span>
                         </div>
                     </a>
                 </div>
             </div>
-          
-           
-          @*   <div class="col-lg-3 col-md-6 col-sm-12">
+
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="card-box">
+                        <a id="picjob" runat="server" href="../SysMasterAPI/SysMasterAPI">
+                            <div>
+                                <img src="~/img/business_1.png" alt="">
+                                <span>Api System Master</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+
+                @*   <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="card-box">
                     <a href="../ManualUpload/ManualUpload" id="ManualUpload" runat="server">
                         <div>
@@ -204,7 +205,7 @@ else
                     </a>
                 </div>
             </div> *@
-@* 
+                @* 
             <div class="col-lg-3 col-md-6 .col-sm-12">
                 <div class="card-box">
                     <a href="../UserManagement/index" id="UserManagement" runat="server">
@@ -215,6 +216,8 @@ else
                     </a>
                 </div>
             </div> *@
-        </div>
+            </div>
+       }
+       
     </div>
 </div>

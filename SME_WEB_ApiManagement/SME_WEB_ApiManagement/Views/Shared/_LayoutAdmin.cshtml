@@ -31,34 +31,51 @@
                 <div class="logo">
                     <img src="~/img/logo-th-01.png" alt="โลโก้" class="img-fluid" />
                 </div>
-                <ul class="nav flex-column px-3">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../SysMasterAPI/SysMasterAPIInbound"><i class="fas fa-newspaper"></i>API Inbound</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../RegisterAPI/RegisterList"><i class="fas fa-thumbtack"></i>API Outbound</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../ErrorApi/Index"><i class="fas fa-images"></i>Error list</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../SysMasterAPI/SysMasterAPI"><i class="fas fa-window-restore"></i>Api System Master</a>
-                    </li>
-                    @if (empDetail.RoleCode == "SUPERADMIN")
-                    {
-                        @*   <li class="nav-item">
-                        <a class="nav-link" href="../APIManagement/AgencyCompany"><i class="fas fa-window-restore"></i>เพิ่มหน่วยงานหรือบริษัท ขอใช้ระบบ</a>
-                    </li> *@
+                @if (empDetail !=null)
+                {
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="../UserManagement/index"><i class="fas fa-users"></i>กำหนดสิทธิ์ผู้ใช้งาน</a>
+                    <ul class="nav flex-column px-3">
+                           <li class="nav-item">
+                            <a class="nav-link" href="~/ApiReference/index"><i class="fas fa-newspaper"></i>API Reference</a>
                         </li>
-                    }
-            
-                </ul>
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/SysMasterAPI/SysMasterAPIInbound"><i class="fas fa-newspaper"></i>API Inbound</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/RegisterAPI/RegisterList"><i class="fas fa-thumbtack"></i>API Outbound</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/ErrorApi/Index"><i class="fas fa-images"></i>Error list</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/SysMasterAPI/SysMasterAPI"><i class="fas fa-window-restore"></i>Api System Master</a>
+                        </li>
+                        @if (empDetail.RoleCode == "SUPERADMIN")
+                        {
+                              <li class="nav-item">
+                        <a class="nav-link" href="~/APIManagement/AgencyCompany"><i class="fas fa-window-restore"></i>เพิ่มหน่วยงานภายนอก</a>
+                    </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="~/UserManagement/index"><i class="fas fa-users"></i>กำหนดสิทธิ์ผู้ใช้งาน</a>
+                            </li>
+                        }
+
+                    </ul>
+                }
+               
                 <div class="sidebar-bottom px-3">
-                    <div class="mb-2"><i class="fas fa-bell me-2"></i> การแจ้งเตือน</div>
-                    <div><i class="fas fa-sign-out-alt me-2"></i> ออกจากระบบ</div>
+                 @*    <div class="mb-2"><i class="fas fa-bell me-2"></i> การแจ้งเตือน</div> *@
+@* 
+                    <a class="d-block text-decoration-none text-dark" href="~/Account/Logout">
+                        <i class="fas fa-sign-out-alt me-2"></i> ออกจากระบบ
+                    </a> *@
+                 <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-link text-dark text-decoration-none p-0">
+        <i class="fas fa-sign-out-alt me-2"></i> ออกจากระบบ
+    </button>
+</form>
                 </div>
             </nav>
             <!-- Main Content -->

@@ -109,11 +109,7 @@
     <div class="main-content">
         <div class="wrap-boder">
             <div class="wrap-content">
-                <div class="header">
-                    <div class="header_content d-flex justify-content-between align-items-center">
-                        <h1>API Outbound</h1>
-                    </div>
-                </div>
+                 <div class="card-title">API Outbound</div>
                 <div class="content_body">
                     <div class="row">
                         <div class="col-md-6">
@@ -134,8 +130,11 @@
                         </div>
                     </div>
                     <div class="text-center m-t-10">
-                        <button class="btn btn_search text-color-botton" name="searchDate" id="searchDate" value="searchDate">ล้างข้อมูล</button>
-                        <button class="btn btn_search text-color-botton" name="searchDate" id="searchDate" value="searchDate">ค้นหา</button>
+                  @*       <button class="btn btn_search text-color-botton" name="searchDate" id="searchDate" value="searchDate">ล้างข้อมูล</button>
+                        <button class="btn btn_search text-color-botton" name="searchDate" id="searchDate" value="searchDate">ค้นหา</button> *@
+                        <button class="btn btn-outline-primary btn-custom" name="clearSearcData" id="clearSearcData" value="clearSearcData" type="submit">ล้างข้อมูล</button>
+                        <button class="btn btn-primary btn-custom" name="searchDate" id="searchDate" value="searchDate" type="submit">ค้นหา</button>
+
                     </div>
                 </div>
             </div>
@@ -235,7 +234,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="table-footer d-flex justify-content-between align-items-center p-2" style="background: #f7f9fa; border-top: 1px solid #e9ecef;">
+                    <div class="table-footer">
                         <div class="pagination-custom d-flex align-items-center gap-2">
                             <button type="submit" class="btn btn-light px-2 @(Model.PageModel.CurrentPageNumber <= 1 ? "disabled" : "")" name="first" value="first" title="หน้าแรก">
                                 <i class="fa fa-angle-double-left"></i>
@@ -264,6 +263,7 @@
                             แสดง @start - @end จาก @total รายการ
                         </div>
                     </div>
+             
                 </div>
             </div>
         </div>

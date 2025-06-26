@@ -24,7 +24,7 @@ var idpEntityId = saml2Section["IdpEntityId"];
 var ssoUrl = saml2Section["SingleSignOnServiceUrl"];
 var sloUrl = saml2Section["SingleLogoutServiceUrl"];
 var signingCertBase64 = saml2Section["SigningCertificate"];
-
+var AcsUrl = saml2Section["AcsUrl"];
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -35,7 +35,7 @@ builder.Services.AddAuthentication(options =>
 {
     builder.Configuration.GetSection("SustainsysSaml2").Bind(options);
     options.SPOptions.EntityId = new EntityId(entityId);
-    options.SPOptions.ReturnUrl = new Uri("https://192.168.9.155:11120/account/login");
+    options.SPOptions.ReturnUrl = new Uri(AcsUrl);
 
     var idp = new IdentityProvider(
         new EntityId(idpEntityId),

@@ -32,7 +32,7 @@
 
     $(document).on('click', '.editbtn', function () {
         $("#InsMOrg_OrganizationId").val($(this).data("organizationid"));
-        $("#InsMOrg_OrganizationCode").val($(this).data("organizationcode")).trigger('change');
+        // $("#InsMOrg_OrganizationCode").val($(this).data("organizationcode")).trigger('change');
         $("#InsMOrg_OrganizationName").val($(this).data("organizationname"));
         $("#InsMOrg_Description").val($(this).data("description"));
         $("#InsMOrg_FlagActive").val($(this).data("flagactive"));
@@ -102,14 +102,21 @@
         });
     });
 
-    $(document).on('click', '#saveData', function (e) {     
-        var orgCode = $('#InsMOrg_OrganizationCode').val();
+    $(document).on('click', '#saveData', function (e) {
+        // Validation
+        // var orgCode = $('#InsMOrg_OrganizationCode').val(); // ถ้ามี field นี้ให้ uncomment
         var orgName = $('#InsMOrg_OrganizationName').val();
         var errorMsg = "";
-        if (!orgCode) errorMsg += "กรุณาเลือกหน่วยงานเจ้าของ API\n";
+        // if (!orgCode) errorMsg += "กรุณาเลือกหน่วยงานเจ้าของ API\n";
         if (!orgName) errorMsg += "กรุณาระบุชื่อระบบ\n";
         if (errorMsg) {
             alert(errorMsg);
+            e.preventDefault();
+            return;
+        }
+
+        // Popup confirm ธรรมดา
+        if (!confirm('คุณต้องการบันทึกข้อมูลนี้ใช่หรือไม่?')) {
             e.preventDefault();
         }
     });
@@ -257,28 +264,26 @@
                         </table>
                     </div>
                     <div class="table-footer">
-                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
-                            <div class="pagination-custom my-2">
-                                <input type="hidden" name="hidtotalpage" id="hidtotalpage" value="@Model.PageModel.TotalPage" />
-                                <button type="submit" class="btn btn-light rounded-circle mx-1 @(Model.PageModel.CurrentPageNumber <= 1 ? "disabled" : "")" name="first" value="first" title="หน้าแรก">
-                                    <i class="fa fa-angle-double-left"></i>
-                                </button>
-                                <button type="submit" class="btn btn-light rounded-circle mx-1 @(Model.PageModel.CurrentPageNumber <= 1 ? "disabled" : "")" name="previous" value="previous" title="ก่อนหน้า">
-                                    <i class="fa fa-angle-left"></i>
-                                </button>
-                                <span class="mx-2">Page</span>
-                                <input type="text" name="hidcurrentpage" id="hidcurrentpage" value="@Model.PageModel.CurrentPageNumber" readonly style="width: 40px; text-align: center;" />
-                                <span class="mx-2">of @Model.PageModel.TotalPage</span>
-                                <button type="submit" class="btn btn-light rounded-circle mx-1 @(Model.PageModel.CurrentPageNumber >= Model.PageModel.TotalPage ? "disabled" : "")" name="next" value="next" title="ถัดไป">
-                                    <i class="fa fa-angle-right"></i>
-                                </button>
-                                <button type="submit" class="btn btn-light rounded-circle mx-1 @(Model.PageModel.CurrentPageNumber >= Model.PageModel.TotalPage ? "disabled" : "")" name="last" id="btnLast" value="last" title="หน้าสุดท้าย">
-                                    <i class="fa fa-angle-double-right"></i>
-                                </button>
-                            </div>
-                            <div class="my-2">
-                                แสดง @((Model.LOrg?.Count() ?? 0) > 0 ? $"{1 + ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize)} - {((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize) + Model.LOrg.Count()} จาก {Model.PageModel.TotalRows} รายการ" : "0 รายการ")
-                            </div>
+                        <div class="pagination-custom my-2">
+                            <input type="hidden" name="hidtotalpage" id="hidtotalpage" value="@Model.PageModel.TotalPage" />
+                            <button type="submit" class="btn btn-light rounded-circle mx-1 @(Model.PageModel.CurrentPageNumber <= 1 ? "disabled" : "")" name="first" value="first" title="หน้าแรก">
+                                <i class="fa fa-angle-double-left"></i>
+                            </button>
+                            <button type="submit" class="btn btn-light rounded-circle mx-1 @(Model.PageModel.CurrentPageNumber <= 1 ? "disabled" : "")" name="previous" value="previous" title="ก่อนหน้า">
+                                <i class="fa fa-angle-left"></i>
+                            </button>
+                            <span class="mx-2">Page</span>
+                            <input type="text" name="hidcurrentpage" id="hidcurrentpage" value="@Model.PageModel.CurrentPageNumber" readonly style="width: 40px; text-align: center;" />
+                            <span class="mx-2">of @Model.PageModel.TotalPage</span>
+                            <button type="submit" class="btn btn-light rounded-circle mx-1 @(Model.PageModel.CurrentPageNumber >= Model.PageModel.TotalPage ? "disabled" : "")" name="next" value="next" title="ถัดไป">
+                                <i class="fa fa-angle-right"></i>
+                            </button>
+                            <button type="submit" class="btn btn-light rounded-circle mx-1 @(Model.PageModel.CurrentPageNumber >= Model.PageModel.TotalPage ? "disabled" : "")" name="last" id="btnLast" value="last" title="หน้าสุดท้าย">
+                                <i class="fa fa-angle-double-right"></i>
+                            </button>
+                        </div>
+                        <div class="my-2">
+                            แสดง @((Model.LOrg?.Count() ?? 0) > 0 ? $"{1 + ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize)} - {((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize) + Model.LOrg.Count()} จาก {Model.PageModel.TotalRows} รายการ" : "0 รายการ")
                         </div>
                     </div>
                 </div>
@@ -290,10 +295,10 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content custom-modal-content">
                 <div class="modal-header" style="background-color: #2196f3; color: #fff; justify-content: center;">
-                    <h4 class="modal-title font-weight-bold" id="CreateModalLabel">หน่วยงานหรือบริษัท</h4>
+                    <h4 class="modal-title font-weight-bold" id="CreateModalLabel">หน่วยงานหรือบริษัท(ภายนอก)</h4>
                 </div>
                 <div class="modal-body px-5 py-4">
-                    <input type="hidden" asp-for="InsMOrg.OrganizationId" id="InsMOrg_OrganizationId" />
+               @*      <input type="hidden" asp-for="InsMOrg.OrganizationId" id="InsMOrg_OrganizationId" />
                     <div class="form-group mb-4">
                         <label for="InsMOrg_OrganizationCode" class="font-weight-bold" style="font-size:1.3rem;">
                             หน่วยงานเจ้าของ API <span class="text-danger">*</span>
@@ -301,10 +306,10 @@
                         <select asp-for="InsMOrg.OrganizationCode" asp-items="vDdlOrg" class="form-control search-dropdown" id="InsMOrg_OrganizationCode" style="font-size:1.1rem;">
                             <option value="">--กรุณาเลือก--</option>
                         </select>
-                    </div>
+                    </div> *@
                     <div class="form-group mb-4">
                         <label for="InsMOrg_OrganizationName" class="font-weight-bold" style="font-size:1.3rem;">
-                            ชื่อระบบ <span class="text-danger">*</span>
+                            ชื่อหน่วยงานภายนอก <span class="text-danger">*</span>
                         </label>
                         <input class="form-control" type="text" asp-for="InsMOrg.OrganizationName" id="InsMOrg_OrganizationName" placeholder="กรุณาระบุ" style="font-size:1.1rem;" />
                     </div>

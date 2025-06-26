@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +13,12 @@ namespace SME_WEB_ApiManagement.Controllers
     public class AccountController : Controller
     {
         private readonly ILogger<AccountController> _logger;
-
-        public AccountController(ILogger<AccountController> logger)
+        private readonly IConfiguration _configuration;
+        public AccountController(ILogger<AccountController> logger
+, IConfiguration configuration)
         {
             _logger = logger;
+            _configuration = configuration;
         }
 
         [AllowAnonymous]
@@ -58,46 +60,18 @@ namespace SME_WEB_ApiManagement.Controllers
             return new EmptyResult(); // Required after challenge
         }
 
-        //public IActionResult Loginx(string returnUrl = "/")
-        //{
-        //    try
-        //    {
-        //        if (User.Identity?.IsAuthenticated == true)
-        //        {
-        //            _logger.LogInformation("User is already authenticated. Redirecting to {ReturnUrl}", returnUrl);
 
-        //            // Log all claims
-        //            foreach (var claim in User.Claims)
-        //            {
-        //                _logger.LogInformation("Claim: {Type} = {Value}", claim.Type, claim.Value);
-        //            }
-
-        //            return Redirect(returnUrl);
-        //        }
-
-        //        _logger.LogInformation("User is not authenticated. Initiating SAML2 challenge.");
-        //        return Challenge(new AuthenticationProperties
-        //        {
-        //            RedirectUri = returnUrl
-        //        }, "Saml2");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Error in SAMLLogin");
-        //        ViewBag.ErrorMessage = "SAML login failed: " + ex.Message;
-        //        return RedirectToAction("SAMLLogin", "Account");
-        //    }
-        //}
-
-        [HttpGet]
-        public async Task<IActionResult> Logout()
+        [HttpPost]
+        public async Task<IActionResult> Logout(string returnUrl = "/")
         {
             _logger.LogInformation("User is logging out.");
 
             await HttpContext.SignOutAsync("Saml2");
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-            return RedirectToAction("Index", "Home");
+            // ดึงค่า SingleLogoutServiceUrl
+            var logoutUrl = _configuration["Saml2:Saml2:SingleLogoutServiceUrl"];
+            return Redirect(logoutUrl);
         }
 
         [HttpGet]
@@ -153,5 +127,6 @@ namespace SME_WEB_ApiManagement.Controllers
         {
             return View();
         }
+     
     }
 }

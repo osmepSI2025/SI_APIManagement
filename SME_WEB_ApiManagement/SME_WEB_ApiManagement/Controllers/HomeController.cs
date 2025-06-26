@@ -1,9 +1,7 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SME_WEB_ApiManagement.DAO;
 using SME_WEB_ApiManagement.Models;
 using SME_WEB_ApiManagement.Services;
-using System.Configuration;
 using System.Diagnostics;
 using System.Text.Json;
 
@@ -36,33 +34,49 @@ namespace SME_WEB_ApiManagement.Controllers
 
         public async Task<IActionResult> Index()
         {
-            EmployeeModels model = new EmployeeModels();
-
-            var claimsJson = HttpContext.Session.GetString("UserClaims");
-            Dictionary<string, string>? claimsDict = null;
-            if (!string.IsNullOrEmpty(claimsJson))
+            try
             {
-                claimsDict = JsonSerializer.Deserialize<Dictionary<string, string>>(claimsJson);
-                string GetClaim(Dictionary<string, string>? dict, string key)
-                    => dict != null && dict.ContainsKey(key) ? dict[key] : string.Empty;
 
-                // Use nameidentifier as primary, fallback to userprincipalname, then email
-                string email = GetClaim(claimsDict, "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
-                model.Email = email;
+                EmployeeModels model = new EmployeeModels();
 
-                var EmpDetail = await EmployeeDAO.GetDetaiEmp(model, API_Path_Main + API_Path_Sub);
-                var empDetailJson = JsonSerializer.Serialize(EmpDetail);
-                HttpContext.Session.SetString("EmpDetail", empDetailJson);
-                HttpContext.Session.SetString("EmployeeId", EmpDetail.EmployeeId);
+                var claimsJson = HttpContext.Session.GetString("UserClaims");
+                Dictionary<string, string>? claimsDict = null;
+                if (!string.IsNullOrEmpty(claimsJson))
+                {
+                    claimsDict = JsonSerializer.Deserialize<Dictionary<string, string>>(claimsJson);
+                    string GetClaim(Dictionary<string, string>? dict, string key)
+                        => dict != null && dict.ContainsKey(key) ? dict[key] : string.Empty;
+
+                    // Use nameidentifier as primary, fallback to userprincipalname, then email
+                    string email = GetClaim(claimsDict, "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+                    model.Email = email;
+                    model.EmployeeId = GetClaim(claimsDict, "EmpID");
+                    var EmpDetail = await EmployeeDAO.GetDetaiEmp(model, API_Path_Main + API_Path_Sub);
+
+                    if (EmpDetail.EmployeeId !=null) 
+                    
+                    {
+                        var empDetailJson = JsonSerializer.Serialize(EmpDetail);
+                        HttpContext.Session.SetString("EmpDetail", empDetailJson);
+                        HttpContext.Session.SetString("EmployeeId", EmpDetail.EmployeeId);
+
+                        ViewBag.EmpDetail = EmpDetail;
+                        ViewBag.claimsDict = claimsJson;
+                    }
              
-                ViewBag.EmpDetail = EmpDetail;
-                ViewBag.claimsDict = claimsJson;
-                return View();
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("login", "account");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return RedirectToAction("login", "account");
+                return View();
+                //return RedirectToAction("login", "account");
             }
+
         }
 
         public IActionResult Privacy()
